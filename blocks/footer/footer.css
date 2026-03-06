@@ -1,20 +1,34 @@
 footer {
-  background-color: var(--light-color);
+  position: relative;
+  background-color: rgb(10 10 10 / 70%);
+  backdrop-filter: blur(90px);
   font-size: var(--body-font-size-xs);
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  margin-top: 100px;
 }
 
 footer .footer > div {
   margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  max-width: 1240px;
+  padding: 40px 24px;
 }
 
 footer .footer p {
   margin: 0;
+  color: var(--secondary-gray);
+}
+
+footer .footer a:any-link {
+  color: var(--secondary-gray);
+  transition: color 0.2s ease;
+}
+
+footer .footer a:hover {
+  color: var(--text-color);
 }
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 40px 32px 24px;
+    padding: 40px;
   }
 }

@@ -1,10 +1,13 @@
 .accordion details {
-  border: 1px solid rgba(255 255 255 / 15%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--light-color);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .accordion details + details {
-  margin-top: 24px;
+  margin-top: 12px;
 }
 
 .accordion details p {
@@ -56,6 +59,6 @@
 }
 
 .accordion details[open] .accordion-item-body {
-  border-top: 1px solid rgba(255 255 255 / 15%);
+  border-top: 1px solid rgb(255 255 255 / 15%);
   background-color: var(--background-color);
 }

@@ -16,10 +16,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 120px 24px 80px;
-  min-height: 560px;
+  padding: 120px 24px 0;
+  overflow: hidden;
 }
 
 /* Dark gradient overlay on top of background image */
@@ -29,11 +28,13 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgb(10 10 10 / 40%) 0%,
-    rgb(10 10 10 / 60%) 40%,
-    rgb(10 10 10 / 90%) 80%
+    rgb(10 10 10 / 30%) 0%,
+    rgb(10 10 10 / 50%) 30%,
+    rgb(10 10 10 / 70%) 60%,
+    rgb(10 10 10 / 95%) 85%
   );
   z-index: 0;
+  pointer-events: none;
 }
 
 /* All direct children above overlay */
@@ -72,7 +73,7 @@
 }
 
 /* Background image row — positioned behind content */
-.hero > div:first-child {
+.hero > .hero-bg {
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -80,39 +81,58 @@
   overflow: hidden;
 }
 
-.hero > div:first-child p {
+.hero > .hero-bg div {
+  height: 100%;
+}
+
+.hero > .hero-bg p {
   margin: 0;
   display: block;
   height: 100%;
 }
 
-.hero > div:first-child picture {
+.hero > .hero-bg picture {
   margin: 0;
   display: block;
   height: 100%;
 }
 
-.hero img {
+.hero > .hero-bg img {
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
 /* Content row */
-.hero > div:last-child {
+.hero > .hero-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
 }
 
-/* Button wrappers — full width stacked */
-.hero p.button-wrapper {
-  width: 100%;
-  margin: 0;
+.hero > .hero-content > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-/* Hero-specific button overrides — full width, rounded rect, larger */
+/* Button container */
+.hero .hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.hero .hero-buttons p.button-wrapper {
+  margin: 0;
+  width: 100%;
+}
+
+/* Hero-specific button overrides */
 .hero a.button:any-link {
   width: 100%;
   border-radius: 12px;
@@ -165,31 +185,96 @@
   color: #29395a;
 }
 
+/* Product image rows — stacked, centered, overlapping */
+.hero > .hero-product {
+  max-width: 480px;
+  margin-top: -20px;
+}
+
+.hero > .hero-product div {
+  display: flex;
+  justify-content: center;
+}
+
+.hero > .hero-product p {
+  margin: 0;
+}
+
+.hero > .hero-product img {
+  width: auto;
+  height: auto;
+  max-width: 280px;
+  object-fit: contain;
+}
+
+/* Jersey image — slightly larger */
+.hero > .hero-product:nth-child(3) img {
+  max-width: 300px;
+}
+
+/* Card image — overlaps jersey */
+.hero > .hero-product:nth-child(4) {
+  margin-top: -60px;
+}
+
+.hero > .hero-product:nth-child(4) img {
+  max-width: 380px;
+}
+
 /* Responsive — tablet */
 @media (width >= 600px) {
   .hero {
-    padding: 140px 32px 100px;
-    min-height: 640px;
+    padding: 140px 32px 0;
   }
 
   .hero p {
     font-size: var(--body-font-size-m);
+  }
+
+  .hero .hero-buttons {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+  }
+
+  .hero .hero-buttons p.button-wrapper {
+    width: auto;
+  }
+
+  .hero a.button:any-link {
+    width: auto;
+    padding: 16px 32px;
+  }
+
+  .hero > .hero-product:nth-child(3) img {
+    max-width: 360px;
+  }
+
+  .hero > .hero-product:nth-child(4) img {
+    max-width: 460px;
   }
 }
 
 /* Responsive — desktop */
 @media (width >= 900px) {
   .hero {
-    padding: 180px 40px 120px;
-    min-height: 720px;
-  }
-
-  .hero > div:last-child {
-    gap: 24px;
+    padding: 160px 40px 0;
   }
 
   .hero p {
     font-size: 18px;
     line-height: 1.25;
+  }
+
+  .hero > .hero-product:nth-child(3) img {
+    max-width: 420px;
+  }
+
+  .hero > .hero-product:nth-child(4) {
+    margin-top: -80px;
+  }
+
+  .hero > .hero-product:nth-child(4) img {
+    max-width: 540px;
   }
 }

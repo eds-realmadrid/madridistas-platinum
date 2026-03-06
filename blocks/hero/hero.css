@@ -1,67 +1,95 @@
+/* Hero block — centered layout matching original platinum design */
+
+/* Remove section wrapper constraints for hero */
 .hero-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
 
-.hero {
-  position: relative;
-  padding: 60px 24px 80px;
-  min-height: 480px;
-  display: flex;
-  align-items: center;
+.hero-container {
+  margin-top: 0;
 }
 
+/* Hero block base */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  min-height: 560px;
+}
+
+/* Dark gradient overlay on top of background image */
 .hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(10 10 10 / 10%) 0%, rgb(10 10 10 / 30%) 25%, rgb(10 10 10 / 90%) 60%);
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10 / 40%) 0%,
+    rgb(10 10 10 / 60%) 40%,
+    rgb(10 10 10 / 90%) 80%
+  );
   z-index: 0;
 }
 
-@media (width >= 900px) {
-  .hero::after {
-    background: linear-gradient(90deg, rgb(10 10 10 / 5%) 0%, rgb(10 10 10 / 30%) 30%, rgb(10 10 10 / 85%) 65%);
-  }
-}
-
+/* All direct children above overlay */
 .hero > div {
   position: relative;
   z-index: 1;
-  max-width: 1240px;
-  margin: 0 auto;
+  max-width: 732px;
   width: 100%;
+  margin: 0 auto;
 }
 
+/* Heading */
 .hero h1 {
-  margin-top: 0;
-  margin-bottom: 20px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+
+.hero h2 {
+  margin: 0;
   color: var(--text-color);
   font-weight: 700;
-  text-shadow: 0 4px 12px rgb(0 0 0 / 50%);
+  line-height: 1.06;
 }
 
+/* Description paragraph */
 .hero p {
-  font-size: var(--body-font-size-m);
-  line-height: 1.5;
-  margin-bottom: 24px;
-  max-width: 840px;
-  color: var(--text-color);
-  text-shadow: 0 2px 8px rgb(0 0 0 / 50%);
+  margin: 0;
+  font-size: var(--body-font-size-s);
+  line-height: 1.25;
+  color: var(--light-gray);
+  max-width: 732px;
 }
 
-.hero .button-wrapper {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.hero picture {
+/* Background image row — positioned behind content */
+.hero > div:first-child {
   position: absolute;
-  z-index: -1;
   inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
+  z-index: -1;
+  max-width: unset;
+  overflow: hidden;
+}
+
+.hero > div:first-child p {
+  margin: 0;
+  display: block;
+  height: 100%;
+}
+
+.hero > div:first-child picture {
+  margin: 0;
+  display: block;
+  height: 100%;
 }
 
 .hero img {
@@ -70,24 +98,98 @@
   height: 100%;
 }
 
-@media (width >= 600px) {
-  .hero {
-    padding: 100px 32px 80px;
-    min-height: 560px;
-  }
-
-  .hero p {
-    font-size: 18px;
-  }
+/* Content row */
+.hero > div:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
 }
 
-@media (width >= 900px) {
+/* Button wrappers — full width stacked */
+.hero p.button-wrapper {
+  width: 100%;
+  margin: 0;
+}
+
+/* Hero-specific button overrides — full width, rounded rect, larger */
+.hero a.button:any-link {
+  width: 100%;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  min-height: 56px;
+  white-space: normal;
+}
+
+/* Primary button — solid white, navy text */
+.hero a.button.primary {
+  background: #fff;
+  border-color: #fff;
+  color: #29395a;
+}
+
+.hero a.button.primary:hover,
+.hero a.button.primary:focus-visible {
+  background: #f0f0f0;
+  border-color: #f0f0f0;
+  color: #29395a;
+}
+
+/* Secondary button — metallic silver gradient, navy text */
+.hero a.button.secondary {
+  background: linear-gradient(
+    90deg,
+    #b4b4b4 0%,
+    #f2f2f2 38%,
+    #eee 47%,
+    #e3e3e3 68%,
+    #b3b3b3 100%
+  );
+  border-color: transparent;
+  color: #29395a;
+}
+
+.hero a.button.secondary:hover,
+.hero a.button.secondary:focus-visible {
+  background: linear-gradient(
+    90deg,
+    #c4c4c4 0%,
+    #fff 38%,
+    #f8f8f8 47%,
+    #ededed 68%,
+    #c3c3c3 100%
+  );
+  border-color: transparent;
+  color: #29395a;
+}
+
+/* Responsive — tablet */
+@media (width >= 600px) {
   .hero {
-    padding: 120px 40px 100px;
+    padding: 140px 32px 100px;
     min-height: 640px;
   }
 
   .hero p {
-    font-size: 20px;
+    font-size: var(--body-font-size-m);
+  }
+}
+
+/* Responsive — desktop */
+@media (width >= 900px) {
+  .hero {
+    padding: 180px 40px 120px;
+    min-height: 720px;
+  }
+
+  .hero > div:last-child {
+    gap: 24px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    line-height: 1.25;
   }
 }

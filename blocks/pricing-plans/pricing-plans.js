@@ -1,11 +1,13 @@
 /**
- * Pricing Plans block with plan toggle and jersey pricing cards.
+ * Pricing Plans block with plan toggle, jersey pricing cards, and benefits carousel.
  * Content structure (rows):
  *   Row 0: Plan Anual label | Plan Mensual label
  *   Row 1: Savings badge text (e.g. "Ahorras un 4.14%")
  *   Row 2: "Camiseta" card — title | annual price | monthly price | image | description
  *   Row 3: "Camiseta Authentic" card — title | annual price | monthly price | image | description
  *   Row 4: Footnote annual | Footnote monthly (optional)
+ *   Row 5: Column headers — shirts header | benefits header
+ *   Rows 6+: Benefit cards — image | text
  */
 export default function decorate(block) {
   const rows = [...block.children];
@@ -38,6 +40,20 @@ export default function decorate(block) {
   const annualFootnote = footnoteCols[0]?.textContent.trim() || '';
   const monthlyFootnote = footnoteCols[1]?.textContent.trim() || '';
 
+  // Row 5: column headers
+  const headerRow = rows[5];
+  const headerCols = headerRow ? [...headerRow.querySelectorAll(':scope > div')] : [];
+  const shirtsHeader = headerCols[0]?.textContent.trim() || 'Recibe tu camiseta anual';
+  const benefitsHeader = headerCols[1]?.textContent.trim() || 'Más beneficios Platinum';
+
+  // Rows 6+: benefit cards
+  const benefits = rows.slice(6).map((row) => {
+    const cols = [...row.querySelectorAll(':scope > div')];
+    const img = cols[0]?.querySelector('img');
+    const text = cols[1]?.textContent.trim() || '';
+    return { img, text };
+  });
+
   // Build toggle
   const toggle = document.createElement('div');
   toggle.className = 'pricing-toggle';
@@ -62,13 +78,27 @@ export default function decorate(block) {
 
   toggle.append(annualTab, monthlyTab);
 
-  // Build cards
-  const cardsContainer = document.createElement('div');
-  cardsContainer.className = 'pricing-cards';
+  // Build two-column content area
+  const contentArea = document.createElement('div');
+  contentArea.className = 'pricing-content';
 
-  cards.forEach((card) => {
+  // Left column: shirts
+  const leftCol = document.createElement('div');
+  leftCol.className = 'pricing-col-shirts';
+
+  const leftHeader = document.createElement('div');
+  leftHeader.className = 'pricing-col-header';
+  const leftH3 = document.createElement('h3');
+  leftH3.textContent = shirtsHeader;
+  leftHeader.append(leftH3);
+  leftCol.append(leftHeader);
+
+  const shirtsRow = document.createElement('div');
+  shirtsRow.className = 'pricing-cards';
+
+  cards.forEach((card, idx) => {
     const cardEl = document.createElement('div');
-    cardEl.className = 'pricing-card';
+    cardEl.className = `pricing-card${idx === 1 ? ' pricing-card-dark' : ''}`;
 
     const cardTitle = document.createElement('h4');
     cardTitle.textContent = card.title;
@@ -92,8 +122,69 @@ export default function decorate(block) {
     descEl.textContent = card.desc;
 
     cardEl.append(cardTitle, priceAnnual, priceMonthly, imgWrapper, descEl);
-    cardsContainer.append(cardEl);
+    shirtsRow.append(cardEl);
   });
+
+  leftCol.append(shirtsRow);
+
+  // Right column: benefits carousel
+  const rightCol = document.createElement('div');
+  rightCol.className = 'pricing-col-benefits';
+
+  const rightHeader = document.createElement('div');
+  rightHeader.className = 'pricing-col-header';
+  const rightH3 = document.createElement('h3');
+  rightH3.textContent = benefitsHeader;
+  rightHeader.append(rightH3);
+  rightCol.append(rightHeader);
+
+  const carouselWrapper = document.createElement('div');
+  carouselWrapper.className = 'pricing-carousel-wrapper';
+
+  const carousel = document.createElement('div');
+  carousel.className = 'pricing-carousel';
+
+  benefits.forEach((benefit) => {
+    const item = document.createElement('div');
+    item.className = 'pricing-benefit';
+
+    if (benefit.img) {
+      const imgEl = document.createElement('div');
+      imgEl.className = 'pricing-benefit-img';
+      imgEl.append(benefit.img.cloneNode(true));
+      item.append(imgEl);
+    }
+
+    const textEl = document.createElement('p');
+    textEl.className = 'pricing-benefit-text';
+    textEl.textContent = benefit.text;
+    item.append(textEl);
+
+    carousel.append(item);
+  });
+
+  carouselWrapper.append(carousel);
+
+  // Carousel navigation
+  const navContainer = document.createElement('div');
+  navContainer.className = 'pricing-carousel-nav';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'pricing-carousel-btn prev';
+  prevBtn.setAttribute('aria-label', 'Previous');
+  prevBtn.innerHTML = '&#8249;';
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'pricing-carousel-btn next';
+  nextBtn.setAttribute('aria-label', 'Next');
+  nextBtn.innerHTML = '&#8250;';
+
+  navContainer.append(prevBtn, nextBtn);
+  carouselWrapper.append(navContainer);
+
+  rightCol.append(carouselWrapper);
+
+  contentArea.append(leftCol, rightCol);
 
   // Footnote
   const footnoteEl = document.createElement('p');
@@ -106,7 +197,7 @@ export default function decorate(block) {
   fnMonthly.textContent = monthlyFootnote;
   footnoteEl.append(fnAnnual, fnMonthly);
 
-  block.append(toggle, cardsContainer, footnoteEl);
+  block.append(toggle, contentArea, footnoteEl);
 
   // Toggle behavior
   const tabs = block.querySelectorAll('.pricing-tab');
@@ -124,4 +215,36 @@ export default function decorate(block) {
       });
     });
   });
+
+  // Carousel behavior
+  let currentIndex = 0;
+  const itemsPerView = 3;
+
+  function updateCarousel() {
+    const items = carousel.querySelectorAll('.pricing-benefit');
+    const maxIndex = Math.max(0, items.length - itemsPerView);
+    if (currentIndex > maxIndex) currentIndex = maxIndex;
+    if (currentIndex < 0) currentIndex = 0;
+
+    const itemHeight = items[0]?.offsetHeight || 0;
+    const gap = 12;
+    const offset = currentIndex * (itemHeight + gap);
+    carousel.style.transform = `translateY(-${offset}px)`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= maxIndex;
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentIndex -= 1;
+    updateCarousel();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex += 1;
+    updateCarousel();
+  });
+
+  // Initialize carousel after render
+  requestAnimationFrame(() => updateCarousel());
 }

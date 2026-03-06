@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "url": "https://platinum.madridistas.com/es-es",
+  "path": "es-es",
+  "timestamp": "2026-03-06T15:06:27.334Z",
+  "title": "Carnet Platinum Real Madrid",
+  "template": "landing-page",
+  "blocks": [
+    "hero",
+    "hero",
+    "hero",
+    "cards",
+    "cards",
+    "columns",
+    "columns",
+    "columns",
+    "columns",
+    "accordion"
+  ]
+}

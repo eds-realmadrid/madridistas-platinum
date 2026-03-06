@@ -1,0 +1,142 @@
+{
+  "templates": [
+    {
+      "name": "landing-page",
+      "urls": [
+        "https://platinum.madridistas.com/es-es"
+      ],
+      "description": "Single-page marketing landing page for Real Madrid Platinum membership. Dark theme with 9 content sections: Hero, Pricing, Details, RM Play, Motivation, Wallet, Welcome Pack, FAQ, and Final CTA.",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": [
+            "section#hero",
+            "section.framer-1u7uig8",
+            "section.framer-7udm7i"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            "section#aldetalle .framer-1WyMe",
+            "section#aldetalle .framer--carousel"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            "section#aldetalle-2 .framer-1d1thws",
+            "section.framer-k3mkbh .framer-34b08d",
+            "section.framer-1d2aruc .framer-1rz9e0p",
+            "section.framer-1askbkw .framer-1wv5k5o"
+          ]
+        },
+        {
+          "name": "accordion",
+          "instances": [
+            "section.framer-1bmqxb9 .framer-G1GNj"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "hero",
+          "name": "Hero",
+          "selector": "section#hero",
+          "style": null,
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "pricing",
+          "name": "Pricing",
+          "selector": "section#aldetalle",
+          "style": null,
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": [
+            "section#aldetalle .framer-7qowij h2"
+          ]
+        },
+        {
+          "id": "details",
+          "name": "Details",
+          "selector": "section#aldetalle-2",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": [
+            "section#aldetalle-2 h2"
+          ]
+        },
+        {
+          "id": "rmplay",
+          "name": "RM Play",
+          "selector": "section.framer-k3mkbh",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "motivation",
+          "name": "Motivation",
+          "selector": "section.framer-1u7uig8",
+          "style": null,
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "wallet",
+          "name": "Wallet",
+          "selector": "section.framer-1d2aruc",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "welcome-pack",
+          "name": "Welcome Pack",
+          "selector": "section.framer-1askbkw",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "faq",
+          "name": "FAQ",
+          "selector": "section.framer-1bmqxb9",
+          "style": null,
+          "blocks": [
+            "accordion"
+          ],
+          "defaultContent": [
+            "section.framer-1bmqxb9 h2",
+            "section.framer-1bmqxb9 .framer-hf713p p"
+          ]
+        },
+        {
+          "id": "final-cta",
+          "name": "Final CTA",
+          "selector": "section.framer-7udm7i",
+          "style": null,
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

@@ -152,6 +152,8 @@
 
 /* Right column: benefits carousel */
 .pricing-plans .pricing-col-benefits {
+  display: flex;
+  flex-direction: column;
   background: linear-gradient(180deg, rgb(50 50 55 / 50%) 0%, rgb(35 35 40 / 30%) 100%);
 }
 
@@ -159,6 +161,7 @@
   position: relative;
   overflow: hidden;
   padding: 12px;
+  flex: 1;
 }
 
 .pricing-plans .pricing-carousel {
@@ -205,12 +208,12 @@
   flex: 1;
 }
 
-/* Carousel navigation */
+/* Carousel navigation — sits below the overflow area, always visible */
 .pricing-plans .pricing-carousel-nav {
   display: flex;
   justify-content: center;
   gap: 12px;
-  padding: 12px 0 4px;
+  padding: 12px 0 16px;
 }
 
 .pricing-plans .pricing-carousel-btn {

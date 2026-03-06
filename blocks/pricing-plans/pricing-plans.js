@@ -172,17 +172,17 @@ export default function decorate(block) {
   const prevBtn = document.createElement('button');
   prevBtn.className = 'pricing-carousel-btn prev';
   prevBtn.setAttribute('aria-label', 'Previous');
-  prevBtn.innerHTML = '&#8249;';
+  prevBtn.innerHTML = '&#8593;';
 
   const nextBtn = document.createElement('button');
   nextBtn.className = 'pricing-carousel-btn next';
   nextBtn.setAttribute('aria-label', 'Next');
-  nextBtn.innerHTML = '&#8250;';
+  nextBtn.innerHTML = '&#8595;';
 
   navContainer.append(prevBtn, nextBtn);
-  carouselWrapper.append(navContainer);
 
   rightCol.append(carouselWrapper);
+  rightCol.append(navContainer);
 
   contentArea.append(leftCol, rightCol);
 

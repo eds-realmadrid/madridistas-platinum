@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+.pricing-plans-container > .default-content-wrapper > h2 {
+  text-align: center;
+}
+
 .pricing-plans-container .pricing-plans-wrapper {
   max-width: 1240px;
   margin: 0 auto;

@@ -21,6 +21,10 @@
   display: block;
 }
 
+.columns-container > .default-content-wrapper > h2 {
+  text-align: center;
+}
+
 /* Stacked centered layout when columns shares a section with hero */
 .hero-container .columns > div {
   text-align: center;

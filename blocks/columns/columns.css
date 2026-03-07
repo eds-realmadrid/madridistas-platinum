@@ -26,7 +26,7 @@
 }
 
 /* Columns with h3 title + bullet list (e.g. "Tu suscripción Madridista") */
-.columns h3 {
+.columns:has(ul) :is(h2, h3) {
   font-size: 48px;
   line-height: 1.2;
   margin: 0 0 16px;

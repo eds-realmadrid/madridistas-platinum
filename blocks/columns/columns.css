@@ -27,7 +27,7 @@
 
 /* Columns with h3 title + bullet list (e.g. "Tu suscripción Madridista") */
 .columns h3 {
-  font-size: 28px;
+  font-size: 48px;
   line-height: 1.2;
   margin: 0 0 16px;
 }
@@ -55,9 +55,9 @@
   width: 24px;
   height: 24px;
   margin-top: 3px;
-  background-color: #2ea043;
+  background-color: #fff;
   border-radius: 50%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a1a1a'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
   background-size: 16px;
   background-position: center;
   background-repeat: no-repeat;

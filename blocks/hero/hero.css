@@ -284,6 +284,7 @@
     text-align: left;
     min-height: 80vh;
     justify-content: center;
+    padding-left: 100px;
     padding-bottom: 80px;
   }
 
@@ -298,7 +299,8 @@
   }
 
   .columns-container .hero h2 {
-    font-size: var(--heading-font-size-xxl);
+    font-size: 56px;
+    line-height: 1.1;
   }
 
   .columns-container .hero p {

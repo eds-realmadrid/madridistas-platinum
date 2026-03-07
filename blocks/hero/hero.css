@@ -277,4 +277,36 @@
   .hero > .hero-product:nth-child(4) img {
     max-width: 540px;
   }
+
+  /* Left-aligned hero when sharing section with columns (e.g. "No es para todos") */
+  .columns-container .hero {
+    align-items: flex-start;
+    text-align: left;
+    min-height: 80vh;
+    justify-content: center;
+    padding-bottom: 80px;
+  }
+
+  .columns-container .hero > .hero-content {
+    align-items: flex-start;
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .columns-container .hero > .hero-content > div {
+    align-items: flex-start;
+  }
+
+  .columns-container .hero h2 {
+    font-size: var(--heading-font-size-xxl);
+  }
+
+  .columns-container .hero p {
+    max-width: 550px;
+  }
+
+  .columns-container .hero > .hero-content,
+  .columns-container .hero > .hero-bg {
+    will-change: transform;
+  }
 }

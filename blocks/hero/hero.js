@@ -33,4 +33,24 @@ export default async function decorate(block) {
   rows.slice(2).forEach((row) => {
     row.classList.add('hero-product');
   });
+
+  // Parallax effect for left-aligned hero (in columns-container section)
+  const section = block.closest('.columns-container');
+  if (section) {
+    const content = block.querySelector('.hero-content');
+    const bg = block.querySelector('.hero-bg');
+    if (content && bg) {
+      const onScroll = () => {
+        const rect = block.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        if (rect.bottom > 0 && rect.top < viewH) {
+          const progress = -rect.top / viewH;
+          content.style.transform = `translateY(${progress * -60}px)`;
+          bg.style.transform = `translateY(${progress * -20}px)`;
+        }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  }
 }

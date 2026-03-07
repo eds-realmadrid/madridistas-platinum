@@ -50,6 +50,7 @@
 
   .hero-container .columns > div > div {
     order: unset;
+    max-width: 800px;
   }
 
   /* 3-column layout: when block has 3+ rows, display rows as columns */

@@ -88,6 +88,33 @@
     border-radius: 20px;
   }
 
+  /* Two-column section: columns text left + adjacent image right */
+  .columns-container:has(> .columns-wrapper + .default-content-wrapper > p > picture) {
+    display: flex;
+    align-items: center;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 100px;
+    gap: 64px;
+  }
+
+  .columns-container:has(> .columns-wrapper + .default-content-wrapper > p > picture) > .columns-wrapper,
+  .columns-container:has(> .columns-wrapper + .default-content-wrapper > p > picture) > .default-content-wrapper {
+    flex: 1;
+    max-width: unset;
+    margin: 0;
+    padding: 0;
+  }
+
+  .columns-container:has(> .columns-wrapper + .default-content-wrapper > p > picture) .columns-img-col {
+    display: none;
+  }
+
+  .columns-container:has(> .columns-wrapper + .default-content-wrapper > p > picture) > .default-content-wrapper img {
+    width: 100%;
+    border-radius: 20px;
+  }
+
   /* Number badges in 3-column layout */
   .columns:has(> div:nth-child(3)) > div > div:not(.columns-img-col) > p:first-child:not(:has(img)) {
     display: flex;

@@ -207,18 +207,38 @@
   object-fit: contain;
 }
 
-/* Jersey image — slightly larger */
+/* Jersey image — slightly larger + floating animation */
+.hero > .hero-product:nth-child(3) {
+  animation: hero-float 4s ease-in-out infinite;
+}
+
 .hero > .hero-product:nth-child(3) img {
   max-width: 300px;
 }
 
-/* Card image — overlaps jersey */
+/* Card image — overlaps jersey + hover lift */
 .hero > .hero-product:nth-child(4) {
   margin-top: -60px;
+  transition: transform 0.4s ease;
+}
+
+.hero > .hero-product:nth-child(4):hover {
+  transform: translateY(-8px);
 }
 
 .hero > .hero-product:nth-child(4) img {
   max-width: 380px;
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 /* Responsive — tablet */
@@ -316,6 +336,10 @@
 /* CTA hero in accordion section ("Únete ya") — extra bottom space + black by button */
 .accordion-container .hero {
   padding-bottom: 200px;
+}
+
+.accordion-container .hero > .hero-content {
+  max-width: 1000px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */

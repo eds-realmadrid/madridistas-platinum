@@ -70,3 +70,8 @@
   border-top: 1px solid rgb(255 255 255 / 15%);
   background-color: var(--background-color);
 }
+
+/* White link for "Consultar todas las preguntas frecuentes" */
+.accordion-container > .default-content-wrapper a {
+  color: #fff;
+}

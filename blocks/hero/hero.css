@@ -37,6 +37,16 @@
   pointer-events: none;
 }
 
+/* Lighter gradient for CTA hero in accordion section ("Únete ya") */
+.accordion-container .hero::after {
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10 / 20%) 0%,
+    rgb(10 10 10 / 40%) 50%,
+    rgb(10 10 10 / 55%) 100%
+  );
+}
+
 /* All direct children above overlay */
 .hero > div {
   position: relative;

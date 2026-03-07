@@ -37,15 +37,18 @@
   pointer-events: none;
 }
 
-/* CTA hero gradient in accordion section ("Únete ya") — black by button area */
+/* CTA hero in accordion section ("Únete ya") — extra bottom space + black by button */
+.accordion-container .hero {
+  padding-bottom: 200px;
+}
+
 .accordion-container .hero::after {
   background: linear-gradient(
     180deg,
-    rgb(10 10 10 / 20%) 0%,
-    rgb(10 10 10 / 40%) 30%,
-    rgb(10 10 10 / 70%) 60%,
-    rgb(10 10 10 / 95%) 85%,
-    rgb(10 10 10 / 100%) 95%
+    rgb(10 10 10 / 15%) 0%,
+    rgb(10 10 10 / 35%) 25%,
+    rgb(10 10 10 / 80%) 45%,
+    rgb(10 10 10 / 100%) 58%
   );
 }
 

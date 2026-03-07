@@ -21,6 +21,11 @@
   display: block;
 }
 
+/* Stacked centered layout when columns shares a section with hero */
+.hero-container .columns > div {
+  text-align: center;
+}
+
 @media (width >= 900px) {
   .columns > div {
     align-items: center;
@@ -30,6 +35,16 @@
 
   .columns > div > div {
     flex: 1;
+    order: unset;
+  }
+
+  .hero-container .columns > div {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .hero-container .columns > div > div {
     order: unset;
   }
 

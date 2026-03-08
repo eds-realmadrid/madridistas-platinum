@@ -29,9 +29,9 @@
   background: linear-gradient(
     180deg,
     rgb(10 10 10 / 30%) 0%,
-    rgb(10 10 10 / 50%) 30%,
-    rgb(10 10 10 / 70%) 60%,
-    rgb(10 10 10 / 95%) 85%
+    rgb(10 10 10 / 60%) 20%,
+    rgb(10 10 10 / 85%) 40%,
+    rgb(10 10 10 / 100%) 60%
   );
   z-index: 0;
   pointer-events: none;
@@ -157,38 +157,24 @@
   color: #29395a;
 }
 
-/* Secondary button — metallic silver gradient, navy text */
+/* Secondary button — black background, white text, white border */
 .hero a.button.secondary {
-  background: linear-gradient(
-    90deg,
-    #b4b4b4 0%,
-    #f2f2f2 38%,
-    #eee 47%,
-    #e3e3e3 68%,
-    #b3b3b3 100%
-  );
-  border-color: transparent;
-  color: #29395a;
+  background: #000;
+  border-color: #fff;
+  color: #fff;
 }
 
 .hero a.button.secondary:hover,
 .hero a.button.secondary:focus-visible {
-  background: linear-gradient(
-    90deg,
-    #c4c4c4 0%,
-    #fff 38%,
-    #f8f8f8 47%,
-    #ededed 68%,
-    #c3c3c3 100%
-  );
-  border-color: transparent;
-  color: #29395a;
+  background: #1a1a1a;
+  border-color: #fff;
+  color: #fff;
 }
 
 /* Product image rows — stacked, centered, overlapping */
 .hero > .hero-product {
   max-width: 480px;
-  margin-top: -20px;
+  margin-top: 20px;
 }
 
 .hero > .hero-product div {
@@ -210,20 +196,28 @@
 /* Jersey image — slightly larger + floating animation */
 .hero > .hero-product:nth-child(3) {
   animation: hero-float 4s ease-in-out infinite;
+  margin-top: 100px !important;
+  position: relative;
+  z-index: 10 !important;
 }
 
 .hero > .hero-product:nth-child(3) img {
   max-width: 300px;
 }
 
-/* Card image — overlaps jersey + hover lift */
+/* Card image — overlaps jersey + 3D tilt effect */
 .hero > .hero-product:nth-child(4) {
-  margin-top: -60px;
-  transition: transform 0.4s ease;
+  margin-top: -350px !important;
+  transition: transform 0.2s ease-out;
+  position: relative;
+  z-index: 20 !important;
+  perspective: 500px;
 }
 
-.hero > .hero-product:nth-child(4):hover {
-  transform: translateY(-8px);
+.hero > .hero-product:nth-child(4) > div {
+  transition: transform 0.2s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .hero > .hero-product:nth-child(4) img {
@@ -291,7 +285,7 @@
   }
 
   .hero > .hero-product:nth-child(4) {
-    margin-top: -80px;
+    margin-top: -200px !important;
   }
 
   .hero > .hero-product:nth-child(4) img {

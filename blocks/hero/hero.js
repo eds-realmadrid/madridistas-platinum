@@ -34,6 +34,28 @@ export default async function decorate(block) {
     row.classList.add('hero-product');
   });
 
+  // 3D tilt effect for card (4th child)
+  const card = rows[3];
+  if (card) {
+    const cardInner = card.querySelector('div');
+    if (cardInner) {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / centerY * -10;
+        const rotateY = (x - centerX) / centerX * 10;
+        cardInner.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        cardInner.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    }
+  }
+
   // Parallax effect for left-aligned hero (in columns-container section)
   const section = block.closest('.columns-container');
   if (section) {

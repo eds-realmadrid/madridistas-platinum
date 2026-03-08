@@ -17,7 +17,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 40px 24px 0;
+  padding: 10px 24px 0;
   overflow: hidden;
 }
 
@@ -209,7 +209,7 @@
 
 /* Card image — overlaps jersey + 3D tilt effect */
 .hero > .hero-product:nth-child(4) {
-  margin-top: -180px !important;
+  margin-top: -220px !important;
   transition: transform 0.2s ease-out;
   position: relative;
   z-index: 20 !important;
@@ -240,7 +240,7 @@
 /* Responsive — tablet */
 @media (width >= 600px) {
   .hero {
-    padding: 80px 32px 0;
+    padding: 50px 32px 0;
   }
 
   .hero p {
@@ -274,7 +274,7 @@
 /* Responsive — desktop */
 @media (width >= 900px) {
   .hero {
-    padding: 80px 40px 0;
+    padding: 50px 40px 0;
   }
 
   .hero p {
@@ -287,7 +287,7 @@
   }
 
   .hero > .hero-product:nth-child(4) {
-    margin-top: -200px !important;
+    margin-top: -260px !important;
   }
 
   .hero > .hero-product:nth-child(4) img {

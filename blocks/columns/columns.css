@@ -126,6 +126,11 @@
     border-radius: 20px;
   }
 
+  /* Blur option: blur the last column's image */
+  .columns.blur > div:last-child > div:last-child img {
+    filter: blur(8px);
+  }
+
   /* Number badges in 3-column layout */
   .columns:has(> div:nth-child(3)) > div > div:not(.columns-img-col) > p:first-child:not(:has(img)) {
     display: flex;

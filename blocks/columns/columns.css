@@ -128,7 +128,7 @@
 
   /* Blur option: blur the last column's image */
   .columns.blur > div:last-child > div:last-child img {
-    filter: blur(8px);
+    filter: blur(4px);
   }
 
   /* Number badges in 3-column layout */

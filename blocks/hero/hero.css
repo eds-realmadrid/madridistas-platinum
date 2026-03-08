@@ -17,7 +17,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 120px 24px 0;
+  padding: 40px 24px 0;
   overflow: hidden;
 }
 
@@ -49,16 +49,16 @@
 /* Heading */
 .hero h1 {
   margin: 0;
-  color: var(--text-color);
+  color: rgba(255, 255, 255, 0.95);
   font-size: var(--heading-font-size-xxl);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.06;
   letter-spacing: -0.01em;
 }
 
 .hero h2 {
   margin: 0;
-  color: var(--text-color);
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 700;
   line-height: 1.06;
 }
@@ -137,36 +137,38 @@
   width: 100%;
   border-radius: 12px;
   padding: 16px 24px;
-  font-size: var(--body-font-size-m);
+  font-size: 18px;
   font-weight: 400;
   min-height: 56px;
   white-space: normal;
 }
 
-/* Primary button — solid white, navy text */
+/* Primary button — solid white, black text */
 .hero a.button.primary {
   background: #fff;
   border-color: #fff;
-  color: #29395a;
+  color: #000;
 }
 
 .hero a.button.primary:hover,
 .hero a.button.primary:focus-visible {
   background: #f0f0f0;
   border-color: #f0f0f0;
-  color: #29395a;
+  color: #000;
 }
 
-/* Secondary button — black background, white text, white border */
+/* Secondary button — transparent with white border, white text */
 .hero a.button.secondary {
-  background: #000;
+  background: transparent;
   border-color: #fff;
+  border-width: 1px;
+  border-style: solid;
   color: #fff;
 }
 
 .hero a.button.secondary:hover,
 .hero a.button.secondary:focus-visible {
-  background: #1a1a1a;
+  background: rgba(255, 255, 255, 0.1);
   border-color: #fff;
   color: #fff;
 }
@@ -196,7 +198,7 @@
 /* Jersey image — slightly larger + floating animation */
 .hero > .hero-product:nth-child(3) {
   animation: hero-float 4s ease-in-out infinite;
-  margin-top: 100px !important;
+  margin-top: 20px !important;
   position: relative;
   z-index: 10 !important;
 }
@@ -207,7 +209,7 @@
 
 /* Card image — overlaps jersey + 3D tilt effect */
 .hero > .hero-product:nth-child(4) {
-  margin-top: -350px !important;
+  margin-top: -180px !important;
   transition: transform 0.2s ease-out;
   position: relative;
   z-index: 20 !important;
@@ -238,7 +240,7 @@
 /* Responsive — tablet */
 @media (width >= 600px) {
   .hero {
-    padding: 140px 32px 0;
+    padding: 80px 32px 0;
   }
 
   .hero p {
@@ -272,7 +274,7 @@
 /* Responsive — desktop */
 @media (width >= 900px) {
   .hero {
-    padding: 160px 40px 0;
+    padding: 80px 40px 0;
   }
 
   .hero p {

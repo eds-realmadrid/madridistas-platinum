@@ -23,3 +23,11 @@
   font-display: swap;
   src: url('../fonts/rm-neue-bold.woff2') format('woff2');
 }
+
+@font-face {
+  font-family: 'RM Neue';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/rm-neue-bold.woff2') format('woff2');
+}

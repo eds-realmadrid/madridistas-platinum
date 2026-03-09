@@ -1,0 +1,17 @@
+{
+  "project": "Madridistas Platinum",
+  "plugins": [
+    {
+      "id": "experimentation",
+      "title": "Experimentation",
+      "titleI18n": {
+        "es": "Experimentación"
+      },
+      "url": "https://github.com/adobe/aem-experimentation/wiki/Experiments#authoring",
+      "passConfig": true,
+      "passReferrer": true,
+      "environments": ["dev", "preview"],
+      "pinned": true
+    }
+  ]
+}

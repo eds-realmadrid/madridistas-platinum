@@ -4,6 +4,11 @@ header .nav-wrapper {
   width: 100%;
   z-index: 10;
   position: fixed;
+  transition: background-color 0.3s ease;
+}
+
+header .nav-wrapper.scrolled {
+  background-color: var(--background-color);
 }
 
 header nav {

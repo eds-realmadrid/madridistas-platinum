@@ -12,7 +12,7 @@ footer .default-content-wrapper {
   gap: 12px;
   margin: auto;
   max-width: 1240px;
-  padding: 24px;
+  padding: 24px 24px 100px;
 }
 
 footer .footer p {
@@ -40,7 +40,7 @@ footer .footer a:hover {
     flex-direction: row;
     align-items: center;
     gap: 16px;
-    padding: 24px 32px;
+    padding: 24px 32px 100px;
   }
 
   /* Push links to the right */

@@ -206,7 +206,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgb(255 255 255 / 30%);
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,7 +214,7 @@
 
 .pricing-plans .pricing-benefit-check::after {
   content: '\2713';
-  color: #fff;
+  color: #2b2b2b;
   font-size: 14px;
   font-weight: 700;
   line-height: 1;

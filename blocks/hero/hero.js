@@ -66,15 +66,45 @@ export default async function decorate(block) {
     const content = block.querySelector('.hero-content');
     const bg = block.querySelector('.hero-bg');
     if (content && bg) {
+      let ticking = false;
+      let isInView = false;
+
+      // Use Intersection Observer to detect when hero is in viewport
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isInView = entry.isIntersecting;
+            if (isInView) {
+              // Apply will-change when in view for smooth animation
+              content.style.willChange = 'transform';
+              bg.style.willChange = 'transform';
+            } else {
+              // Reset transforms and remove will-change when out of view
+              content.style.transform = '';
+              bg.style.transform = '';
+              content.style.willChange = 'auto';
+              bg.style.willChange = 'auto';
+            }
+          });
+        },
+        { rootMargin: '50px' },
+      );
+      observer.observe(block);
+
       const onScroll = () => {
-        const rect = block.getBoundingClientRect();
-        const viewH = window.innerHeight;
-        if (rect.bottom > 0 && rect.top < viewH) {
+        if (!isInView || ticking) return;
+
+        ticking = true;
+        requestAnimationFrame(() => {
+          const rect = block.getBoundingClientRect();
+          const viewH = window.innerHeight;
           const progress = -rect.top / viewH;
           content.style.transform = `translateY(${progress * -60}px)`;
           bg.style.transform = `translateY(${progress * -30}px)`;
-        }
+          ticking = false;
+        });
       };
+
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
     }

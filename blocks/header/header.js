@@ -178,8 +178,10 @@ export default async function decorate(block) {
   `;
   block.append(bottomBanner);
 
-  // Toggle solid background on scroll + show/hide bottom banner
-  const onScroll = () => {
+  // Toggle solid background on scroll + show/hide bottom banner (throttled)
+  let ticking = false;
+
+  const updateScrollState = () => {
     navWrapper.classList.toggle('scrolled', window.scrollY > 50);
 
     const pricingSection = document.querySelector('.pricing-plans-container');
@@ -188,6 +190,17 @@ export default async function decorate(block) {
       bottomBanner.classList.toggle('visible', rect.top < window.innerHeight);
     }
   };
+
+  const onScroll = () => {
+    if (ticking) return;
+
+    ticking = true;
+    requestAnimationFrame(() => {
+      updateScrollState();
+      ticking = false;
+    });
+  };
+
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  updateScrollState();
 }

@@ -54,13 +54,19 @@ export default function decorate(block) {
     return { img, text };
   });
 
-  // Build toggle
+  // Build toggle with proper ARIA roles
   const toggle = document.createElement('div');
   toggle.className = 'pricing-toggle';
+  toggle.setAttribute('role', 'tablist');
+  toggle.setAttribute('aria-label', 'Plan selection');
 
   const annualTab = document.createElement('button');
   annualTab.className = 'pricing-tab active';
   annualTab.setAttribute('data-plan', 'annual');
+  annualTab.setAttribute('role', 'tab');
+  annualTab.setAttribute('aria-selected', 'true');
+  annualTab.setAttribute('aria-controls', 'pricing-content-annual');
+  annualTab.id = 'tab-annual';
   const labelSpan = document.createElement('span');
   labelSpan.textContent = annualLabel;
   annualTab.append(labelSpan);
@@ -68,19 +74,27 @@ export default function decorate(block) {
     const badge = document.createElement('span');
     badge.className = 'pricing-badge';
     badge.textContent = savingsText;
+    badge.setAttribute('aria-label', `Badge: ${savingsText}`);
     annualTab.append(badge);
   }
 
   const monthlyTab = document.createElement('button');
   monthlyTab.className = 'pricing-tab';
   monthlyTab.setAttribute('data-plan', 'monthly');
+  monthlyTab.setAttribute('role', 'tab');
+  monthlyTab.setAttribute('aria-selected', 'false');
+  monthlyTab.setAttribute('aria-controls', 'pricing-content-monthly');
+  monthlyTab.id = 'tab-monthly';
   monthlyTab.textContent = monthlyLabel;
 
   toggle.append(annualTab, monthlyTab);
 
-  // Build two-column content area
+  // Build two-column content area with ARIA roles
   const contentArea = document.createElement('div');
   contentArea.className = 'pricing-content';
+  contentArea.setAttribute('role', 'tabpanel');
+  contentArea.setAttribute('aria-labelledby', 'tab-annual');
+  contentArea.id = 'pricing-content-annual';
 
   // Left column: shirts
   const leftCol = document.createElement('div');
@@ -150,9 +164,13 @@ export default function decorate(block) {
 
   const carouselWrapper = document.createElement('div');
   carouselWrapper.className = 'pricing-carousel-wrapper';
+  carouselWrapper.setAttribute('role', 'region');
+  carouselWrapper.setAttribute('aria-label', benefitsHeader);
 
   const carousel = document.createElement('div');
   carousel.className = 'pricing-carousel';
+  carousel.setAttribute('aria-live', 'polite');
+  carousel.setAttribute('aria-atomic', 'false');
 
   benefits.forEach((benefit) => {
     const item = document.createElement('div');
@@ -186,12 +204,14 @@ export default function decorate(block) {
 
   const prevBtn = document.createElement('button');
   prevBtn.className = 'pricing-carousel-btn prev';
-  prevBtn.setAttribute('aria-label', 'Previous');
+  prevBtn.setAttribute('aria-label', 'Previous benefits');
+  prevBtn.setAttribute('type', 'button');
   prevBtn.innerHTML = '&#8593;';
 
   const nextBtn = document.createElement('button');
   nextBtn.className = 'pricing-carousel-btn next';
-  nextBtn.setAttribute('aria-label', 'Next');
+  nextBtn.setAttribute('aria-label', 'Next benefits');
+  nextBtn.setAttribute('type', 'button');
   nextBtn.innerHTML = '&#8595;';
 
   navContainer.append(prevBtn, nextBtn);
@@ -214,14 +234,20 @@ export default function decorate(block) {
 
   block.append(toggle, contentArea, footnoteEl);
 
-  // Toggle behavior
+  // Toggle behavior with proper ARIA updates
   const tabs = block.querySelectorAll('.pricing-tab');
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      tabs.forEach((t) => t.classList.remove('active'));
+      tabs.forEach((t) => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
 
       const { plan } = tab.dataset;
+      contentArea.setAttribute('aria-labelledby', `tab-${plan}`);
+
       block.querySelectorAll('.plan-annual').forEach((el) => {
         el.classList.toggle('hidden', plan !== 'annual');
       });

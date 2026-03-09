@@ -388,3 +388,59 @@ main .section.center .default-content-wrapper {
     margin-inline: auto;
   }
 }
+
+/* Respect user's motion preferences for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* stylelint-disable no-descending-specificity */
+
+/* Ensure minimum touch target size (44x44px per WCAG 2.1) */
+a,
+button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Accessibility: Visible focus indicators */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+/* stylelint-enable no-descending-specificity */
+
+/* Skip to main content link for screen readers */
+.skip-to-main {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-to-main:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 16px;
+  background: var(--background-color);
+  color: var(--text-color);
+  border: 2px solid var(--link-color);
+  z-index: 10000;
+}

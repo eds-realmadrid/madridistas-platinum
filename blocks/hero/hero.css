@@ -205,6 +205,13 @@
   z-index: 10 !important;
 }
 
+/* Pause animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero > .hero-product:nth-child(3) {
+    animation: none;
+  }
+}
+
 .hero > .hero-product:nth-child(3) img {
   max-width: 300px;
 }
@@ -221,6 +228,9 @@
 .hero > .hero-product:nth-child(4) > div {
   transition: transform 0.2s ease-out;
   transform-style: preserve-3d;
+}
+
+.hero > .hero-product:nth-child(4):hover > div {
   will-change: transform;
 }
 
@@ -370,10 +380,7 @@
     height: 100%;
   }
 
-  .hero.left > .hero-content,
-  .hero.left > .hero-bg {
-    will-change: transform;
-  }
+  /* will-change applied dynamically via JS when scrolling starts */
 }
 
 /* CTA hero ("Únete ya") — lighter gradient so background image stays visible */

@@ -49,7 +49,7 @@
 /* Heading */
 .hero h1 {
   margin: 0;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgb(255 255 255 / 95%);
   font-size: var(--heading-font-size-xxl);
   font-weight: 800;
   line-height: 1.06;
@@ -58,7 +58,7 @@
 
 .hero h2 {
   margin: 0;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgb(255 255 255 / 95%);
   font-weight: 700;
   line-height: 1.06;
 }
@@ -168,7 +168,7 @@
 
 .hero a.button.secondary:hover,
 .hero a.button.secondary:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   border-color: #fff;
   color: #fff;
 }
@@ -270,6 +270,23 @@
     max-width: 460px;
   }
 }
+
+/* Left-aligned hero in columns section — all viewports */
+/* stylelint-disable no-descending-specificity */
+.columns-container .hero {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.columns-container .hero > .hero-content {
+  align-items: flex-start;
+}
+
+.columns-container .hero > .hero-content > div {
+  align-items: flex-start;
+}
+
+/* stylelint-enable no-descending-specificity */
 
 /* Responsive — desktop */
 @media (width >= 900px) {

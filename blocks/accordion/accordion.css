@@ -1,9 +1,16 @@
-/* Center FAQ section content at 800px to match RM Play width */
+/* Center FAQ section heading and constrain width */
 .accordion-container > .default-content-wrapper,
 .accordion-container > .accordion-wrapper {
   max-width: 800px;
   margin: 0 auto;
+}
+
+.accordion-container > .default-content-wrapper {
   text-align: center;
+}
+
+.accordion-container > .accordion-wrapper {
+  text-align: left;
 }
 
 .accordion details {

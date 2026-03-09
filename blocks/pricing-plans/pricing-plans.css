@@ -134,6 +134,14 @@
   margin-bottom: 16px;
 }
 
+.pricing-plans .pricing-original {
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: line-through;
+  opacity: 0.6;
+  margin-right: 4px;
+}
+
 .pricing-plans .pricing-card-image {
   display: flex;
   justify-content: center;
@@ -164,7 +172,7 @@
 .pricing-plans .pricing-col-benefits {
   display: flex;
   flex-direction: column;
-  background: rgb(43, 43, 43);
+  background: rgb(43 43 43);
 }
 
 .pricing-plans .pricing-carousel-wrapper {
@@ -185,12 +193,31 @@
 .pricing-plans .pricing-benefit {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 16px;
-  min-height: 92px;
+  gap: 12px;
+  background: linear-gradient(rgb(255 255 255 / 8%), rgb(255 255 255 / 19%));
+  border-radius: 16px;
+  padding: 14px 16px;
   max-width: 420px;
+}
+
+/* Checkmark icon */
+.pricing-plans .pricing-benefit-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 30%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pricing-plans .pricing-benefit-check::after {
+  content: '\2713';
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .pricing-plans .pricing-benefit-img {
@@ -257,6 +284,7 @@
   font-size: 12px;
   color: var(--tertiary-gray, #999);
   text-align: left;
+  align-self: flex-start;
   max-width: 100%;
 }
 

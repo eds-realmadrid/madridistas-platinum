@@ -103,9 +103,19 @@ export default function decorate(block) {
     const cardTitle = document.createElement('h4');
     cardTitle.textContent = card.title;
 
+    // Annual price with crossed-out monthly equivalent
     const priceAnnual = document.createElement('div');
     priceAnnual.className = 'pricing-price plan-annual';
-    priceAnnual.textContent = card.annualPrice;
+    const monthlyMatch = card.monthlyPrice.match(/([\d,.]+)/);
+    if (monthlyMatch) {
+      const monthlyNum = parseFloat(monthlyMatch[1].replace(',', '.'));
+      const crossedPrice = (monthlyNum * 12).toFixed(2).replace('.', ',');
+      const crossed = document.createElement('span');
+      crossed.className = 'pricing-original';
+      crossed.textContent = `${crossedPrice}€`;
+      priceAnnual.append(crossed);
+    }
+    priceAnnual.append(` ${card.annualPrice}`);
 
     const priceMonthly = document.createElement('div');
     priceMonthly.className = 'pricing-price plan-monthly hidden';
@@ -147,6 +157,11 @@ export default function decorate(block) {
   benefits.forEach((benefit) => {
     const item = document.createElement('div');
     item.className = 'pricing-benefit';
+
+    const check = document.createElement('span');
+    check.className = 'pricing-benefit-check';
+    check.setAttribute('aria-hidden', 'true');
+    item.append(check);
 
     if (benefit.img) {
       const imgEl = document.createElement('div');

@@ -1,7 +1,7 @@
 /* Pricing Plans block */
 .pricing-plans-container {
   margin: 0;
-  padding: 80px 0;
+  padding: 20px 0 80px;
 }
 
 .pricing-plans-container > .default-content-wrapper > h2 {
@@ -10,6 +10,7 @@
   font-weight: 700;
   line-height: 1;
   color: #fff;
+  margin-top: 0;
   margin-bottom: 48px;
 }
 

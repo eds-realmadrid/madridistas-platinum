@@ -34,6 +34,11 @@ export default async function decorate(block) {
     row.classList.add('hero-product');
   });
 
+  // CTA hero (bg + content only, no product images)
+  if (rows.length === 2) {
+    block.classList.add('cta');
+  }
+
   // 3D tilt effect for card (4th child)
   const card = rows[3];
   if (card) {

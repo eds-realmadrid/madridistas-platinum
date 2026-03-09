@@ -89,6 +89,7 @@
   margin: 0;
   display: block;
   height: 100%;
+  max-width: unset;
 }
 
 .hero > .hero-bg picture {
@@ -374,20 +375,23 @@
   }
 }
 
-/* CTA hero in accordion section ("Únete ya") — extra bottom space + black by button */
-.accordion-container .hero {
-  padding-bottom: 200px;
-}
-
-.accordion-container .hero > .hero-content {
-  max-width: 1000px;
+/* CTA hero ("Únete ya") — lighter gradient so background image stays visible */
+.hero.cta {
+  padding: 120px 24px;
+  min-height: 360px;
+  justify-content: center;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-.accordion-container .hero > .hero-bg {
-  bottom: 200px;
+.hero.cta::after {
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10 / 40%) 0%,
+    rgb(10 10 10 / 55%) 50%,
+    rgb(10 10 10 / 70%) 100%
+  );
 }
 
-.accordion-container .hero::after {
-  background: none;
+.hero.cta > .hero-content {
+  max-width: 1000px;
 }

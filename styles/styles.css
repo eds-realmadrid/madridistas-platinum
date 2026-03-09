@@ -370,3 +370,7 @@ main .section.highlight {
     padding: 80px 0;
   }
 }
+
+main .section.center .default-content-wrapper {
+  text-align: center;
+}

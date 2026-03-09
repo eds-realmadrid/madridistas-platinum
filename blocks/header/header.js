@@ -125,9 +125,9 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
   const classes = ['brand', 'sections', 'tools'];
+  const sections = [...nav.children].filter((child) => child.tagName !== 'HR');
   classes.forEach((c, i) => {
-    const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
+    if (sections[i]) sections[i].classList.add(`nav-${c}`);
   });
 
   const navBrand = nav.querySelector('.nav-brand');
@@ -164,18 +164,70 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
+  // Language switcher
+  const languages = [
+    { code: 'en-us', label: 'EN' },
+    { code: 'es-es', label: 'ES' },
+  ];
+  const currentPath = window.location.pathname;
+  const currentLang = languages.find((l) => currentPath.includes(l.code)) || languages[1];
+
+  const langSwitcher = document.createElement('div');
+  langSwitcher.className = 'nav-lang-switcher';
+
+  const currentBtn = document.createElement('button');
+  currentBtn.type = 'button';
+  currentBtn.className = 'nav-lang-current';
+  currentBtn.setAttribute('aria-expanded', 'false');
+  currentBtn.setAttribute('aria-label', 'Switch language');
+  currentBtn.innerHTML = `<span>${currentLang.label}</span>`
+    + '<svg width="12" height="12" viewBox="0 0 12 12" fill="none">'
+    + '<path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+    + '</svg>';
+
+  const dropdown = document.createElement('div');
+  dropdown.className = 'nav-lang-dropdown';
+  languages.filter((l) => l.code !== currentLang.code).forEach((lang) => {
+    const langPath = currentPath.includes(currentLang.code)
+      ? currentPath.replace(currentLang.code, lang.code)
+      : currentPath.replace(/\/?$/, `/${lang.code}`);
+    const link = document.createElement('a');
+    link.href = langPath;
+    link.textContent = lang.label;
+    dropdown.append(link);
+  });
+
+  currentBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const expanded = currentBtn.getAttribute('aria-expanded') === 'true';
+    currentBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  });
+
+  document.addEventListener('click', () => {
+    currentBtn.setAttribute('aria-expanded', 'false');
+  });
+
+  langSwitcher.append(currentBtn, dropdown);
+  nav.append(langSwitcher);
+
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // Sticky bottom CTA banner
+  // Sticky bottom CTA banner — read content from nav tools section
+  const navTools = nav.querySelector('.nav-tools');
   const bottomBanner = document.createElement('div');
   bottomBanner.className = 'nav-bottom-banner';
-  bottomBanner.innerHTML = `
-    <span class="nav-bottom-banner-text">Hazte Madridista Platinum</span>
-    <a href="#" class="nav-bottom-banner-cta">Únete como Platinum</a>
-  `;
+  const bannerText = navTools?.querySelector('p:not(:has(a))')?.textContent || '';
+  const bannerLink = navTools?.querySelector('a');
+  if (bannerText && bannerLink) {
+    bottomBanner.innerHTML = `
+      <span class="nav-bottom-banner-text">${bannerText}</span>
+      <a href="${bannerLink.href}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
+    `;
+    navTools.textContent = '';
+  }
   block.append(bottomBanner);
 
   // Toggle solid background on scroll + show/hide bottom banner (throttled)

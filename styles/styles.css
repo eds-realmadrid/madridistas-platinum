@@ -381,3 +381,10 @@ main .section.highlight {
 main .section.center .default-content-wrapper {
   text-align: center;
 }
+
+@media (width >= 900px) {
+  main .section.center .default-content-wrapper > p {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+}

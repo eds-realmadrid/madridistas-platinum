@@ -169,9 +169,24 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // Toggle solid background on scroll
+  // Sticky bottom CTA banner
+  const bottomBanner = document.createElement('div');
+  bottomBanner.className = 'nav-bottom-banner';
+  bottomBanner.innerHTML = `
+    <span class="nav-bottom-banner-text">Hazte Madridista Platinum</span>
+    <a href="#" class="nav-bottom-banner-cta">Únete como Platinum</a>
+  `;
+  block.append(bottomBanner);
+
+  // Toggle solid background on scroll + show/hide bottom banner
   const onScroll = () => {
     navWrapper.classList.toggle('scrolled', window.scrollY > 50);
+
+    const pricingSection = document.querySelector('.pricing-plans-container');
+    if (pricingSection) {
+      const rect = pricingSection.getBoundingClientRect();
+      bottomBanner.classList.toggle('visible', rect.top < window.innerHeight);
+    }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

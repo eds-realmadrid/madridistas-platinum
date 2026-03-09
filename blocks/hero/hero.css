@@ -271,14 +271,14 @@
   }
 }
 
-/* Left-aligned hero in columns section — all viewports */
+/* Left-aligned hero variant — all viewports */
 /* stylelint-disable no-descending-specificity */
-.columns-container .hero {
+.hero.left {
   align-items: flex-start;
   text-align: left;
 }
 
-.columns-container .hero > div {
+.hero.left > div {
   margin: 0;
 }
 
@@ -307,37 +307,29 @@
     max-width: 540px;
   }
 
-  /* Left-aligned hero when sharing section with columns (e.g. "No es para todos") */
-  .columns-container .hero {
-    align-items: flex-start;
-    text-align: left;
+  /* Left-aligned hero variant (e.g. "No es para todos") */
+  .hero.left {
     min-height: 80vh;
     justify-content: center;
     padding-left: 100px;
     padding-bottom: 80px;
   }
 
-  .columns-container .hero > .hero-content {
-    align-items: flex-start;
+  .hero.left > div {
     max-width: 600px;
-    margin: 0;
   }
 
-  .columns-container .hero > .hero-content > div {
-    align-items: flex-start;
-  }
-
-  .columns-container .hero h2 {
+  .hero.left h2 {
     font-size: 56px;
     line-height: 1.1;
   }
 
-  .columns-container .hero p {
+  .hero.left p {
     max-width: 550px;
   }
 
-  .columns-container .hero > .hero-content,
-  .columns-container .hero > .hero-bg {
+  .hero.left > .hero-content,
+  .hero.left > .hero-bg {
     will-change: transform;
   }
 }

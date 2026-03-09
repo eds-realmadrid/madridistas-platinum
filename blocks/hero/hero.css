@@ -278,12 +278,8 @@
   text-align: left;
 }
 
-.columns-container .hero > .hero-content {
-  align-items: flex-start;
-}
-
-.columns-container .hero > .hero-content > div {
-  align-items: flex-start;
+.columns-container .hero > div {
+  margin: 0;
 }
 
 /* stylelint-enable no-descending-specificity */

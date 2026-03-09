@@ -282,6 +282,10 @@
   margin: 0;
 }
 
+.hero.left::after {
+  display: none;
+}
+
 /* stylelint-enable no-descending-specificity */
 
 /* Responsive — desktop */
@@ -307,16 +311,33 @@
     max-width: 540px;
   }
 
-  /* Left-aligned hero variant (e.g. "No es para todos") */
+  /* Left-aligned hero variant (e.g. "No es para todos") — side-by-side */
   .hero.left {
+    flex-direction: row;
+    align-items: stretch;
     min-height: 80vh;
-    justify-content: center;
-    padding-left: 100px;
-    padding-bottom: 80px;
+    padding: 0;
+    overflow: hidden;
   }
 
-  .hero.left > div {
-    max-width: 600px;
+  .hero.left > .hero-content {
+    position: relative;
+    order: 0;
+    flex: 0 0 45%;
+    max-width: 45%;
+    padding: 80px 40px 80px 100px;
+    z-index: 2;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .hero.left > .hero-bg {
+    position: relative;
+    inset: unset;
+    order: 1;
+    flex: 0 0 55%;
+    max-width: 55%;
+    z-index: 1;
   }
 
   .hero.left h2 {

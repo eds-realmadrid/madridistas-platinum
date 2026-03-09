@@ -56,9 +56,8 @@ export default async function decorate(block) {
     }
   }
 
-  // Parallax effect for left-aligned hero (in columns-container section)
-  const section = block.closest('.columns-container');
-  if (section) {
+  // Parallax effect for left-aligned hero
+  if (block.classList.contains('left')) {
     const content = block.querySelector('.hero-content');
     const bg = block.querySelector('.hero-bg');
     if (content && bg) {
@@ -68,7 +67,7 @@ export default async function decorate(block) {
         if (rect.bottom > 0 && rect.top < viewH) {
           const progress = -rect.top / viewH;
           content.style.transform = `translateY(${progress * -60}px)`;
-          bg.style.transform = `translateY(${progress * -20}px)`;
+          bg.style.transform = `translateY(${progress * -30}px)`;
         }
       };
       window.addEventListener('scroll', onScroll, { passive: true });

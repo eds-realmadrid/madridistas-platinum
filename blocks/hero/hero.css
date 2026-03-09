@@ -323,20 +323,25 @@
   .hero.left > .hero-content {
     position: relative;
     order: 0;
-    flex: 0 0 45%;
-    max-width: 45%;
-    padding: 80px 40px 80px 100px;
+    flex: 0 0 40%;
+    max-width: 40%;
+    padding: 80px 0 80px 100px;
     z-index: 2;
     align-items: flex-start;
     justify-content: center;
+  }
+
+  .hero.left > .hero-content > div {
+    align-items: flex-start;
   }
 
   .hero.left > .hero-bg {
     position: relative;
     inset: unset;
     order: 1;
-    flex: 0 0 55%;
-    max-width: 55%;
+    flex: 1;
+    max-width: unset;
+    margin-left: -40px;
     z-index: 1;
   }
 

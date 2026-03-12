@@ -2,27 +2,45 @@
 
 This project uses the [adobe-rnd/aem-martech](https://github.com/adobe-rnd/aem-martech) plugin for Adobe Experience Platform WebSDK and Adobe Client Data Layer integration.
 
-## Configuration via Metadata
+## Default Configuration
 
-The martech plugin is configured using page-level metadata. Add these metadata fields to your documents:
+The martech plugin is configured with the following default values in `scripts.js`:
 
-### Required Metadata
+- **`datastreamId`**: `57d34a92-1686-4574-ae1e-7ea17064d5f1`
+- **`orgId`**: `2D10A5EF56EBE7097F000101@AdobeOrg`
+- **`launchUrls`**: `https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js`
+- **`personalization`**: Enabled by default (Adobe Target/AJO)
 
-- **`datastream-id`**: Your Adobe Experience Platform datastream ID
-- **`org-id`**: Your Adobe organization ID (IMS Org ID)
+These defaults apply to all pages automatically. No metadata configuration is required unless you need to override these values.
+
+## Configuration via Metadata (Optional Overrides)
+
+You can override the default configuration on a per-page basis using metadata:
 
 ### Optional Metadata
 
-- **`target`**: Set to any value to enable Adobe Target/AJO personalization (e.g., `target: true`)
-- **`launch-urls`**: Comma-separated list of Adobe Launch container URLs for tag management
+- **`datastream-id`**: Override the default datastream ID
+- **`org-id`**: Override the default organization ID
+- **`target`**: Set to `false` to disable Adobe Target/AJO personalization on a specific page
+- **`launch-urls`**: Override the default Launch container URLs (comma-separated list)
 
 ### Example Metadata Block
+
+To disable personalization on a specific page:
+
+```
+---
+target: false
+---
+```
+
+To override all values:
 
 ```
 ---
 datastream-id: your-datastream-id-here
 org-id: your-org-id-here@AdobeOrg
-target: true
+target: false
 launch-urls: https://assets.adobedtm.com/launch-xxx.min.js
 ---
 ```

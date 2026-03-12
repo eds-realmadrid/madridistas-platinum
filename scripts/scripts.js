@@ -188,12 +188,14 @@ async function loadEager(doc) {
   // MarTech plugin — eager phase (personalization)
   const martechLoadedPromise = initMartech(
     {
-      datastreamId: getMetadata('datastream-id') || '',
-      orgId: getMetadata('org-id') || '',
+      datastreamId: getMetadata('datastream-id') || '57d34a92-1686-4574-ae1e-7ea17064d5f1',
+      orgId: getMetadata('org-id') || '2D10A5EF56EBE7097F000101@AdobeOrg',
     },
     {
-      personalization: !!getMetadata('target'),
-      launchUrls: getMetadata('launch-urls')?.split(',').map((url) => url.trim()).filter(Boolean) || [],
+      personalization: getMetadata('target') !== 'false',
+      launchUrls: getMetadata('launch-urls')?.split(',').map((url) => url.trim()).filter(Boolean) || [
+        'https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js',
+      ],
     },
   );
 

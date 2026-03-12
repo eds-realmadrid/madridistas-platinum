@@ -100,10 +100,11 @@ The plugin exports additional functions for custom implementations:
 
 ## Performance Considerations
 
-- Preload hints are configured in `head.html` for optimal performance
-- Preconnect to `edge.adobedc.net` reduces DNS lookup time
+- Preconnect to `edge.adobedc.net` in `head.html` reduces DNS lookup time
+- Scripts load dynamically via ES6 imports (CSP-compliant with `'strict-dynamic'`)
 - Personalization timeout is 1000ms by default (configurable)
 - Analytics loading is deferred to avoid LCP impact
+- No preload hints used to avoid CSP violations with strict-dynamic policy
 
 ## Testing
 

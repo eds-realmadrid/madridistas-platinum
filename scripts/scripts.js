@@ -45,7 +45,7 @@ const AUDIENCES = {
   desktop: () => window.innerWidth >= 600,
 };
 
-  const isConsentGiven = true;
+  /*const isConsentGiven = true;
   const martechLoadedPromise = initMartech(
     // The WebSDK config
     // Documentation: https://experienceleague.adobe.com/en/docs/experience-platform/web-sdk/commands/configure/overview#configure-js
@@ -97,6 +97,7 @@ const AUDIENCES = {
       personalization: !!getMetadata('target') && isConsentGiven,
     },
   );
+*/
 
 const pluginContext = {
   getAllMetadata,

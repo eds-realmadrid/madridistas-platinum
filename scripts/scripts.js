@@ -17,15 +17,6 @@ import {
   toClassName,
 } from './aem.js';
 
-// MarTech plugin imports
-import {
-  initMartech,
-  updateUserConsent,
-  martechEager,
-  martechLazy,
-  martechDelayed,
-} from '../plugins/martech/src/index.js';
-
 /**
  * Returns all metadata properties for a given scope.
  * @param {string} scope The metadata scope/prefix
@@ -46,28 +37,6 @@ const AUDIENCES = {
   mobile: () => window.innerWidth < 600,
   desktop: () => window.innerWidth >= 600,
 };
-
-// MarTech Configuration
-// TODO: Replace these placeholder values with your actual Adobe configuration
-const isConsentGiven = true;
-const martechLoadedPromise = initMartech(
-  {
-    datastreamId: 'YOUR_DATASTREAM_ID', // TODO: Get from https://platform.adobe.com/ > Datastreams
-    orgId: 'YOUR_ORG_ID@AdobeOrg', // TODO: Get from https://platform.adobe.com/ > Queries > Credentials
-    defaultConsent: 'in',
-    onBeforeEventSend: (payload) => {
-      payload.data.__adobe.target ||= {};
-      payload.data.__adobe.analytics ||= {};
-    },
-    edgeConfigOverrides: {
-      // Optional overrides for datastream, datasets, etc.
-    },
-  },
-  {
-    launchUrls: ['YOUR_LAUNCH_URL'], // TODO: Get from https://experience.adobe.com/#/data-collection/ > Tags > Environments
-    personalization: !!getMetadata('target') && isConsentGiven,
-  },
-);
 
 const pluginContext = {
   getAllMetadata,
@@ -215,11 +184,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    // Load first section with martech eager phase
-    await Promise.all([
-      martechLoadedPromise.then(martechEager),
-      loadSection(main.querySelector('.section'), waitForFirstImage),
-    ]);
+    await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
   try {
@@ -251,9 +216,6 @@ async function loadLazy(doc) {
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
 
-  // MarTech lazy phase
-  await martechLazy();
-
   // Experimentation plugin — lazy phase
   if (getMetadata('experiment')
     || Object.keys(getAllMetadata('campaign')).length
@@ -270,10 +232,7 @@ async function loadLazy(doc) {
  */
 function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => {
-    martechDelayed();
-    return import('./delayed.js');
-  }, 3000);
+  window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
 }
 
@@ -284,35 +243,6 @@ async function loadPage() {
 }
 
 loadPage();
-
-// Adobe Data Layer initialization
-window.adobeDataLayer = window.adobeDataLayer || [];
-
-// Push page context data
-window.adobeDataLayer.push({
-  pageContext: {
-    pageType: getMetadata('template') || 'default',
-    pageName: document.title,
-    eventType: 'visibilityHidden',
-    maxXOffset: 0,
-    maxYOffset: 0,
-    minXOffset: 0,
-    minYOffset: 0,
-  },
-  _experienceplatform: {
-    identification: {
-      core: {
-        ecid: sessionStorage.getItem('com.adobe.reactor.dataElements.ECID'),
-      },
-    },
-  },
-  web: {
-    webPageDetails: {
-      name: document.title,
-      URL: window.location.href,
-    },
-  },
-});
 
 (async function loadDa() {
   if (!new URL(window.location.href).searchParams.get('dapreview')) return;

@@ -249,9 +249,7 @@ async function loadEager(doc) {
     },
     {
       personalization: getMetadata('target') !== 'false',
-      launchUrls: getMetadata('launch-urls')?.split(',').map((url) => url.trim()).filter(Boolean) || [
-        'https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js',
-      ],
+      // launchUrls removed - Launch script loaded manually in delayed phase
     },
   );
 
@@ -313,13 +311,18 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  // eslint-disable-next-line import/no-cycle
-  //window.setTimeout(() => import('./delayed.js'), 3000);
   // MarTech plugin — delayed phase (Launch tags, non-essential scripts)
-  //martechDelayed();
-  // load anything that can be postponed to the latest here
+  // Load Adobe Launch container and call martechDelayed after delay
   window.setTimeout(() => {
+    // Load Adobe Launch container
+    const launchUrl = getMetadata('launch-url')
+      || 'https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js';
+    if (launchUrl) {
+      loadScript(launchUrl, { async: true });
+    }
+
     martechDelayed();
+    // eslint-disable-next-line import/no-cycle
     return import('./delayed.js');
   }, 3000);
 }

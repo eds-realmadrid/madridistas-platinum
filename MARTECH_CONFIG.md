@@ -8,7 +8,7 @@ The martech plugin is configured with the following default values in `scripts.j
 
 - **`datastreamId`**: `57d34a92-1686-4574-ae1e-7ea17064d5f1`
 - **`orgId`**: `2D10A5EF56EBE7097F000101@AdobeOrg`
-- **`launchUrls`**: `https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js`
+- **`launch-url`**: `https://assets.adobedtm.com/145b4bb02250/7acb236f9bde/launch-125e7f9e1eeb-development.min.js`
 - **`personalization`**: Enabled by default (Adobe Target/AJO)
 
 These defaults apply to all pages automatically. No metadata configuration is required unless you need to override these values.
@@ -22,7 +22,7 @@ You can override the default configuration on a per-page basis using metadata:
 - **`datastream-id`**: Override the default datastream ID
 - **`org-id`**: Override the default organization ID
 - **`target`**: Set to `false` to disable Adobe Target/AJO personalization on a specific page
-- **`launch-urls`**: Override the default Launch container URLs (comma-separated list)
+- **`launch-url`**: Override the default Launch container URL
 
 ### Example Metadata Block
 
@@ -41,7 +41,7 @@ To override all values:
 datastream-id: your-datastream-id-here
 org-id: your-org-id-here@AdobeOrg
 target: false
-launch-urls: https://assets.adobedtm.com/launch-xxx.min.js
+launch-url: https://assets.adobedtm.com/launch-xxx.min.js
 ---
 ```
 
@@ -60,8 +60,10 @@ The martech integration follows Adobe's three-phase loading approach:
 - Avoids impacting Largest Contentful Paint (LCP)
 
 ### 3. Delayed Phase (loadDelayed)
-- Executes Launch tags and other non-essential scripts
-- Runs ~3 seconds after page load to minimize performance impact
+- Loads Adobe Launch container script using `loadScript()` helper
+- Launch script is loaded as a traditional script tag (not ES module)
+- Executes ~3 seconds after page load to minimize performance impact
+- Compatible with Content Security Policy using 'strict-dynamic'
 
 ## Consent Management
 

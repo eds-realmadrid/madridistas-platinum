@@ -16,6 +16,11 @@ import {
   toCamelCase,
   toClassName,
 } from './aem.js';
+import {
+  initMartech,
+  martechLazy,
+  martechDelayed,
+} from '../plugins/martech/src/index.js'; // eslint-disable-line import/no-relative-packages
 
 /**
  * Returns all metadata properties for a given scope.
@@ -180,11 +185,27 @@ async function loadEager(doc) {
     await runEager(document, { audiences: AUDIENCES }, pluginContext);
   }
 
+  // MarTech plugin — eager phase (personalization)
+  const martechLoadedPromise = initMartech(
+    {
+      datastreamId: getMetadata('datastream-id') || '',
+      orgId: getMetadata('org-id') || '',
+    },
+    {
+      personalization: !!getMetadata('target'),
+      launchUrls: getMetadata('launch-urls')?.split(',').map((url) => url.trim()).filter(Boolean) || [],
+    },
+  );
+
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    // Wait for personalization before rendering content to prevent flicker
+    await Promise.all([
+      loadSection(main.querySelector('.section'), waitForFirstImage),
+      martechLoadedPromise,
+    ]);
   }
 
   try {
@@ -213,6 +234,9 @@ async function loadLazy(doc) {
 
   loadFooter(doc.querySelector('footer'));
 
+  // MarTech plugin — lazy phase (analytics)
+  martechLazy();
+
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
 
@@ -233,6 +257,8 @@ async function loadLazy(doc) {
 function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
   window.setTimeout(() => import('./delayed.js'), 3000);
+  // MarTech plugin — delayed phase (Launch tags, non-essential scripts)
+  martechDelayed();
   // load anything that can be postponed to the latest here
 }
 

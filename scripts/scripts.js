@@ -180,6 +180,28 @@ async function loadEager(doc) {
     await runEager(document, { audiences: AUDIENCES }, pluginContext);
   }
 
+  // === START: Adobe Alloy Integration ===
+  // Load and configure Adobe Alloy for data collection
+  // Datastream ID: bfcc8ae9-888b-4254-af2d-f1f3a9d0c560
+  // Org ID: C73F174362AB26490A495EC6@AdobeOrg
+  // To remove: Delete this entire block between START and END markers
+  try {
+    await loadScript('https://cdn1.adoberesources.net/alloy/2.31.1/alloy.min.js');
+    
+    // Configure Alloy with datastream
+    if (window.alloy) {
+      window.alloy('configure', {
+        datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
+        orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
+      });
+    }
+    console.log('Adobe Alloy loaded and configured');
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load Adobe Alloy', error);
+  }
+  // === END: Adobe Alloy Integration ===
+
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);

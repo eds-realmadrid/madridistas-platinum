@@ -193,9 +193,8 @@ async function loadEager(doc) {
       window.alloy('configure', {
         datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
         orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
-        // Fix cookie domain error - prevents "com.adobe.alloy.getTld" rejection
+        // Let Alloy auto-detect cookie domain to prevent "com.adobe.alloy.getTld" rejection errors
         thirdPartyCookiesEnabled: false, // Disables 3rd-party cookies (not needed for most use cases)
-        cookieDomain: window.location.hostname, // Explicitly set cookie domain (prevents auto-detection errors)
       });
     }
     console.log('Adobe Alloy loaded and configured');

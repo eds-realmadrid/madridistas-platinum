@@ -181,26 +181,79 @@ async function loadEager(doc) {
   }
 
   // === START: Adobe Alloy Integration ===
-  // Load and configure Adobe Alloy for data collection
+  // Load and configure Adobe Alloy for data collection and personalization
   // Datastream ID: bfcc8ae9-888b-4254-af2d-f1f3a9d0c560
   // Org ID: C73F174362AB26490A495EC6@AdobeOrg
+  // Supports: Adobe Journey Optimizer (AJO) Web Personalization
   // To remove: Delete this entire block between START and END markers
   try {
     await loadScript('https://cdn1.adoberesources.net/alloy/2.31.1/alloy.min.js');
     
-    // Configure Alloy with datastream
+    // Configure Alloy with datastream and personalization settings
     if (window.alloy) {
       window.alloy('configure', {
         datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
         orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
         // Let Alloy auto-detect cookie domain to prevent "com.adobe.alloy.getTld" rejection errors
-        thirdPartyCookiesEnabled: false, // Disables 3rd-party cookies (not needed for most use cases)
+        thirdPartyCookiesEnabled: false,
+        // Enable user consent by default for personalization
+        defaultConsent: 'in',
+        // Enable debug mode for development/testing (set to false in production)
+        debugEnabled: true,
       });
+
+      // Send page view event and fetch personalization content
+      // renderDecisions: true enables automatic rendering of AJO Visual Editor modifications
+      await window.alloy('sendEvent', {
+        renderDecisions: true, // Automatically apply visual modifications from AJO
+        xdm: {
+          web: {
+            webPageDetails: {
+              pageViews: { value: 1 },
+              URL: window.location.href,
+            },
+            webReferrer: {
+              URL: document.referrer,
+            },
+          },
+          eventType: 'web.webpagedetails.pageViews',
+        },
+      }).then((result) => {
+        // Log personalization propositions for debugging
+        if (result.propositions && result.propositions.length > 0) {
+          // eslint-disable-next-line no-console
+          console.log('AJO Propositions received:', result.propositions);
+          
+          // Track display events for rendered propositions
+          const displayedPropositions = result.propositions.filter(
+            (proposition) => proposition.renderAttempted === true,
+          );
+          
+          if (displayedPropositions.length > 0) {
+            // Send display tracking event
+            window.alloy('sendEvent', {
+              xdm: {
+                eventType: 'decisioning.propositionDisplay',
+                _experience: {
+                  decisioning: {
+                    propositions: displayedPropositions.map((proposition) => ({
+                      id: proposition.id,
+                      scope: proposition.scope,
+                      scopeDetails: proposition.scopeDetails,
+                    })),
+                  },
+                },
+              },
+            });
+          }
+        }
+      });
+
+      console.log('Adobe Alloy loaded, configured, and personalization enabled');
     }
-    console.log('Adobe Alloy loaded and configured');
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to load Adobe Alloy', error);
+    console.error('Failed to load or configure Adobe Alloy', error);
   }
   // === END: Adobe Alloy Integration ===
 

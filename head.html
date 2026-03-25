@@ -1,15 +1,25 @@
+<!-- Content Security Policy (CSP) Configuration -->
+<!-- This policy controls security for scripts, resources, and iframe embedding -->
+<!-- IMPORTANT: frame-ancestors directive allows Adobe Journey Optimizer (AJO) Visual Editor to load this page -->
+<!-- Without frame-ancestors, AJO cannot display the page in its Visual Editor for creating web campaigns/journeys -->
 <meta
   http-equiv="Content-Security-Policy"
-  content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none';"
+  content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://*.adobe.com https://*.campaign.adobe.com https://*.experiencecloud.adobe.com;"
   move-to-http-header="true"
 >
+
+<!-- Viewport and Display Configuration -->
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#0a0a0a"/>
 <meta name="format-detection" content="telephone=no"/>
 <meta name="referrer" content="no-referrer-when-downgrade"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<!-- Performance Optimization: Preconnect to Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+<!-- Core Scripts and Styles -->
 <script nonce="aem" src="/scripts/aem.js" type="module"></script>
 <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
 <link rel="stylesheet" href="/styles/styles.css"/>

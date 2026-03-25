@@ -1,3 +1,5 @@
 helix-importer-ui
 *.min.js
 plugins/
+# BACKTRACK: generated importer bundles are committed artifacts, not lintable source.
+tools/importer/*.bundle.js

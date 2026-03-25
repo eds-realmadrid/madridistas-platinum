@@ -21,20 +21,27 @@ function getSameOriginBaseCandidates() {
   if (window.hlx && window.hlx.codeBasePath) {
     candidates.push(window.hlx.codeBasePath.replace(/\/$/, ''));
   }
-  const pathname = window.location.pathname;
+
+  const { pathname } = window.location;
   const segments = pathname.split('/').filter(Boolean);
-  let prefix = '';
-  for (const seg of segments) {
-    prefix += `/${seg}`;
-    if (!candidates.includes(prefix)) candidates.push(prefix);
-  }
-  if (!candidates.includes('')) candidates.push('');
-  return candidates;
+  const prefixes = segments.reduce((acc, segment) => {
+    const previousPrefix = acc[acc.length - 1] || '';
+    const nextPrefix = `${previousPrefix}/${segment}`;
+    if (!candidates.includes(nextPrefix) && !acc.includes(nextPrefix)) {
+      acc.push(nextPrefix);
+    }
+    return acc;
+  }, []);
+
+  const allCandidates = candidates.concat(prefixes);
+  if (!allCandidates.includes('')) allCandidates.push('');
+  return allCandidates;
 }
 
 /**
  * Returns the content source base URL when running on EDS (e.g. *.aem.page).
- * Derived from hostname main--vodafone-poc--jmanuelbr.aem.page -> https://content.da.live/jmanuelbr/vodafone-poc
+ * Derived from hostname main--vodafone-poc--jmanuelbr.aem.page
+ * -> https://content.da.live/jmanuelbr/vodafone-poc
  * or from meta name="content-source" if set.
  */
 function getContentSourceBaseUrl() {
@@ -73,9 +80,69 @@ function getGitHubContentBaseUrl() {
   return `https://raw.githubusercontent.com/${owner}/${repo}/${ref}`;
 }
 
+function getSameOriginUrl(baseUrl, plainUrl) {
+  if (baseUrl) return `${baseUrl}${plainUrl}`;
+  return plainUrl;
+}
+
+function getRemoteUrl(baseUrl, plainName) {
+  return `${baseUrl.replace(/\/$/, '')}/${plainName}`;
+}
+
+function getFragmentBaseUrl(fragmentPath, contentBaseUrl) {
+  if (!contentBaseUrl) {
+    return new URL(fragmentPath, window.location.origin);
+  }
+
+  const normalizedPath = fragmentPath.startsWith('/')
+    ? fragmentPath.slice(1)
+    : fragmentPath;
+  const normalizedBaseUrl = `${contentBaseUrl.replace(/\/$/, '')}/`;
+  return new URL(normalizedPath || '.', normalizedBaseUrl);
+}
+
+function getCachedFragmentRequest(cachedBase, path, plainUrl, plainName) {
+  const isRemoteBase = cachedBase.startsWith('http');
+  const url = isRemoteBase
+    ? getRemoteUrl(cachedBase, plainName)
+    : getSameOriginUrl(cachedBase, plainUrl);
+  let fragmentPath = path;
+  if (!isRemoteBase && cachedBase) {
+    fragmentPath = `${cachedBase}${path}`;
+  }
+
+  return {
+    url,
+    fragmentPath,
+    contentBaseUrl: isRemoteBase ? cachedBase : null,
+  };
+}
+
 /**
- * Loads a fragment: tries same-origin paths first, then content source (content.da.live).
- * EDS preview often does not serve nav/footer from the page origin; they exist at the content source.
+ * BACKTRACK: recursion keeps same-origin probing sequential while avoiding
+ * no-restricted-syntax and no-await-in-loop lint errors.
+ */
+async function findSameOriginFragment(baseUrls, tryFetch, path, index = 0) {
+  if (index >= baseUrls.length) return null;
+
+  const baseUrl = baseUrls[index];
+  const resp = await tryFetch(baseUrl, true);
+  if (resp.ok) {
+    return {
+      resp,
+      baseUrl,
+      fragmentPath: baseUrl ? `${baseUrl}${path}` : path,
+    };
+  }
+
+  return findSameOriginFragment(baseUrls, tryFetch, path, index + 1);
+}
+
+/**
+ * Loads a fragment: tries same-origin paths first, then content source
+ * (content.da.live).
+ * EDS preview often does not serve nav/footer from the page origin; they exist
+ * at the content source.
  * @param {string} path The path to the fragment (e.g. /nav or /footer)
  * @returns {HTMLElement} The root element of the fragment
  */
@@ -83,11 +150,13 @@ export async function loadFragment(path) {
   if (!path || !path.startsWith('/') || path.startsWith('//')) return null;
 
   const plainUrl = `${path}.plain.html`;
+  const pathNoLead = path.replace(/^\//, '');
+  const plainName = `${pathNoLead}.plain.html`;
 
   const tryFetch = (baseUrl, isSameOrigin) => {
     const url = isSameOrigin
-      ? (baseUrl ? `${baseUrl}${plainUrl}` : plainUrl)
-      : `${baseUrl}${path}.plain.html`;
+      ? getSameOriginUrl(baseUrl, plainUrl)
+      : getRemoteUrl(baseUrl, plainName);
     return fetch(url);
   };
 
@@ -95,9 +164,7 @@ export async function loadFragment(path) {
     if (!resp.ok) return null;
     const main = document.createElement('main');
     main.innerHTML = await resp.text();
-    const fragmentBaseUrl = contentBaseUrl
-      ? new URL((fragmentPath.startsWith('/') ? fragmentPath.slice(1) : fragmentPath) || '.', `${contentBaseUrl.replace(/\/$/, '')}/`)
-      : new URL(fragmentPath, window.location.origin);
+    const fragmentBaseUrl = getFragmentBaseUrl(fragmentPath, contentBaseUrl);
     const resetAttributeBase = (tag, attr) => {
       main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
         elem[attr] = new URL(elem.getAttribute(attr), fragmentBaseUrl).href;
@@ -110,62 +177,60 @@ export async function loadFragment(path) {
     return main;
   };
 
-  const pathNoLead = path.replace(/^\//, '');
-  const plainName = `${pathNoLead}.plain.html`;
   const isEDS = isEDSHost();
 
-  const tryRemoteBase = (baseUrl) => {
+  const tryRemoteBase = async (baseUrl) => {
     if (!baseUrl) return null;
-    const url = `${baseUrl.replace(/\/$/, '')}/${plainName}`;
-    return fetch(url).then((r) => (r.ok ? { resp: r, base: baseUrl } : null));
+    const resp = await fetch(getRemoteUrl(baseUrl, plainName));
+    if (!resp.ok) return null;
+    return resp;
   };
 
-  // 1) Use cached base if we already found one that works (avoids repeated failed requests)
+  // 1) Use cached base if we already found one that works.
   const cached = window.hlx?.fragmentBasePath;
   if (cached != null) {
-    const url = cached.startsWith('http') ? `${cached.replace(/\/$/, '')}/${plainName}` : (cached ? `${cached}${plainUrl}` : plainUrl);
+    const cachedRequest = getCachedFragmentRequest(cached, path, plainUrl, plainName);
+    const { url, fragmentPath, contentBaseUrl } = cachedRequest;
     const resp = await fetch(url);
     if (resp.ok) {
-      const fragmentPath = cached.startsWith('http') ? path : (cached ? `${cached}${path}` : path);
-      return processResponse(resp, fragmentPath, cached.startsWith('http') ? cached : null);
+      return processResponse(resp, fragmentPath, contentBaseUrl);
     }
   }
 
-  // 2) On EDS: only raw GitHub (e.g. raw.githubusercontent.com/owner/repo/main) – no other fallbacks
+  // 2) On EDS: only raw GitHub (e.g. raw.githubusercontent.com/owner/repo/main).
   if (isEDS) {
     const gh = getGitHubContentBaseUrl();
-    const result = gh ? await tryRemoteBase(gh) : null;
-    if (result) {
+    const resp = gh ? await tryRemoteBase(gh) : null;
+    if (resp) {
       if (window.hlx) window.hlx.fragmentBasePath = gh;
-      return processResponse(result.resp, path, gh);
+      return processResponse(resp, path, gh);
     }
     return null;
   }
 
-  // 3) Local / non-EDS: same-origin path candidates, then content source, then raw GitHub
+  // 3) Local / non-EDS: same-origin path candidates, then content source, then raw GitHub.
   const sameOriginBases = getSameOriginBaseCandidates();
-  for (const base of sameOriginBases) {
-    const fragmentPath = base ? `${base}${path}` : path;
-    const resp = await tryFetch(base, true);
-    if (resp.ok) {
-      if (window.hlx) window.hlx.fragmentBasePath = base;
-      return processResponse(resp, fragmentPath, null);
-    }
+  const sameOriginMatch = await findSameOriginFragment(sameOriginBases, tryFetch, path);
+  if (sameOriginMatch) {
+    if (window.hlx) window.hlx.fragmentBasePath = sameOriginMatch.baseUrl;
+    return processResponse(sameOriginMatch.resp, sameOriginMatch.fragmentPath, null);
   }
+
   const contentBase = getContentSourceBaseUrl();
   if (contentBase) {
     const resp = await tryRemoteBase(contentBase);
     if (resp) {
       if (window.hlx) window.hlx.fragmentBasePath = contentBase;
-      return processResponse(resp.resp, path, contentBase);
+      return processResponse(resp, path, contentBase);
     }
   }
+
   const gh = getGitHubContentBaseUrl();
   if (gh) {
-    const result = await tryRemoteBase(gh);
-    if (result) {
+    const resp = await tryRemoteBase(gh);
+    if (resp) {
       if (window.hlx) window.hlx.fragmentBasePath = gh;
-      return processResponse(result.resp, path, gh);
+      return processResponse(resp, path, gh);
     }
   }
 

@@ -188,7 +188,7 @@ async function loadEager(doc) {
   // To remove: Delete this entire block between START and END markers
   try {
     await loadScript('https://cdn1.adoberesources.net/alloy/2.31.1/alloy.min.js');
-    
+
     // Configure Alloy with datastream and personalization settings
     if (window.alloy) {
       window.alloy('configure', {
@@ -223,12 +223,12 @@ async function loadEager(doc) {
         if (result.propositions && result.propositions.length > 0) {
           // eslint-disable-next-line no-console
           console.log('AJO Propositions received:', result.propositions);
-          
+
           // Track display events for rendered propositions
           const displayedPropositions = result.propositions.filter(
             (proposition) => proposition.renderAttempted === true,
           );
-          
+
           if (displayedPropositions.length > 0) {
             // Send display tracking event
             window.alloy('sendEvent', {
@@ -249,6 +249,7 @@ async function loadEager(doc) {
         }
       });
 
+      // eslint-disable-next-line no-console
       console.log('Adobe Alloy loaded, configured, and personalization enabled');
     }
   } catch (error) {

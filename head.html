@@ -4,7 +4,7 @@
 <!-- Without frame-ancestors, AJO cannot display the page in its Visual Editor for creating web campaigns/journeys -->
 <meta
   http-equiv="Content-Security-Policy"
-  content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://*.adobe.com https://*.campaign.adobe.com https://*.experiencecloud.adobe.com;"
+  content="script-src 'nonce-aem' 'strict-dynamic'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://*.adobe.com https://*.campaign.adobe.com https://*.experiencecloud.adobe.com;"
   move-to-http-header="true"
 >
 
@@ -18,6 +18,27 @@
 <!-- Performance Optimization: Preconnect to Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+<!-- Adobe Web SDK base code: queue Alloy calls before the async library is ready -->
+<script nonce="aem">
+  !function(n, o) {
+    o.forEach(function (name) {
+      n[name] || ((n.__alloyNS = n.__alloyNS || []).push(name), n[name] = function () {
+        const args = arguments;
+        return new Promise(function (resolve, reject) {
+          n.setTimeout(function () {
+            n[name].q.push([resolve, reject, args]);
+          });
+        });
+      }, n[name].q = []);
+    });
+  }(window, ['alloy']);
+</script>
+<script
+  nonce="aem"
+  src="https://cdn1.adoberesources.net/alloy/2.31.1/alloy.min.js"
+  async
+></script>
 
 <!-- Core Scripts and Styles -->
 <script nonce="aem" src="/scripts/aem.js" type="module"></script>

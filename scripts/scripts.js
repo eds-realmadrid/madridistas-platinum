@@ -187,11 +187,17 @@ async function loadEager(doc) {
   // Supports: Adobe Journey Optimizer (AJO) Web Personalization
   // To remove: Delete this entire block between START and END markers
   try {
-    await loadScript('https://cdn1.adoberesources.net/alloy/2.31.1/alloy.min.js');
+    const { alloy } = window;
 
-    // Configure Alloy with datastream and personalization settings
-    if (window.alloy) {
-      window.alloy('configure', {
+    if (typeof alloy !== 'function') {
+      // eslint-disable-next-line no-console
+      console.error('Adobe Alloy bootstrap is missing; Web SDK did not initialize');
+    } else {
+      const pageSurface = `web://${window.location.host}${window.location.pathname}`;
+
+      // Configure Alloy with datastream and personalization settings.
+      // The base code in head.html guarantees calls are queued until the SDK is ready.
+      alloy('configure', {
         datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
         orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
         // Let Alloy auto-detect cookie domain to prevent "com.adobe.alloy.getTld" rejection errors
@@ -202,10 +208,14 @@ async function loadEager(doc) {
         debugEnabled: true,
       });
 
-      // Send page view event and fetch personalization content
-      // renderDecisions: true enables automatic rendering of AJO Visual Editor modifications
-      await window.alloy('sendEvent', {
+      // Send page view event and fetch personalization content.
+      // Include a real page-level surface to make AJO/AEP activity easier to inspect.
+      // This intentionally stays page-level until Welcome Pack targeting has a stable contract.
+      const result = await alloy('sendEvent', {
         renderDecisions: true, // Automatically apply visual modifications from AJO
+        personalization: {
+          surfaces: [pageSurface],
+        },
         xdm: {
           web: {
             webPageDetails: {
@@ -218,36 +228,35 @@ async function loadEager(doc) {
           },
           eventType: 'web.webpagedetails.pageViews',
         },
-      }).then((result) => {
-        // Log personalization propositions for debugging
-        if (result.propositions && result.propositions.length > 0) {
-          // eslint-disable-next-line no-console
-          console.log('AJO Propositions received:', result.propositions);
+      });
 
-          // Track display events for rendered propositions
-          const displayedPropositions = result.propositions.filter(
-            (proposition) => proposition.renderAttempted === true,
-          );
+      // Log personalization propositions for debugging
+      if (result.propositions && result.propositions.length > 0) {
+        // eslint-disable-next-line no-console
+        console.log('AJO Propositions received:', result.propositions);
 
-          if (displayedPropositions.length > 0) {
-            // Send display tracking event
-            window.alloy('sendEvent', {
-              xdm: {
-                eventType: 'decisioning.propositionDisplay',
-                _experience: {
-                  decisioning: {
-                    propositions: displayedPropositions.map((proposition) => ({
-                      id: proposition.id,
-                      scope: proposition.scope,
-                      scopeDetails: proposition.scopeDetails,
-                    })),
-                  },
+        // Track display events for rendered propositions
+        const displayedPropositions = result.propositions.filter(
+          (proposition) => proposition.renderAttempted === true,
+        );
+
+        if (displayedPropositions.length > 0) {
+          alloy('sendEvent', {
+            xdm: {
+              eventType: 'decisioning.propositionDisplay',
+              _experience: {
+                decisioning: {
+                  propositions: displayedPropositions.map((proposition) => ({
+                    id: proposition.id,
+                    scope: proposition.scope,
+                    scopeDetails: proposition.scopeDetails,
+                  })),
                 },
               },
-            });
-          }
+            },
+          });
         }
-      });
+      }
 
       // eslint-disable-next-line no-console
       console.log('Adobe Alloy loaded, configured, and personalization enabled');

@@ -220,8 +220,55 @@ async function loadEager(doc) {
         return;
       }
 
+      let ecid = null;
+      try {
+        // [aep] Web SDK can acquire and use ECID automatically during sendEvent.
+        // [aep] Call getIdentity here only to make ECID visible in the outbound payload.
+        const identityResult = await alloy('getIdentity');
+        ecid = identityResult?.identity?.ECID || null;
+
+        if (ecid) {
+          // eslint-disable-next-line no-console
+          console.log('[aep] ECID resolved for the primary page-view event', diagnostics);
+        } else {
+          // [aep] If ECID is unavailable, still send the event without identityMap.
+          // [aep] Web SDK can continue automatic identity handling on the request path.
+          // eslint-disable-next-line no-console
+          console.warn('[aep] ECID was not returned by getIdentity; sending event without manual identityMap', diagnostics);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('[aep] getIdentity failed; sending event without manual identityMap', diagnostics, error);
+      }
+
       let result;
       try {
+        const xdmPayload = {
+          web: {
+            webPageDetails: {
+              pageViews: { value: 1 },
+              URL: window.location.href,
+            },
+            webReferrer: {
+              URL: document.referrer,
+            },
+          },
+          eventType: 'web.webpagedetails.pageViews',
+          timestamp: new Date().toISOString(),
+        };
+
+        if (ecid) {
+          // [aep] ECID is normally managed by Web SDK.
+          // [aep] Add it explicitly here only to expose ECID in the outbound payload.
+          // [aep] This supplements normal Web SDK identity handling; it does not replace it.
+          xdmPayload.identityMap = {
+            ECID: [{
+              id: ecid,
+              primary: true,
+            }],
+          };
+        }
+
         // [aep] Send a page-level surface so AEP/AJO events are easier to inspect.
         // [aep] Keep this page-scoped until Welcome Pack targeting has a stable contract.
         result = await alloy('sendEvent', {
@@ -229,18 +276,7 @@ async function loadEager(doc) {
           personalization: {
             surfaces: [pageSurface],
           },
-          xdm: {
-            web: {
-              webPageDetails: {
-                pageViews: { value: 1 },
-                URL: window.location.href,
-              },
-              webReferrer: {
-                URL: document.referrer,
-              },
-            },
-            eventType: 'web.webpagedetails.pageViews',
-          },
+          xdm: xdmPayload,
         });
       } catch (error) {
         // eslint-disable-next-line no-console

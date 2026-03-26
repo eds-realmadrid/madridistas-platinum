@@ -191,75 +191,111 @@ async function loadEager(doc) {
 
     if (typeof alloy !== 'function') {
       // eslint-disable-next-line no-console
-      console.error('Adobe Alloy bootstrap is missing; Web SDK did not initialize');
+      console.error('[aep] Adobe Alloy bootstrap is missing; Web SDK did not initialize');
     } else {
       const pageSurface = `web://${window.location.host}${window.location.pathname}`;
+      const diagnostics = {
+        host: window.location.host,
+        path: window.location.pathname,
+        surface: pageSurface,
+        customEdgeDomainConfigured: false,
+      };
 
-      // Configure Alloy with datastream and personalization settings.
-      // The base code in head.html guarantees calls are queued until the SDK is ready.
-      alloy('configure', {
-        datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
-        orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
-        // Let Alloy auto-detect cookie domain to prevent "com.adobe.alloy.getTld" rejection errors
-        thirdPartyCookiesEnabled: false,
-        // Enable user consent by default for personalization
-        defaultConsent: 'in',
-        // Enable debug mode for development/testing (set to false in production)
-        debugEnabled: true,
-      });
+      // [aep] Configure Alloy for AEP/AJO using the head bootstrap queue.
+      try {
+        await alloy('configure', {
+          datastreamId: 'bfcc8ae9-888b-4254-af2d-f1f3a9d0c560',
+          orgId: 'C73F174362AB26490A495EC6@AdobeOrg',
+          // Let Alloy auto-detect cookie domain to prevent
+          // "com.adobe.alloy.getTld" rejection errors.
+          thirdPartyCookiesEnabled: false,
+          // Enable user consent by default for personalization
+          defaultConsent: 'in',
+          // Enable debug mode for development/testing (set to false in production)
+          debugEnabled: true,
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('[aep] Alloy configure failed before any Edge network request', diagnostics, error);
+        return;
+      }
 
-      // Send page view event and fetch personalization content.
-      // Include a real page-level surface to make AJO/AEP activity easier to inspect.
-      // This intentionally stays page-level until Welcome Pack targeting has a stable contract.
-      const result = await alloy('sendEvent', {
-        renderDecisions: true, // Automatically apply visual modifications from AJO
-        personalization: {
-          surfaces: [pageSurface],
-        },
-        xdm: {
-          web: {
-            webPageDetails: {
-              pageViews: { value: 1 },
-              URL: window.location.href,
-            },
-            webReferrer: {
-              URL: document.referrer,
-            },
+      let result;
+      try {
+        // [aep] Send a page-level surface so AEP/AJO events are easier to inspect.
+        // [aep] Keep this page-scoped until Welcome Pack targeting has a stable contract.
+        result = await alloy('sendEvent', {
+          renderDecisions: true, // Automatically apply visual modifications from AJO
+          personalization: {
+            surfaces: [pageSurface],
           },
-          eventType: 'web.webpagedetails.pageViews',
-        },
-      });
+          xdm: {
+            web: {
+              webPageDetails: {
+                pageViews: { value: 1 },
+                URL: window.location.href,
+              },
+              webReferrer: {
+                URL: document.referrer,
+              },
+            },
+            eventType: 'web.webpagedetails.pageViews',
+          },
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(
+          '[aep] Primary sendEvent failed during the Adobe Edge transport request',
+          diagnostics,
+          error,
+        );
+        result = null;
+      }
 
-      // Log personalization propositions for debugging
-      if (result.propositions && result.propositions.length > 0) {
+      if (result?.propositions && result.propositions.length > 0) {
+        // [aep] Log returned propositions so decisioning can be verified in the console.
         // eslint-disable-next-line no-console
         console.log('AJO Propositions received:', result.propositions);
 
-        // Track display events for rendered propositions
+        // [aep] Send proposition display tracking for items Alloy attempted to render.
         const displayedPropositions = result.propositions.filter(
           (proposition) => proposition.renderAttempted === true,
         );
 
         if (displayedPropositions.length > 0) {
-          alloy('sendEvent', {
-            xdm: {
-              eventType: 'decisioning.propositionDisplay',
-              _experience: {
-                decisioning: {
-                  propositions: displayedPropositions.map((proposition) => ({
-                    id: proposition.id,
-                    scope: proposition.scope,
-                    scopeDetails: proposition.scopeDetails,
-                  })),
+          try {
+            await alloy('sendEvent', {
+              xdm: {
+                eventType: 'decisioning.propositionDisplay',
+                _experience: {
+                  decisioning: {
+                    propositions: displayedPropositions.map((proposition) => ({
+                      id: proposition.id,
+                      scope: proposition.scope,
+                      scopeDetails: proposition.scopeDetails,
+                    })),
+                  },
                 },
               },
-            },
-          });
+            });
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(
+              '[aep] Proposition display tracking failed during the Adobe Edge transport request',
+              {
+                ...diagnostics,
+                displayedPropositionCount: displayedPropositions.length,
+              },
+              error,
+            );
+          }
         }
       }
 
-      // eslint-disable-next-line no-console
-      console.log('Adobe Alloy loaded, configured, and personalization enabled');
+      if (result) {
+        // eslint-disable-next-line no-console
+        console.log('Adobe Alloy loaded, configured, and personalization enabled');
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -145,18 +145,18 @@
   white-space: normal;
 }
 
-/* Primary button — Adobe red */
+/* Primary button — solid white, black text */
 .hero a.button.primary {
-  background: #eb1000;
-  border-color: #eb1000;
-  color: #fff;
+  background: #fff;
+  border-color: #fff;
+  color: #000;
 }
 
 .hero a.button.primary:hover,
 .hero a.button.primary:focus-visible {
-  background: #c40e00;
-  border-color: #c40e00;
-  color: #fff;
+  background: #f0f0f0;
+  border-color: #f0f0f0;
+  color: #000;
 }
 
 /* Secondary button — transparent with white border, white text */

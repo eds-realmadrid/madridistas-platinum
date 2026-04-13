@@ -145,15 +145,29 @@
   white-space: normal;
 }
 
-/* Primary button — solid white, black text */
-.hero a.button.primary {
+/* Primary button — Adobe red (main hero only) */
+.hero:not(.cta) a.button.primary {
+  background: #eb1000;
+  border-color: #eb1000;
+  color: #fff;
+}
+
+.hero:not(.cta) a.button.primary:hover,
+.hero:not(.cta) a.button.primary:focus-visible {
+  background: #c40e00;
+  border-color: #c40e00;
+  color: #fff;
+}
+
+/* Primary button — solid white, black text (CTA hero variant) */
+.hero.cta a.button.primary {
   background: #fff;
   border-color: #fff;
   color: #000;
 }
 
-.hero a.button.primary:hover,
-.hero a.button.primary:focus-visible {
+.hero.cta a.button.primary:hover,
+.hero.cta a.button.primary:focus-visible {
   background: #f0f0f0;
   border-color: #f0f0f0;
   color: #000;

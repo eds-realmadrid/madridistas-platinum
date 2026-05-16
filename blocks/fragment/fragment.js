@@ -21,13 +21,13 @@ function getSameOriginBaseCandidates() {
   if (window.hlx && window.hlx.codeBasePath) {
     candidates.push(window.hlx.codeBasePath.replace(/\/$/, ''));
   }
-  const pathname = window.location.pathname;
+  const { pathname } = window.location;
   const segments = pathname.split('/').filter(Boolean);
   let prefix = '';
-  for (const seg of segments) {
+  segments.forEach((seg) => {
     prefix += `/${seg}`;
     if (!candidates.includes(prefix)) candidates.push(prefix);
-  }
+  });
   if (!candidates.includes('')) candidates.push('');
   return candidates;
 }
@@ -75,7 +75,8 @@ function getGitHubContentBaseUrl() {
 
 /**
  * Loads a fragment: tries same-origin paths first, then content source (content.da.live).
- * EDS preview often does not serve nav/footer from the page origin; they exist at the content source.
+ * EDS preview often does not serve nav/footer from the page origin;
+ * they exist at the content source.
  * @param {string} path The path to the fragment (e.g. /nav or /footer)
  * @returns {HTMLElement} The root element of the fragment
  */
@@ -85,9 +86,12 @@ export async function loadFragment(path) {
   const plainUrl = `${path}.plain.html`;
 
   const tryFetch = (baseUrl, isSameOrigin) => {
-    const url = isSameOrigin
-      ? (baseUrl ? `${baseUrl}${plainUrl}` : plainUrl)
-      : `${baseUrl}${path}.plain.html`;
+    let url;
+    if (isSameOrigin) {
+      url = baseUrl ? `${baseUrl}${plainUrl}` : plainUrl;
+    } else {
+      url = `${baseUrl}${path}.plain.html`;
+    }
     return fetch(url);
   };
 
@@ -123,15 +127,27 @@ export async function loadFragment(path) {
   // 1) Use cached base if we already found one that works (avoids repeated failed requests)
   const cached = window.hlx?.fragmentBasePath;
   if (cached != null) {
-    const url = cached.startsWith('http') ? `${cached.replace(/\/$/, '')}/${plainName}` : (cached ? `${cached}${plainUrl}` : plainUrl);
+    const cachedIsRemote = cached.startsWith('http');
+    let url;
+    let fragmentPath;
+    if (cachedIsRemote) {
+      url = `${cached.replace(/\/$/, '')}/${plainName}`;
+      fragmentPath = path;
+    } else if (cached) {
+      url = `${cached}${plainUrl}`;
+      fragmentPath = `${cached}${path}`;
+    } else {
+      url = plainUrl;
+      fragmentPath = path;
+    }
     const resp = await fetch(url);
     if (resp.ok) {
-      const fragmentPath = cached.startsWith('http') ? path : (cached ? `${cached}${path}` : path);
-      return processResponse(resp, fragmentPath, cached.startsWith('http') ? cached : null);
+      return processResponse(resp, fragmentPath, cachedIsRemote ? cached : null);
     }
   }
 
-  // 2) On EDS: only raw GitHub (e.g. raw.githubusercontent.com/owner/repo/main) – no other fallbacks
+  // 2) On EDS: only raw GitHub (raw.githubusercontent.com/owner/repo/main)
+  //    no other fallbacks
   if (isEDS) {
     const gh = getGitHubContentBaseUrl();
     const result = gh ? await tryRemoteBase(gh) : null;
@@ -144,14 +160,18 @@ export async function loadFragment(path) {
 
   // 3) Local / non-EDS: same-origin path candidates, then content source, then raw GitHub
   const sameOriginBases = getSameOriginBaseCandidates();
-  for (const base of sameOriginBases) {
+  const sameOriginResult = await sameOriginBases.reduce(async (accPromise, base) => {
+    const acc = await accPromise;
+    if (acc !== null) return acc;
     const fragmentPath = base ? `${base}${path}` : path;
     const resp = await tryFetch(base, true);
     if (resp.ok) {
       if (window.hlx) window.hlx.fragmentBasePath = base;
       return processResponse(resp, fragmentPath, null);
     }
-  }
+    return null;
+  }, Promise.resolve(null));
+  if (sameOriginResult) return sameOriginResult;
   const contentBase = getContentSourceBaseUrl();
   if (contentBase) {
     const resp = await tryRemoteBase(contentBase);

@@ -47,7 +47,6 @@ function buildPageData() {
   const pageLevel2 = segments[1] || '';
   const pageLevel3 = segments[2] || '';
 
-
   const authoredPageType = getMetadata('page-type');
   const pageType = authoredPageType || '';
 

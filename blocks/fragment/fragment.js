@@ -14,181 +14,29 @@ import {
 } from '../../scripts/aem.js';
 
 /**
- * Returns same-origin candidate base paths (code base, then pathname prefixes).
- */
-function getSameOriginBaseCandidates() {
-  const candidates = [];
-  if (window.hlx && window.hlx.codeBasePath) {
-    candidates.push(window.hlx.codeBasePath.replace(/\/$/, ''));
-  }
-  const { pathname } = window.location;
-  const segments = pathname.split('/').filter(Boolean);
-  let prefix = '';
-  segments.forEach((seg) => {
-    prefix += `/${seg}`;
-    if (!candidates.includes(prefix)) candidates.push(prefix);
-  });
-  if (!candidates.includes('')) candidates.push('');
-  return candidates;
-}
-
-/**
- * Returns the content source base URL when running on EDS (e.g. *.aem.page).
- * Derived from hostname main--vodafone-poc--jmanuelbr.aem.page -> https://content.da.live/jmanuelbr/vodafone-poc
- * or from meta name="content-source" if set.
- */
-function getContentSourceBaseUrl() {
-  const meta = document.querySelector('meta[name="content-source"]');
-  if (meta?.content) return meta.content.replace(/\/$/, '');
-  const host = window.location.hostname;
-  if (!host.endsWith('.aem.page')) return null;
-  const parts = host.split('--');
-  if (parts.length < 3) return null;
-  const owner = parts[parts.length - 1].replace(/\.aem\.page$/i, '');
-  const repo = parts[parts.length - 2];
-  return `https://content.da.live/${owner}/${repo}`;
-}
-
-/**
- * Returns true when running on EDS (preview or live).
- */
-function isEDSHost() {
-  const host = window.location.hostname;
-  return host.endsWith('.aem.page') || host.endsWith('.aem.live');
-}
-
-/**
- * Returns raw GitHub base URL for the repo (branch from hostname, e.g. main).
- * Used when content.da.live returns 401; raw GitHub is public.
- * Supports both *.aem.page (preview) and *.aem.live (live).
- */
-function getGitHubContentBaseUrl() {
-  const host = window.location.hostname;
-  if (!isEDSHost()) return null;
-  const parts = host.split('--');
-  if (parts.length < 3) return null;
-  const ref = parts[0] || 'main';
-  const repo = parts[parts.length - 2];
-  const owner = parts[parts.length - 1].replace(/\.aem\.(page|live)$/i, '');
-  return `https://raw.githubusercontent.com/${owner}/${repo}/${ref}`;
-}
-
-/**
- * Loads a fragment: tries same-origin paths first, then content source (content.da.live).
- * EDS preview often does not serve nav/footer from the page origin;
- * they exist at the content source.
+ * Loads a fragment from the same origin (works on localhost, EDS preview, and EDS live).
  * @param {string} path The path to the fragment (e.g. /nav or /footer)
  * @returns {HTMLElement} The root element of the fragment
  */
 export async function loadFragment(path) {
-  if (!path || !path.startsWith('/') || path.startsWith('//')) return null;
-
-  const plainUrl = `${path}.plain.html`;
-
-  const tryFetch = (baseUrl, isSameOrigin) => {
-    let url;
-    if (isSameOrigin) {
-      url = baseUrl ? `${baseUrl}${plainUrl}` : plainUrl;
-    } else {
-      url = `${baseUrl}${path}.plain.html`;
-    }
-    return fetch(url);
-  };
-
-  const processResponse = async (resp, fragmentPath, contentBaseUrl) => {
-    if (!resp.ok) return null;
-    const main = document.createElement('main');
-    main.innerHTML = await resp.text();
-    const fragmentBaseUrl = contentBaseUrl
-      ? new URL((fragmentPath.startsWith('/') ? fragmentPath.slice(1) : fragmentPath) || '.', `${contentBaseUrl.replace(/\/$/, '')}/`)
-      : new URL(fragmentPath, window.location.origin);
-    const resetAttributeBase = (tag, attr) => {
-      main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-        elem[attr] = new URL(elem.getAttribute(attr), fragmentBaseUrl).href;
-      });
-    };
-    resetAttributeBase('img', 'src');
-    resetAttributeBase('source', 'srcset');
-    decorateMain(main);
-    await loadSections(main);
-    return main;
-  };
-
-  const pathNoLead = path.replace(/^\//, '');
-  const plainName = `${pathNoLead}.plain.html`;
-  const isEDS = isEDSHost();
-
-  const tryRemoteBase = (baseUrl) => {
-    if (!baseUrl) return null;
-    const url = `${baseUrl.replace(/\/$/, '')}/${plainName}`;
-    return fetch(url).then((r) => (r.ok ? { resp: r, base: baseUrl } : null));
-  };
-
-  // 1) Use cached base if we already found one that works (avoids repeated failed requests)
-  const cached = window.hlx?.fragmentBasePath;
-  if (cached != null) {
-    const cachedIsRemote = cached.startsWith('http');
-    let url;
-    let fragmentPath;
-    if (cachedIsRemote) {
-      url = `${cached.replace(/\/$/, '')}/${plainName}`;
-      fragmentPath = path;
-    } else if (cached) {
-      url = `${cached}${plainUrl}`;
-      fragmentPath = `${cached}${path}`;
-    } else {
-      url = plainUrl;
-      fragmentPath = path;
-    }
-    const resp = await fetch(url);
+  if (path && path.startsWith('/')) {
+    const resp = await fetch(`${path}.plain.html`);
     if (resp.ok) {
-      return processResponse(resp, fragmentPath, cachedIsRemote ? cached : null);
+      const main = document.createElement('main');
+      main.innerHTML = await resp.text();
+      const fragmentBase = new URL(path, window.location.origin);
+      const resetAttributeBase = (tag, attr) => {
+        main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
+          elem[attr] = new URL(elem.getAttribute(attr), fragmentBase).href;
+        });
+      };
+      resetAttributeBase('img', 'src');
+      resetAttributeBase('source', 'srcset');
+      decorateMain(main);
+      await loadSections(main);
+      return main;
     }
   }
-
-  // 2) On EDS: only raw GitHub (raw.githubusercontent.com/owner/repo/main)
-  //    no other fallbacks
-  if (isEDS) {
-    const gh = getGitHubContentBaseUrl();
-    const result = gh ? await tryRemoteBase(gh) : null;
-    if (result) {
-      if (window.hlx) window.hlx.fragmentBasePath = gh;
-      return processResponse(result.resp, path, gh);
-    }
-    return null;
-  }
-
-  // 3) Local / non-EDS: same-origin path candidates, then content source, then raw GitHub
-  const sameOriginBases = getSameOriginBaseCandidates();
-  const sameOriginResult = await sameOriginBases.reduce(async (accPromise, base) => {
-    const acc = await accPromise;
-    if (acc !== null) return acc;
-    const fragmentPath = base ? `${base}${path}` : path;
-    const resp = await tryFetch(base, true);
-    if (resp.ok) {
-      if (window.hlx) window.hlx.fragmentBasePath = base;
-      return processResponse(resp, fragmentPath, null);
-    }
-    return null;
-  }, Promise.resolve(null));
-  if (sameOriginResult) return sameOriginResult;
-  const contentBase = getContentSourceBaseUrl();
-  if (contentBase) {
-    const resp = await tryRemoteBase(contentBase);
-    if (resp) {
-      if (window.hlx) window.hlx.fragmentBasePath = contentBase;
-      return processResponse(resp.resp, path, contentBase);
-    }
-  }
-  const gh = getGitHubContentBaseUrl();
-  if (gh) {
-    const result = await tryRemoteBase(gh);
-    if (result) {
-      if (window.hlx) window.hlx.fragmentBasePath = gh;
-      return processResponse(result.resp, path, gh);
-    }
-  }
-
   return null;
 }
 

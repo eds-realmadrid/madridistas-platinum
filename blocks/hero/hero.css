@@ -73,18 +73,6 @@
   max-width: 732px;
 }
 
-/* Animated WebGL canvas — sits above the ::after gradient (z-index 0) but below content (z-index 1).
-   Alpha blending lets the darkened background image show through in transparent areas. */
-.hero > canvas.hero-bg-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 1;
-  pointer-events: none;
-}
-
 /* Background image row — positioned behind content */
 .hero > .hero-bg {
   position: absolute;

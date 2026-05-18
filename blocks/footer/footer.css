@@ -29,6 +29,7 @@ footer .footer a:any-link {
   color: #fff;
   text-decoration: none;
   transition: color 0.2s ease;
+  padding: 0 16px;
 }
 
 footer .footer a:hover {

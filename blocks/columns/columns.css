@@ -13,6 +13,13 @@
   display: block;
 }
 
+@media (width < 900px) {
+  /* When image col is authored first (for desktop alternating layout), push it after text on mobile */
+  .columns > div:has(.columns-img-col:first-child) > .columns-img-col {
+    order: 1;
+  }
+}
+
 .columns-container > .default-content-wrapper > h2 {
   text-align: center;
 }

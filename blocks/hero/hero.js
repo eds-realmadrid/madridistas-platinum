@@ -3,7 +3,7 @@
  * @param {Element} block The hero block element
  */
 
-function initAnimatedBackground(bgEl) {
+function initAnimatedBackground(bgEl, block) {
   const canvas = document.createElement('canvas');
   canvas.className = 'hero-bg-canvas';
   bgEl.prepend(canvas);
@@ -100,12 +100,12 @@ function initAnimatedBackground(bgEl) {
   const uRes = gl.getUniformLocation(prog, 'u_res');
 
   let raf = null;
-  let inView = false;
+  let inView = true;
   let startTime = null;
 
   function resize() {
-    const w = Math.max(1, Math.floor(bgEl.offsetWidth * 0.5));
-    const h = Math.max(1, Math.floor(bgEl.offsetHeight * 0.5));
+    const w = Math.max(1, Math.floor((bgEl.offsetWidth || block.offsetWidth) * 0.5));
+    const h = Math.max(1, Math.floor((bgEl.offsetHeight || block.offsetHeight) * 0.5));
     if (canvas.width !== w || canvas.height !== h) {
       canvas.width = w;
       canvas.height = h;
@@ -131,6 +131,8 @@ function initAnimatedBackground(bgEl) {
       if (!inView && raf) { cancelAnimationFrame(raf); raf = null; }
     });
   }).observe(bgEl);
+
+  raf = requestAnimationFrame(render);
 }
 
 export default async function decorate(block) {
@@ -173,7 +175,7 @@ export default async function decorate(block) {
   // Animated WebGL background for top hero (has product images, not left-aligned)
   if (rows.length > 2 && !block.classList.contains('left')) {
     const bg = block.querySelector('.hero-bg');
-    if (bg) initAnimatedBackground(bg);
+    if (bg) initAnimatedBackground(bg, block);
   }
 
   // 3D tilt effect for card (4th child)

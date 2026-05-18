@@ -2,6 +2,7 @@
 .pricing-plans-container {
   margin: 0;
   padding: 20px 0 80px;
+  background-color: rgb(10 10 10);
 }
 
 .pricing-plans-container > .default-content-wrapper > h2 {
@@ -11,7 +12,6 @@
   line-height: 1;
   background: linear-gradient(0deg, rgb(153 153 153) 0%, rgb(209 209 209) 44.78%, rgb(255 255 255) 100%);
   background-clip: text;
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-top: 0;
   margin-bottom: 48px;
@@ -86,7 +86,7 @@
 
 /* Column headers */
 .pricing-plans .pricing-col-header {
-  background: transparent;
+  background: rgb(41 41 41);
   padding: 16px 24px;
   text-align: center;
 }

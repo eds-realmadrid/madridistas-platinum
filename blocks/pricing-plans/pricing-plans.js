@@ -43,6 +43,7 @@ export default function decorate(block) {
   // Row 5: column headers
   const headerRow = rows[5];
   const headerCols = headerRow ? [...headerRow.querySelectorAll(':scope > div')] : [];
+  const shirtsHeader = headerCols[0]?.textContent.trim() || 'Recibe tu camiseta anual';
   const benefitsHeader = headerCols[1]?.textContent.trim() || 'Más beneficios Platinum';
 
   // Rows 6+: benefit cards
@@ -98,6 +99,13 @@ export default function decorate(block) {
   // Left column: shirts
   const leftCol = document.createElement('div');
   leftCol.className = 'pricing-col-shirts';
+
+  const leftHeader = document.createElement('div');
+  leftHeader.className = 'pricing-col-header';
+  const leftH3 = document.createElement('h3');
+  leftH3.textContent = shirtsHeader;
+  leftHeader.append(leftH3);
+  leftCol.append(leftHeader);
 
   const shirtsRow = document.createElement('div');
   shirtsRow.className = 'pricing-cards';

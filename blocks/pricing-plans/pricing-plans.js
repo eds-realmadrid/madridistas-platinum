@@ -233,8 +233,10 @@ export default function decorate(block) {
   const footnoteEl = document.createElement('p');
   footnoteEl.className = 'pricing-footnote';
   const fnAnnual = document.createElement('span');
+  fnAnnual.className = 'plan-annual';
   fnAnnual.textContent = annualFootnote;
   const fnMonthly = document.createElement('span');
+  fnMonthly.className = 'plan-monthly hidden';
   fnMonthly.textContent = monthlyFootnote;
   footnoteEl.append(fnAnnual, fnMonthly);
 

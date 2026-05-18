@@ -136,8 +136,8 @@ export default function decorate(block) {
     priceMonthly.textContent = card.monthlyPrice;
 
     const monthlyImgSrcs = [
-      '/media/camiseta-monthly.webp',
-      '/media/camiseta-authentic-monthly.png',
+      '/media/media_1f6a12e06f67662186970acee5a1c852ec8ede180.webp',
+      '/media/media_16e5dcca225cfd968fa4ca790d76b0cb322c94783.png',
     ];
 
     const imgWrapper = document.createElement('div');

@@ -3,7 +3,7 @@
  * @param {Element} block The hero block element
  */
 
-function initAnimatedBackground(bgEl, block) {
+function initAnimatedBackground(bgEl) {
   const canvas = document.createElement('canvas');
   canvas.className = 'hero-bg-canvas';
   bgEl.prepend(canvas);
@@ -99,30 +99,25 @@ function initAnimatedBackground(bgEl, block) {
   const uTime = gl.getUniformLocation(prog, 'u_time');
   const uRes = gl.getUniformLocation(prog, 'u_res');
 
+  // Set buffer size once — changing canvas.width/height resets GL state, so we never touch it again.
+  // CSS width/height:100% handles visual scaling to fill the container.
+  const W = Math.max(320, Math.floor(window.innerWidth / 2));
+  const H = Math.max(240, Math.floor(window.innerHeight / 2));
+  canvas.width = W;
+  canvas.height = H;
+  gl.viewport(0, 0, W, H);
+  gl.uniform2f(uRes, W, H);
+
   let raf = null;
   let inView = true;
   let startTime = null;
 
-  function resize() {
-    const w = Math.max(1, Math.floor((bgEl.offsetWidth || block.offsetWidth) * 0.5));
-    const h = Math.max(1, Math.floor((bgEl.offsetHeight || block.offsetHeight) * 0.5));
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
-      gl.viewport(0, 0, w, h);
-    }
-  }
-
   function render(ts) {
     if (!startTime) startTime = ts;
     gl.uniform1f(uTime, (ts - startTime) / 1000);
-    gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     if (inView) raf = requestAnimationFrame(render);
   }
-
-  new ResizeObserver(resize).observe(bgEl);
-  resize();
 
   new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -175,7 +170,7 @@ export default async function decorate(block) {
   // Animated WebGL background for top hero (has product images, not left-aligned)
   if (rows.length > 2 && !block.classList.contains('left')) {
     const bg = block.querySelector('.hero-bg');
-    if (bg) initAnimatedBackground(bg, block);
+    if (bg) initAnimatedBackground(bg);
   }
 
   // 3D tilt effect for card (4th child)

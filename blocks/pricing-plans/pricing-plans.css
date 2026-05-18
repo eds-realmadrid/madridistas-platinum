@@ -86,9 +86,13 @@
 
 /* Column headers */
 .pricing-plans .pricing-col-header {
-  background: rgb(71 71 71);
+  background: rgb(41 41 41);
   padding: 16px 24px;
   text-align: center;
+}
+
+.pricing-plans .pricing-col-benefits .pricing-col-header {
+  background: rgb(71 71 71);
 }
 
 .pricing-plans .pricing-col-header h3 {

@@ -5,7 +5,9 @@ import { loadFragment } from '../fragment/fragment.js';
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  const fragment = await loadFragment('/footer');
+  const locales = ['en-us', 'es-es'];
+  const locale = locales.find((l) => window.location.pathname.includes(l)) || 'es-es';
+  const fragment = await loadFragment(`/${locale}/footer`);
 
   // decorate footer DOM
   block.textContent = '';

@@ -112,7 +112,9 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  const fragment = await loadFragment('/nav');
+  const locales = ['en-us', 'es-es'];
+  const locale = locales.find((l) => window.location.pathname.includes(l)) || 'es-es';
+  const fragment = await loadFragment(`/${locale}/nav`);
 
   // decorate nav DOM
   block.textContent = '';

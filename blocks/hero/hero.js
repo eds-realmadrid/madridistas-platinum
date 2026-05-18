@@ -3,7 +3,11 @@
  * @param {Element} block The hero block element
  */
 
-function initAnimatedBackground(bgEl) {
+function initAnimatedBackground(block, bgEl) {
+  // Darken the background image so the effect reads clearly over it
+  const bgImg = bgEl.querySelector('img');
+  if (bgImg) bgImg.style.filter = 'brightness(0.4)';
+
   const canvas = document.createElement('canvas');
   canvas.className = 'hero-bg-canvas';
 
@@ -11,11 +15,16 @@ function initAnimatedBackground(bgEl) {
   canvas.width = Math.max(320, Math.floor(window.innerWidth / 2));
   canvas.height = Math.max(240, Math.floor(window.innerHeight / 2));
 
-  bgEl.prepend(canvas);
+  // Append directly to the block so it sits above the ::after gradient overlay
+  block.append(canvas);
 
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false })
+    || canvas.getContext('experimental-webgl', { alpha: true, premultipliedAlpha: false });
   if (!gl) return;
 
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.clearColor(0, 0, 0, 0);
 
   const vsSource = `
     attribute vec2 a_pos;
@@ -68,11 +77,15 @@ function initAnimatedBackground(bgEl) {
       );
       float f = fbm(uv * 2.0 + r);
 
-      vec3 col = mix(vec3(0.03, 0.03, 0.06), vec3(0.35, 0.37, 0.44), clamp(f * 3.0, 0.0, 1.0));
-      col = mix(col, vec3(0.55, 0.58, 0.66), clamp(length(q) * 0.9, 0.0, 1.0));
-      col = mix(col, vec3(0.80, 0.84, 0.90), clamp(r.x * r.x * 2.0, 0.0, 1.0));
+      // Flowing silver highlights with alpha — transparent base, opaque bright streaks
+      float shadow = clamp(f * f * 4.0, 0.0, 1.0);
+      float highlight = clamp(r.x * r.x * 2.5, 0.0, 1.0);
+      float alpha = clamp(shadow * 0.55 + highlight * 0.65, 0.0, 0.85);
 
-      gl_FragColor = vec4(col, 1.0);
+      vec3 col = mix(vec3(0.08, 0.08, 0.12), vec3(0.45, 0.47, 0.55), shadow);
+      col = mix(col, vec3(0.78, 0.82, 0.90), highlight);
+
+      gl_FragColor = vec4(col, alpha);
     }
   `;
 
@@ -119,7 +132,7 @@ function initAnimatedBackground(bgEl) {
       if (inView && !raf) raf = requestAnimationFrame(render);
       if (!inView && raf) { cancelAnimationFrame(raf); raf = null; }
     });
-  }).observe(bgEl);
+  }).observe(block);
 
   raf = requestAnimationFrame(render);
 }
@@ -164,7 +177,7 @@ export default async function decorate(block) {
   // Animated WebGL background for top hero (has product images, not left-aligned)
   if (rows.length > 2 && !block.classList.contains('left')) {
     const bg = block.querySelector('.hero-bg');
-    if (bg) initAnimatedBackground(bg);
+    if (bg) initAnimatedBackground(block, bg);
   }
 
   // 3D tilt effect for card (4th child)

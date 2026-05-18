@@ -376,9 +376,16 @@ header .nav-bottom-banner.visible {
 }
 
 header .nav-bottom-banner-text {
+  display: none;
   color: #fff;
   font-size: 18px;
   line-height: 24px;
+}
+
+@media (width >= 600px) {
+  header .nav-bottom-banner-text {
+    display: block;
+  }
 }
 
 header .nav-bottom-banner-cta {

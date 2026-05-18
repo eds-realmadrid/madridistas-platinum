@@ -122,10 +122,11 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
   const sections = [...nav.children].filter((child) => child.tagName !== 'HR');
-  classes.forEach((c, i) => {
-    if (sections[i]) sections[i].classList.add(`nav-${c}`);
+  sections.forEach((section, i) => {
+    if (i === 0) section.classList.add('nav-brand');
+    else if (i === sections.length - 1) section.classList.add('nav-tools');
+    else section.classList.add('nav-sections');
   });
 
   const navBrand = nav.querySelector('.nav-brand');
@@ -238,6 +239,8 @@ export default async function decorate(block) {
     if (pricingSection) {
       const rect = pricingSection.getBoundingClientRect();
       bottomBanner.classList.toggle('visible', rect.top < window.innerHeight);
+    } else {
+      bottomBanner.classList.add('visible');
     }
   };
 

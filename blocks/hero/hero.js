@@ -6,6 +6,11 @@
 function initAnimatedBackground(bgEl) {
   const canvas = document.createElement('canvas');
   canvas.className = 'hero-bg-canvas';
+
+  // Dimensions must be set before getContext — setting them after resets all GL state.
+  canvas.width = Math.max(320, Math.floor(window.innerWidth / 2));
+  canvas.height = Math.max(240, Math.floor(window.innerHeight / 2));
+
   bgEl.prepend(canvas);
 
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -99,14 +104,8 @@ function initAnimatedBackground(bgEl) {
   const uTime = gl.getUniformLocation(prog, 'u_time');
   const uRes = gl.getUniformLocation(prog, 'u_res');
 
-  // Set buffer size once — changing canvas.width/height resets GL state, so we never touch it again.
-  // CSS width/height:100% handles visual scaling to fill the container.
-  const W = Math.max(320, Math.floor(window.innerWidth / 2));
-  const H = Math.max(240, Math.floor(window.innerHeight / 2));
-  canvas.width = W;
-  canvas.height = H;
-  gl.viewport(0, 0, W, H);
-  gl.uniform2f(uRes, W, H);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.uniform2f(uRes, canvas.width, canvas.height);
 
   let raf = null;
   let inView = true;

@@ -106,13 +106,15 @@
 /* Cards container */
 .pricing-plans .pricing-cards {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0;
   width: 100%;
 }
 
 /* Individual pricing card */
 .pricing-plans .pricing-card {
+  flex: 1;
+  min-width: 0;
   padding: 24px;
   text-align: center;
   color: #0a0a0a;
@@ -321,16 +323,8 @@
   }
 }
 
-/* Responsive — tablet: side-by-side cards */
+/* Responsive — tablet */
 @media (width >= 600px) {
-  .pricing-plans .pricing-cards {
-    flex-direction: row;
-  }
-
-  .pricing-plans .pricing-card {
-    flex: 1;
-  }
-
   .pricing-plans .pricing-tab {
     padding: 16px 48px;
   }

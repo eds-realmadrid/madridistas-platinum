@@ -101,6 +101,8 @@
 /* Left column: shirts */
 .pricing-plans .pricing-col-shirts {
   background: transparent;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Cards container */
@@ -109,6 +111,7 @@
   flex-direction: row;
   gap: 0;
   width: 100%;
+  flex: 1;
 }
 
 /* Individual pricing card */
@@ -119,6 +122,9 @@
   text-align: center;
   color: #0a0a0a;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pricing-plans .pricing-card-dark {

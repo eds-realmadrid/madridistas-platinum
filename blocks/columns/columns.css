@@ -63,6 +63,21 @@
   background-repeat: no-repeat;
 }
 
+/* Number badges in 3-column layout — all viewport sizes */
+.columns:has(> div:nth-child(3)) > div > div:not(.columns-img-col) > p:first-child:not(:has(img)) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
 /* Stacked centered layout when columns shares a section with hero */
 .hero-container .columns > div {
   text-align: center;
@@ -133,18 +148,4 @@
     filter: blur(4px);
   }
 
-  /* Number badges in 3-column layout */
-  .columns:has(> div:nth-child(3)) > div > div:not(.columns-img-col) > p:first-child:not(:has(img)) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #fff;
-    color: #1a1a1a;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0 0 8px;
-  }
 }

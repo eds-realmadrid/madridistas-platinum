@@ -16,8 +16,6 @@ function initAnimatedBackground(bgEl) {
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   if (!gl) return;
 
-  const img = bgEl.querySelector('img');
-  if (img) img.style.opacity = '0';
 
   const vsSource = `
     attribute vec2 a_pos;

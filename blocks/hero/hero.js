@@ -70,12 +70,9 @@ function initAnimatedBackground(bgEl) {
       );
       float f = fbm(uv * 2.0 + r);
 
-      vec3 col = mix(vec3(0.01, 0.01, 0.02), vec3(0.12, 0.13, 0.15), clamp(f * 2.5, 0.0, 1.0));
-      col = mix(col, vec3(0.22, 0.24, 0.27), clamp(length(q) * 0.7, 0.0, 1.0));
-      col = mix(col, vec3(0.38, 0.40, 0.44), clamp(r.x * r.x * 1.5, 0.0, 1.0));
-
-      float vig = 1.0 - dot((uv - 0.5) * 1.4, (uv - 0.5) * 1.4);
-      col *= clamp(vig, 0.2, 1.0);
+      vec3 col = mix(vec3(0.03, 0.03, 0.06), vec3(0.35, 0.37, 0.44), clamp(f * 3.0, 0.0, 1.0));
+      col = mix(col, vec3(0.55, 0.58, 0.66), clamp(length(q) * 0.9, 0.0, 1.0));
+      col = mix(col, vec3(0.80, 0.84, 0.90), clamp(r.x * r.x * 2.0, 0.0, 1.0));
 
       gl_FragColor = vec4(col, 1.0);
     }

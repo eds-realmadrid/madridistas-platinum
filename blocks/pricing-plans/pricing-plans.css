@@ -155,7 +155,7 @@
 }
 
 .pricing-plans .pricing-card-image img {
-  max-width: 240px;
+  max-width: min(240px, 100%);
   height: auto;
   object-fit: contain;
 }

@@ -73,6 +73,15 @@
   max-width: 732px;
 }
 
+/* Animated WebGL canvas — fills hero-bg, rendered at half-res and scaled up via CSS */
+.hero > .hero-bg canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 /* Background image row — positioned behind content */
 .hero > .hero-bg {
   position: absolute;

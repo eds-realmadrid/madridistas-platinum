@@ -2,6 +2,137 @@
  * Decorates the hero block
  * @param {Element} block The hero block element
  */
+
+function initAnimatedBackground(bgEl) {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'hero-bg-canvas';
+  bgEl.prepend(canvas);
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+
+  const img = bgEl.querySelector('img');
+  if (img) img.style.opacity = '0';
+
+  const vsSource = `
+    attribute vec2 a_pos;
+    void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+  `;
+
+  const fsSource = `
+    precision mediump float;
+    uniform float u_time;
+    uniform vec2 u_res;
+
+    float hash(vec2 p) {
+      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    }
+
+    float noise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      vec2 u = f * f * (3.0 - 2.0 * f);
+      return mix(
+        mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+        mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
+        u.y
+      );
+    }
+
+    float fbm(vec2 p) {
+      float v = 0.0;
+      float a = 0.5;
+      mat2 rot = mat2(0.8775, 0.4794, -0.4794, 0.8775);
+      for (int i = 0; i < 5; i++) {
+        v += a * noise(p);
+        p = rot * p * 2.1 + vec2(100.0);
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    void main() {
+      vec2 uv = gl_FragCoord.xy / u_res;
+      float t = u_time * 0.06;
+
+      vec2 q = vec2(
+        fbm(uv * 2.0 + t),
+        fbm(uv * 2.0 + vec2(5.2, 1.3) + t * 0.8)
+      );
+      vec2 r = vec2(
+        fbm(uv * 1.5 + q + vec2(1.7, 9.2) + 0.12 * t),
+        fbm(uv * 1.5 + q + vec2(8.3, 2.8) + 0.10 * t)
+      );
+      float f = fbm(uv * 2.0 + r);
+
+      vec3 col = mix(vec3(0.01, 0.01, 0.02), vec3(0.12, 0.13, 0.15), clamp(f * 2.5, 0.0, 1.0));
+      col = mix(col, vec3(0.22, 0.24, 0.27), clamp(length(q) * 0.7, 0.0, 1.0));
+      col = mix(col, vec3(0.38, 0.40, 0.44), clamp(r.x * r.x * 1.5, 0.0, 1.0));
+
+      float vig = 1.0 - dot((uv - 0.5) * 1.4, (uv - 0.5) * 1.4);
+      col *= clamp(vig, 0.2, 1.0);
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  function compileShader(type, src) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    return sh;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vsSource));
+  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fsSource));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  const posLoc = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(posLoc);
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_res');
+
+  let raf = null;
+  let inView = false;
+  let startTime = null;
+
+  function resize() {
+    const w = Math.max(1, Math.floor(bgEl.offsetWidth * 0.5));
+    const h = Math.max(1, Math.floor(bgEl.offsetHeight * 0.5));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+  }
+
+  function render(ts) {
+    if (!startTime) startTime = ts;
+    gl.uniform1f(uTime, (ts - startTime) / 1000);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    if (inView) raf = requestAnimationFrame(render);
+  }
+
+  new ResizeObserver(resize).observe(bgEl);
+  resize();
+
+  new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      inView = entry.isIntersecting;
+      if (inView && !raf) raf = requestAnimationFrame(render);
+      if (!inView && raf) { cancelAnimationFrame(raf); raf = null; }
+    });
+  }).observe(bgEl);
+}
+
 export default async function decorate(block) {
   const rows = [...block.children];
 
@@ -37,6 +168,12 @@ export default async function decorate(block) {
   // CTA hero (bg + content only, no product images)
   if (rows.length === 2) {
     block.classList.add('cta');
+  }
+
+  // Animated WebGL background for top hero (has product images, not left-aligned)
+  if (rows.length > 2 && !block.classList.contains('left')) {
+    const bg = block.querySelector('.hero-bg');
+    if (bg) initAnimatedBackground(bg);
   }
 
   // 3D tilt effect for card (4th child)
@@ -80,17 +217,14 @@ export default async function decorate(block) {
       let ticking = false;
       let isInView = false;
 
-      // Use Intersection Observer to detect when hero is in viewport
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             isInView = entry.isIntersecting;
             if (isInView) {
-              // Apply will-change when in view for smooth animation
               content.style.willChange = 'transform';
               bg.style.willChange = 'transform';
             } else {
-              // Reset transforms and remove will-change when out of view
               content.style.transform = '';
               bg.style.transform = '';
               content.style.willChange = 'auto';

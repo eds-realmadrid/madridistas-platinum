@@ -128,7 +128,7 @@
 
 .pricing-plans .pricing-card h4 {
   margin: 0 0 12px;
-  font-size: 28px;
+  font-size: clamp(14px, 4vw, 22px);
   font-weight: 600;
   color: inherit;
 }
@@ -312,10 +312,6 @@
   .pricing-plans-container > .default-content-wrapper > h2 {
     font-size: 48px;
     margin-bottom: 32px;
-  }
-
-  .pricing-plans .pricing-card h4 {
-    font-size: 24px;
   }
 
   .pricing-plans .pricing-col-header h3 {

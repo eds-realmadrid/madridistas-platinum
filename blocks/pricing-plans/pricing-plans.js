@@ -135,10 +135,18 @@ export default function decorate(block) {
     priceMonthly.className = 'pricing-price plan-monthly hidden';
     priceMonthly.textContent = card.monthlyPrice;
 
+    const monthlyImgSrcs = [
+      '/images/pricing-plans/camiseta-monthly.png',
+      '/images/pricing-plans/camiseta-authentic-monthly.png',
+    ];
+
     const imgWrapper = document.createElement('div');
     imgWrapper.className = 'pricing-card-image';
     if (card.img) {
-      imgWrapper.append(card.img.cloneNode(true));
+      const imgEl = card.img.cloneNode(true);
+      imgEl.dataset.annualSrc = imgEl.src;
+      imgEl.dataset.monthlySrc = monthlyImgSrcs[idx];
+      imgWrapper.append(imgEl);
     }
 
     const descEl = document.createElement('p');
@@ -253,6 +261,10 @@ export default function decorate(block) {
       });
       block.querySelectorAll('.plan-monthly').forEach((el) => {
         el.classList.toggle('hidden', plan !== 'monthly');
+      });
+
+      block.querySelectorAll('.pricing-card-image img[data-monthly-src]').forEach((img) => {
+        img.src = plan === 'monthly' ? img.dataset.monthlySrc : img.dataset.annualSrc;
       });
     });
   });

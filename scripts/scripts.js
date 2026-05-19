@@ -154,7 +154,7 @@ function decorateButtons(main) {
  * @param {Element} main The main element
  */
 function decorateInPageLinks(main) {
-  const aldetalle = main.querySelector('#platinum-al-detalle');
+  const aldetalle = main.querySelector('#todo-lo-que-incluye-platinum');
   if (aldetalle) {
     const section = aldetalle.closest('.section');
     if (section && !section.id) section.id = 'aldetalle';

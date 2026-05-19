@@ -150,6 +150,22 @@ function decorateButtons(main) {
 }
 
 /**
+ * Adds anchor ids and rewrites external links that should point to in-page sections.
+ * @param {Element} main The main element
+ */
+function decorateInPageLinks(main) {
+  const aldetalle = main.querySelector('#platinum-al-detalle');
+  if (aldetalle) {
+    const section = aldetalle.closest('.section');
+    if (section && !section.id) section.id = 'aldetalle';
+  }
+
+  main.querySelectorAll('a[href*="platinum.madridistas.com"][href*="#aldetalle"]').forEach((a) => {
+    a.href = './es-es#aldetalle';
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -160,6 +176,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateButtons(main);
+  decorateInPageLinks(main);
 }
 
 /**

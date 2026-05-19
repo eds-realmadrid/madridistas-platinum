@@ -186,13 +186,28 @@ export default async function decorate(block) {
 
   const dropdown = document.createElement('div');
   dropdown.className = 'nav-lang-dropdown';
-  languages.filter((l) => l.code !== currentLang.code).forEach((lang) => {
+
+  // Non-current languages first, then current (selected) at the bottom
+  const orderedLangs = [
+    ...languages.filter((l) => l.code !== currentLang.code),
+    currentLang,
+  ];
+  orderedLangs.forEach((lang) => {
     const langPath = currentPath.includes(currentLang.code)
       ? currentPath.replace(currentLang.code, lang.code)
       : currentPath.replace(/\/?$/, `/${lang.code}`);
     const link = document.createElement('a');
     link.href = langPath;
     link.textContent = lang.label;
+    if (lang.code === currentLang.code) {
+      link.classList.add('is-current');
+      link.setAttribute('aria-current', 'true');
+      const check = document.createElement('span');
+      check.className = 'nav-lang-check';
+      check.setAttribute('aria-hidden', 'true');
+      check.textContent = '✓';
+      link.append(check);
+    }
     dropdown.append(link);
   });
 

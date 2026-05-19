@@ -327,7 +327,10 @@ header nav .nav-lang-current[aria-expanded='true'] ~ .nav-lang-dropdown {
 }
 
 header nav .nav-lang-dropdown a {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   padding: 10px 16px;
   color: #fff;
   font-size: 14px;
@@ -338,6 +341,15 @@ header nav .nav-lang-dropdown a {
 
 header nav .nav-lang-dropdown a:hover {
   background: rgb(255 255 255 / 10%);
+}
+
+header nav .nav-lang-dropdown a.is-current {
+  background: #fff;
+  color: #1a1a1a;
+}
+
+header nav .nav-lang-dropdown a.is-current:hover {
+  background: #f0f0f0;
 }
 
 /* tools — used as data source for bottom banner, hidden from view */

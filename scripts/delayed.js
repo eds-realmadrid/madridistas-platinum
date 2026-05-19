@@ -213,31 +213,6 @@ function pushPageLoadEvent() {
   window.adobeDataLayer.push(buildPageLoadObject());
 }
 
-/**
- * Pushes the pageLoad event to the Adobe Data Layer.
- * adobeDataLayer is a queue — it is safe to push before Launch fully initializes;
- * Launch will drain the queue when it loads.
- */
-function pushPageLoadEvent() {
-  window.adobeDataLayer = window.adobeDataLayer || [];
-  const {
-    pageSection, pageName, pageLevel1, pageLevel2, pageLevel3, pageType, country,
-  } = buildPageData();
-  window.adobeDataLayer.push({
-    event: 'pageLoad',
-    webPageDetails: {
-      pageName,
-      pageSection,
-      pageLevel1,
-      pageLevel2,
-      pageLevel3,
-      pageType,
-      pageLoadType: 'sequential',
-      cms: 'aem',
-      country,
-    },
-  });
-}
 
 /**
  * Loads the Adobe Launch (DTM) library and immediately pushes the pageLoad event.

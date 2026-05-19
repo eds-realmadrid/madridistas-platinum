@@ -154,9 +154,9 @@ function decorateButtons(main) {
  * @param {Element} main The main element
  */
 function decorateAnchors(main) {
-  const aldetalle = main.querySelector('#todo-lo-que-incluye-platinum');
-  if (aldetalle) {
-    const section = aldetalle.closest('.section');
+  const pricingBlock = main.querySelector('.pricing-plans');
+  if (pricingBlock) {
+    const section = pricingBlock.closest('.section');
     if (section && !section.id) section.id = 'aldetalle';
   }
 }

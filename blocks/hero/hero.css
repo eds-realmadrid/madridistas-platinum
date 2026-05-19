@@ -392,12 +392,7 @@
 
 /* stylelint-disable-next-line no-descending-specificity */
 .hero.cta::after {
-  background: linear-gradient(
-    180deg,
-    rgb(10 10 10 / 40%) 0%,
-    rgb(10 10 10 / 55%) 50%,
-    rgb(10 10 10 / 70%) 100%
-  );
+  display: none;
 }
 
 .hero.cta > .hero-content {

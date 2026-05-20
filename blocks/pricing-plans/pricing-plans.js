@@ -308,7 +308,7 @@ export default function decorate(block) {
   const firstBenefit = carousel.querySelector('.pricing-benefit');
   if (firstBenefit) {
     new ResizeObserver(() => {
-      const h = itemsPerView * (firstBenefit.offsetHeight + 12) - 12 + 24;
+      const h = itemsPerView * (firstBenefit.offsetHeight + 12) - 12;
       if (h > 0) {
         carouselWrapper.style.height = `${h}px`;
         updateCarousel();

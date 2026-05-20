@@ -107,8 +107,8 @@ export default async function decorate(block) {
           const rect = block.getBoundingClientRect();
           const viewH = window.innerHeight;
           const progress = -rect.top / viewH;
-          content.style.transform = `translateY(${progress * -60}px)`;
-          bg.style.transform = `translateY(${progress * -30}px)`;
+          content.style.transform = `translateY(${progress * -100}px)`;
+          bg.style.transform = `translateY(${progress * -50}px)`;
           ticking = false;
         });
       };

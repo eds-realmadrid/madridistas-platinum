@@ -269,18 +269,29 @@ export default function decorate(block) {
 
   function updateCarousel() {
     const items = [...carousel.querySelectorAll('.pricing-benefit')];
-    const maxIndex = Math.max(0, items.length - itemsPerView);
-    if (currentIndex > maxIndex) currentIndex = maxIndex;
-    if (currentIndex < 0) currentIndex = 0;
+    if (!items.length) return;
 
-    // Build actual top positions — items may have different heights
     let top = 0;
     const tops = items.map((item) => {
       const t = top;
       top += item.offsetHeight + 12;
       return t;
     });
-    carousel.style.transform = `translateY(-${tops[currentIndex] ?? 0}px)`;
+
+    const lastBottom = tops[items.length - 1] + items[items.length - 1].offsetHeight;
+    const visibleH = carouselWrapper.offsetHeight - 24;
+    const maxOffset = Math.max(0, lastBottom - visibleH);
+
+    let maxIndex = 0;
+    for (let i = tops.length - 1; i >= 0; i -= 1) {
+      if (tops[i] <= maxOffset) { maxIndex = i; break; }
+    }
+
+    if (currentIndex > maxIndex) currentIndex = maxIndex;
+    if (currentIndex < 0) currentIndex = 0;
+
+    const offset = currentIndex === maxIndex ? maxOffset : tops[currentIndex];
+    carousel.style.transform = `translateY(-${offset}px)`;
 
     prevBtn.classList.toggle('hidden', currentIndex === 0);
     nextBtn.classList.toggle('hidden', currentIndex >= maxIndex);
@@ -314,7 +325,7 @@ export default function decorate(block) {
     if (!items.length) return;
     const maxH = Math.max(...items.map((item) => item.offsetHeight));
     if (maxH === 0) return;
-    carouselWrapper.style.height = `${itemsPerView * (maxH + 12) - 12}px`;
+    carouselWrapper.style.maxHeight = `${itemsPerView * (maxH + 12) - 12}px`;
     updateCarousel();
   }).observe(carousel);
 

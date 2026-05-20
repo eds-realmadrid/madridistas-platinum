@@ -310,7 +310,9 @@ export default function decorate(block) {
     const firstItem = carousel.querySelector('.pricing-benefit');
     if (firstItem) {
       const itemH = firstItem.offsetHeight;
-      carouselWrapper.style.height = `${itemsPerView * (itemH + 12) - 12 + 24}px`;
+      const h = `${itemsPerView * (itemH + 12) - 12 + 24}px`;
+      carouselWrapper.style.height = h;
+      carouselWrapper.style.maxHeight = h;
     }
   });
 }

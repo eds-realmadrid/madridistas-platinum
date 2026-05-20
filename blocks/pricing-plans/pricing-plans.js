@@ -37,8 +37,8 @@ export default function decorate(block) {
   // Row 4: footnotes (optional)
   const footnoteRow = rows[4];
   const footnoteCols = footnoteRow ? [...footnoteRow.querySelectorAll(':scope > div')] : [];
-  const annualFootnote = footnoteCols[0]?.textContent.trim() || '';
-  const monthlyFootnote = footnoteCols[1]?.textContent.trim() || '';
+  const annualFootnote = footnoteCols[0]?.innerHTML.trim() || '';
+  const monthlyFootnote = footnoteCols[1]?.innerHTML.trim() || '';
 
   // Row 5: column headers
   const headerRow = rows[5];
@@ -234,10 +234,10 @@ export default function decorate(block) {
   footnoteEl.className = 'pricing-footnote';
   const fnAnnual = document.createElement('span');
   fnAnnual.className = 'plan-annual';
-  fnAnnual.textContent = annualFootnote;
+  fnAnnual.innerHTML = annualFootnote;
   const fnMonthly = document.createElement('span');
   fnMonthly.className = 'plan-monthly hidden';
-  fnMonthly.textContent = monthlyFootnote;
+  fnMonthly.innerHTML = monthlyFootnote;
   footnoteEl.append(fnAnnual, fnMonthly);
 
   block.append(toggle, contentArea, footnoteEl);

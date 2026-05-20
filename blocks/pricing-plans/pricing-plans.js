@@ -304,6 +304,17 @@ export default function decorate(block) {
     setTimeout(() => { wheelLocked = false; }, 250);
   }, { passive: false });
 
-  // Initialize carousel after render
+  // Size wrapper to exactly itemsPerView items — ResizeObserver fires before first paint
+  const firstBenefit = carousel.querySelector('.pricing-benefit');
+  if (firstBenefit) {
+    new ResizeObserver(() => {
+      const h = itemsPerView * (firstBenefit.offsetHeight + 12) - 12 + 24;
+      if (h > 0) {
+        carouselWrapper.style.height = `${h}px`;
+        updateCarousel();
+      }
+    }).observe(firstBenefit);
+  }
+
   requestAnimationFrame(() => updateCarousel());
 }

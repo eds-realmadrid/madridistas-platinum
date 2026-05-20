@@ -72,8 +72,8 @@ export default async function decorate(block) {
     }
   }
 
-  // Parallax effect for left-aligned hero
-  if (block.classList.contains('left')) {
+  // Parallax effect for left-aligned and CTA heroes
+  if (block.classList.contains('left') || block.classList.contains('cta')) {
     const content = block.querySelector('.hero-content');
     const bg = block.querySelector('.hero-bg');
     if (content && bg) {

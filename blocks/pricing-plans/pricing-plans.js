@@ -304,6 +304,13 @@ export default function decorate(block) {
     setTimeout(() => { wheelLocked = false; }, 250);
   }, { passive: false });
 
-  // Initialize carousel after render
-  requestAnimationFrame(() => updateCarousel());
+  // Initialize carousel after render — set exact wrapper height to fit itemsPerView items
+  requestAnimationFrame(() => {
+    updateCarousel();
+    const firstItem = carousel.querySelector('.pricing-benefit');
+    if (firstItem) {
+      const itemH = firstItem.offsetHeight;
+      carouselWrapper.style.height = `${itemsPerView * (itemH + 12) - 12 + 24}px`;
+    }
+  });
 }

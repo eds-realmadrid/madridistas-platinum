@@ -207,25 +207,19 @@ export default function decorate(block) {
   carouselWrapper.append(carousel);
 
   // Carousel navigation
-  const navContainer = document.createElement('div');
-  navContainer.className = 'pricing-carousel-nav';
-
   const prevBtn = document.createElement('button');
-  prevBtn.className = 'pricing-carousel-btn prev';
+  prevBtn.className = 'pricing-carousel-btn prev hidden';
   prevBtn.setAttribute('aria-label', 'Previous benefits');
   prevBtn.setAttribute('type', 'button');
-  prevBtn.innerHTML = '&#8593;';
 
   const nextBtn = document.createElement('button');
   nextBtn.className = 'pricing-carousel-btn next';
   nextBtn.setAttribute('aria-label', 'Next benefits');
   nextBtn.setAttribute('type', 'button');
-  nextBtn.innerHTML = '&#8595;';
 
-  navContainer.append(prevBtn, nextBtn);
+  carouselWrapper.append(prevBtn, nextBtn);
 
   rightCol.append(carouselWrapper);
-  rightCol.append(navContainer);
 
   contentArea.append(leftCol, rightCol);
 
@@ -284,19 +278,31 @@ export default function decorate(block) {
     const offset = currentIndex * (itemHeight + gap);
     carousel.style.transform = `translateY(-${offset}px)`;
 
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= maxIndex;
+    prevBtn.classList.toggle('hidden', currentIndex === 0);
+    nextBtn.classList.toggle('hidden', currentIndex >= maxIndex);
+    carouselWrapper.classList.toggle('has-prev', currentIndex > 0);
+    carouselWrapper.classList.toggle('has-next', currentIndex < maxIndex);
   }
 
   prevBtn.addEventListener('click', () => {
-    currentIndex -= 1;
+    currentIndex -= itemsPerView;
     updateCarousel();
   });
 
   nextBtn.addEventListener('click', () => {
-    currentIndex += 1;
+    currentIndex += itemsPerView;
     updateCarousel();
   });
+
+  let wheelLocked = false;
+  carouselWrapper.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (wheelLocked) return;
+    wheelLocked = true;
+    currentIndex += e.deltaY > 0 ? 1 : -1;
+    updateCarousel();
+    setTimeout(() => { wheelLocked = false; }, 250);
+  }, { passive: false });
 
   // Initialize carousel after render
   requestAnimationFrame(() => updateCarousel());

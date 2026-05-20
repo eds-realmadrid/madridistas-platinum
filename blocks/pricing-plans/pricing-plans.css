@@ -194,15 +194,46 @@
 .pricing-plans .pricing-carousel-wrapper {
   position: relative;
   overflow: hidden;
-  padding: 12px;
+  padding: 56px 12px;
   flex: 1;
+}
+
+.pricing-plans .pricing-carousel-wrapper::before,
+.pricing-plans .pricing-carousel-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pricing-plans .pricing-carousel-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgb(43 43 43), transparent);
+}
+
+.pricing-plans .pricing-carousel-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgb(43 43 43), transparent);
+}
+
+.pricing-plans .pricing-carousel-wrapper.has-prev::before {
+  opacity: 1;
+}
+
+.pricing-plans .pricing-carousel-wrapper.has-next::after {
+  opacity: 1;
 }
 
 .pricing-plans .pricing-carousel {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: transform 0.4s ease;
+  transition: transform 0.25s ease;
 }
 
 /* Benefit card */
@@ -262,36 +293,57 @@
   max-width: 280px;
 }
 
-/* Carousel navigation — sits below the overflow area, always visible */
-.pricing-plans .pricing-carousel-nav {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px 0 16px;
-}
-
+/* Carousel navigation — circular arrow buttons overlaid on carousel wrapper */
 .pricing-plans .pricing-carousel-btn {
-  width: 36px;
-  height: 36px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 30%);
-  background: rgb(255 255 255 / 10%);
-  color: #fff;
-  font-size: 20px;
+  border: none;
+  background: rgb(80 80 80 / 90%);
   cursor: pointer;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease;
+  min-height: unset;
+  min-width: unset;
+}
+
+.pricing-plans .pricing-carousel-btn.prev {
+  top: 8px;
+}
+
+.pricing-plans .pricing-carousel-btn.next {
+  bottom: 8px;
+}
+
+.pricing-plans .pricing-carousel-btn::after {
+  content: '';
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid #fff;
+  border-top: 2px solid #fff;
+}
+
+.pricing-plans .pricing-carousel-btn.prev::after {
+  transform: rotate(-45deg) translate(1px, 2px);
+}
+
+.pricing-plans .pricing-carousel-btn.next::after {
+  transform: rotate(135deg) translate(1px, 2px);
 }
 
 .pricing-plans .pricing-carousel-btn:hover {
-  background: rgb(255 255 255 / 20%);
+  background: rgb(100 100 100 / 95%);
 }
 
-.pricing-plans .pricing-carousel-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
+.pricing-plans .pricing-carousel-btn.hidden {
+  display: none;
 }
 
 /* Footnote */

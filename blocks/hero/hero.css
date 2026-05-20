@@ -42,7 +42,7 @@
 .hero > div {
   position: relative;
   z-index: 1;
-  max-width: 732px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto;
 }
@@ -70,7 +70,7 @@
   font-size: var(--body-font-size-s);
   line-height: 1.25;
   color: var(--light-gray);
-  max-width: 732px;
+  max-width: 900px;
 }
 
 /* Background image row — positioned behind content */

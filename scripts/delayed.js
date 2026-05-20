@@ -89,7 +89,7 @@ function pushPageLoadEvent() {
 function loadLaunch() {
   loadScript(
     'https://assets.adobedtm.com/ab05854e772b/386400a5741e/launch-938e6c931256-development.min.js',
-    /*'https://assets.adobedtm.com/ab05854e772b/386400a5741e/launch-19612895918c.min.js',*/
+    /* 'https://assets.adobedtm.com/ab05854e772b/386400a5741e/launch-19612895918c.min.js', */
     { async: '' },
   );
   pushPageLoadEvent();

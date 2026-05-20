@@ -14,23 +14,6 @@ function getMetadata(name) {
   return meta?.content?.trim() || '';
 }
 
-function hex(bytes) {
-  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-}
-/**
- * Generates a cryptographically secure unique page view identifier.
- *
- * Produces a 64-character hexadecimal string compatible with
- * analytics correlation and tracking requirements.
- *
- * @returns {string} Unique pageView ID.
- */
-function generatePageViewId() {
-  const bytes = new Uint8Array(32); // 32 bytes = 64 hex chars
-  crypto.getRandomValues(bytes);
-  return hex(bytes);
-}
-
 /**
  * Derives structured page data from the current URL pathname.
  *
@@ -42,177 +25,61 @@ function generatePageViewId() {
  * The locale prefix encodes both language (first part) and country (second part),
  * e.g. "en-us" → language=en, country=us. We only need the country for the datalayer.
  */
-function getLocaleData() {
-  const { pathname, hostname, href } = window.location;
+function buildPageData() {
+  const { pathname } = window.location;
 
-  const localeMatch = pathname.match(/^\/([a-z]{2})-([a-z]{2})(\/|$)/i);
-  const pageLang = localeMatch ? localeMatch[1].toLowerCase() : '';
-  const country = localeMatch ? localeMatch[2].toLowerCase() : '';
+  // Match the locale prefix at the start of the path: /xx-xx/ or /xx-xx (end of string)
+  // Group 1 = language code (e.g. "es"), Group 2 = country code (e.g. "es" or "us")
+  const localeMatch = pathname.match(/^\/([a-z]{2})-([a-z]{2})(\/|$)/);
+  const country = localeMatch ? localeMatch[2] : 'es';
 
+  // Strip the locale prefix (e.g. "/es-es" or "/es-es/") to get the remaining path,
+  // then remove any trailing slash before splitting into segments.
+  // e.g. "/es-es/landing/platinum/home" → "landing/platinum/home" → ['landing','platinum','home']
+  // e.g. "/es-es" or "/es-es/" → "" → [] (treated as home)
   const stripped = pathname
-    .replace(/^\/[a-z]{2}-[a-z]{2}(\/|$)/i, '')
+    .replace(/^\/[a-z]{2}-[a-z]{2}(\/|$)/, '')
     .replace(/\/$/, '');
-
   const segments = stripped ? stripped.split('/').filter(Boolean) : [];
 
   const pageSection = 'madridistas';
-  const pageLevel1 = segments[0] || 'home';
-  const pageLevel2 = segments[1] || '';
-  const pageLevel3 = segments[2] || '';
-  const pageLevel4 = segments[3] || '';
-  const pageType = getMetadata('page-type') || (segments.length ? segments[0] : 'home');
-  const pageName = [pageSection, pageLevel1, pageLevel2, pageLevel3, pageLevel4]
-    .filter(Boolean)
-    .join(':');
+  const pageLevels = {};
+  segments.forEach((seg, i) => { pageLevels[`pageLevel${i + 1}`] = seg; });
+  if (!pageLevels.pageLevel1) pageLevels.pageLevel1 = 'home';
+
+  const authoredPageType = getMetadata('page-type');
+  const pageType = authoredPageType || '';
+
+  const pageName = [pageSection, ...Object.values(pageLevels)].join(':');
 
   return {
-    pageSection,
-    pageName,
-    pageLevel1,
-    pageLevel2,
-    pageLevel3,
-    pageLevel4,
-    pageType,
-    country,
-    pageLang,
-    pagePath: pathname,
-    pageURL: href,
-    pageDomain: hostname,
-    pageTopDomain: hostname.includes('.') ? `.${hostname.split('.').slice(-1)[0]}` : '',
-    pageTitle: document.title || '',
-  };
-}
-/**
- * Builds the complete Adobe Data Layer pageLoad payload.
- *
- * This method centralizes all analytics-related page context,
- * including:
- * - web page metadata
- * - environment details
- * - referrer information
- * - user placeholders
- * - campaign placeholders
- * - subscription placeholders
- * - generated pageView identifier
- *
- * The structure is aligned with the existing analytics schema
- * used in the migration project.
- *
- * @returns {Object} Adobe Data Layer pageLoad object.
- */
-function buildPageLoadObject() {
-  const {
-    pageSection,
-    pageName,
-    pageLevel1,
-    pageLevel2,
-    pageLevel3,
-    pageLevel4,
-    pageType,
-    country,
-    pageLang,
-    pagePath,
-    pageURL,
-    pageDomain,
-    pageTopDomain,
-    pageTitle,
-  } = getLocaleData();
-
-  return {
-    webPageDetails: {
-      pageName,
-      pageChannel: 'web',
-      pageURL,
-      pageSection,
-      pageLevel1,
-      pageLevel2,
-      pageLevel3,
-      pageLevel4,
-      pageType,
-      pageAnchor: window.location.hash || '',
-      pagePath,
-      pageTopDomain,
-      pageDomain,
-      pageTitle,
-      pageLoadType: 'sequential',
-      cms: 'aem',
-      pageLang,
-      country,
-      siteEnviroment: getMetadata('site-environment') || 'pro',
-      viewName: pagePath,
-      userAgent: navigator.userAgent || '',
-    },
-    environment: {
-      acceptLanguage: navigator.language || navigator.languages?.[0] || '',
-    },
-    webReferrer: {
-      previousPagePath: document.referrer ? new URL(document.referrer).pathname : '',
-      previousName: document.referrer ? pageName : '',
-      previousPageURL: document.referrer || '',
-      referrer: document.referrer || '',
-    },
-    user: {
-      userLoginStatus: 'not_authenticated',
-      userLoyaltyStatus: '',
-      userAge: '',
-      userGender: '',
-      userCategory: '',
-      userSubType: '',
-      userLoginType: '',
-      teamPreferences: '',
-      addressCountryCode: '',
-      userNumber: '',
-    },
-    campaign: {
-      campaignID: '',
-      campaignSource: '',
-      campaignMedium: '',
-      campaignContent: '',
-      intCampaign: '',
-      behalfClientId: '',
-    },
-    funnelInfo: {
-      funnelType: '',
-      funnelSeat: '',
-      funnelPlace: '',
-      funnelArea: '',
-      funnelVersion: '',
-    },
-    promotion: {
-      promotionID: '',
-    },
-    identification: {
-      idpID: '',
-      hashedEmail: '',
-      correlationIdpID: '',
-    },
-    subscription: {
-      nextPaymentDate: '',
-      nextPaymentDays: null,
-      paymentMethod: '',
-      creditCardExpirationDate: '',
-      creditCardExpirationDays: null,
-      creationDate: '',
-      creationDays: null,
-      status: '',
-      billingCycle: '',
-      planItem: '',
-    },
-    pageInfo: {
-      pageViewID: generatePageViewId(),
-    },
-    event: 'pageLoad',
+    pageSection, pageName, ...pageLevels, pageType, country,
   };
 }
 
 /**
- * Pushes the pageLoad event to Adobe Data Layer.
+ * Pushes the pageLoad event to the Adobe Data Layer.
+ * adobeDataLayer is a queue — it is safe to push before Launch fully initializes;
+ * Launch will drain the queue when it loads.
  */
 function pushPageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
-  window.adobeDataLayer.push(buildPageLoadObject());
+  const {
+    pageSection, pageName, pageType, country, ...pageLevels
+  } = buildPageData();
+  window.adobeDataLayer.push({
+    event: 'pageLoad',
+    webPageDetails: {
+      pageName,
+      pageSection,
+      ...pageLevels,
+      pageType,
+      pageLoadType: 'sequential',
+      cms: 'aem',
+      country,
+    },
+  });
 }
-
 
 /**
  * Loads the Adobe Launch (DTM) library and immediately pushes the pageLoad event.
@@ -222,6 +89,7 @@ function pushPageLoadEvent() {
 function loadLaunch() {
   loadScript(
     'https://assets.adobedtm.com/ab05854e772b/386400a5741e/launch-938e6c931256-development.min.js',
+    /*'https://assets.adobedtm.com/ab05854e772b/386400a5741e/launch-19612895918c.min.js',*/
     { async: '' },
   );
   pushPageLoadEvent();

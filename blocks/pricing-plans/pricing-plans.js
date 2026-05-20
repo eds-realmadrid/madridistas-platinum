@@ -265,7 +265,7 @@ export default function decorate(block) {
 
   // Carousel behavior
   let currentIndex = 0;
-  const itemsPerView = window.matchMedia('(width >= 900px)').matches ? 3 : 4;
+  const itemsPerView = 4;
 
   function updateCarousel() {
     const items = [...carousel.querySelectorAll('.pricing-benefit')];

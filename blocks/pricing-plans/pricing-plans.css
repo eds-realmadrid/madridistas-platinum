@@ -2,6 +2,7 @@
 .pricing-plans-container {
   margin: 0;
   padding: 20px 0 80px;
+  background-color: rgb(10 10 10);
 }
 
 .pricing-plans-container > .default-content-wrapper > h2 {
@@ -9,7 +10,9 @@
   font-size: 72px;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
+  background: linear-gradient(0deg, rgb(153 153 153) 0%, rgb(209 209 209) 44.78%, rgb(255 255 255) 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-top: 0;
   margin-bottom: 48px;
 }
@@ -63,12 +66,12 @@
 
 .pricing-plans .pricing-badge {
   display: inline-block;
-  background-color: #6c5ce7;
+  background-color: #3e31fa;
   color: #fff;
   font-size: 12px;
   font-weight: 600;
   padding: 2px 10px;
-  border-radius: 99px;
+  border-radius: 8px;
   margin-top: 2px;
 }
 
@@ -77,15 +80,19 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-radius: 24px;
+  border-radius: 40px;
   overflow: hidden;
 }
 
 /* Column headers */
 .pricing-plans .pricing-col-header {
-  background: transparent;
+  background: rgb(41 41 41);
   padding: 16px 24px;
   text-align: center;
+}
+
+.pricing-plans .pricing-col-benefits .pricing-col-header {
+  background: rgb(71 71 71);
 }
 
 .pricing-plans .pricing-col-header h3 {
@@ -98,22 +105,30 @@
 /* Left column: shirts */
 .pricing-plans .pricing-col-shirts {
   background: transparent;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Cards container */
 .pricing-plans .pricing-cards {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0;
   width: 100%;
+  flex: 1;
 }
 
 /* Individual pricing card */
 .pricing-plans .pricing-card {
-  padding: 24px;
+  flex: 1;
+  min-width: 0;
+  padding: clamp(8px, 2vw, 24px);
   text-align: center;
   color: #0a0a0a;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pricing-plans .pricing-card-dark {
@@ -123,13 +138,13 @@
 
 .pricing-plans .pricing-card h4 {
   margin: 0 0 12px;
-  font-size: 28px;
+  font-size: clamp(11px, 3vw, 22px);
   font-weight: 600;
   color: inherit;
 }
 
 .pricing-plans .pricing-price {
-  font-size: 24px;
+  font-size: clamp(13px, 3.2vw, 24px);
   font-weight: 700;
   color: inherit;
   margin-bottom: 16px;
@@ -150,7 +165,7 @@
 }
 
 .pricing-plans .pricing-card-image img {
-  max-width: 240px;
+  max-width: min(240px, 100%);
   height: auto;
   object-fit: contain;
 }
@@ -223,19 +238,18 @@
 
 .pricing-plans .pricing-benefit-img {
   flex-shrink: 0;
-  width: 80px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 110px;
+  height: 88px;
+  overflow: hidden;
+  border-radius: 8px;
   order: 1;
 }
 
 .pricing-plans .pricing-benefit-img img {
-  max-width: 80px;
-  max-height: 70px;
-  object-fit: contain;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 .pricing-plans .pricing-benefit-text {
@@ -282,11 +296,14 @@
 
 /* Footnote */
 .pricing-plans .pricing-footnote {
-  font-size: 12px;
-  color: var(--tertiary-gray, #999);
+  font-size: var(--body-font-size-s);
+  color: #fff;
   text-align: left;
   align-self: flex-start;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 /* Hidden elements for plan toggle */
@@ -309,25 +326,13 @@
     margin-bottom: 32px;
   }
 
-  .pricing-plans .pricing-card h4 {
-    font-size: 24px;
-  }
-
   .pricing-plans .pricing-col-header h3 {
     font-size: 20px;
   }
 }
 
-/* Responsive — tablet: side-by-side cards */
+/* Responsive — tablet */
 @media (width >= 600px) {
-  .pricing-plans .pricing-cards {
-    flex-direction: row;
-  }
-
-  .pricing-plans .pricing-card {
-    flex: 1;
-  }
-
   .pricing-plans .pricing-tab {
     padding: 16px 48px;
   }

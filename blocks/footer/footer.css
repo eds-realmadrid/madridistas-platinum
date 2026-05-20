@@ -1,8 +1,8 @@
 footer {
   position: relative;
   background-color: var(--background-color);
-  font-size: var(--body-font-size-xs);
-  border-top: 1px solid rgb(255 255 255 / 10%);
+  font-size: var(--body-font-size-s);
+  border-top: 1px solid #fff;
 }
 
 footer .default-content-wrapper {
@@ -10,14 +10,14 @@ footer .default-content-wrapper {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin: auto;
-  max-width: 1240px;
+  box-sizing: border-box;
+  width: 100%;
   padding: 24px 24px 100px;
 }
 
 footer .footer p {
   margin: 0;
-  color: var(--secondary-gray);
+  color: #fff;
 }
 
 footer .footer img {
@@ -26,9 +26,10 @@ footer .footer img {
 }
 
 footer .footer a:any-link {
-  color: var(--secondary-gray);
+  color: #fff;
   text-decoration: none;
   transition: color 0.2s ease;
+  padding: 0 16px;
 }
 
 footer .footer a:hover {
@@ -39,6 +40,7 @@ footer .footer a:hover {
   footer .default-content-wrapper {
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     padding: 24px 32px 100px;
   }

@@ -150,6 +150,18 @@ function decorateButtons(main) {
 }
 
 /**
+ * Adds anchor id to the pricing section so in-page #aldetalle links work.
+ * @param {Element} main The main element
+ */
+function decorateAnchors(main) {
+  const pricingBlock = main.querySelector('.pricing-plans');
+  if (pricingBlock) {
+    const section = pricingBlock.closest('.section');
+    if (section && !section.id) section.id = 'aldetalle';
+  }
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -160,6 +172,7 @@ export function decorateMain(main) {
   decorateSections(main);
   decorateBlocks(main);
   decorateButtons(main);
+  decorateAnchors(main);
 }
 
 /**

@@ -1,3 +1,4 @@
 helix-importer-ui
 *.min.js
 plugins/
+tools/importer/import-landing-page.bundle.js

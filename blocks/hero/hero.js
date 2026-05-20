@@ -61,6 +61,17 @@ export default async function decorate(block) {
     }
   }
 
+  // Mobile background image for left-aligned hero (below 900px desktop breakpoint)
+  if (block.classList.contains('left')) {
+    const picture = block.querySelector('.hero-bg picture');
+    if (picture) {
+      const source = document.createElement('source');
+      source.media = '(max-width: 899px)';
+      source.srcset = '/media/media_158357b35da2e095c8400fd8c0a72365950512ad4.png';
+      picture.prepend(source);
+    }
+  }
+
   // Parallax effect for left-aligned hero
   if (block.classList.contains('left')) {
     const content = block.querySelector('.hero-content');
@@ -69,17 +80,14 @@ export default async function decorate(block) {
       let ticking = false;
       let isInView = false;
 
-      // Use Intersection Observer to detect when hero is in viewport
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             isInView = entry.isIntersecting;
             if (isInView) {
-              // Apply will-change when in view for smooth animation
               content.style.willChange = 'transform';
               bg.style.willChange = 'transform';
             } else {
-              // Reset transforms and remove will-change when out of view
               content.style.transform = '';
               bg.style.transform = '';
               content.style.willChange = 'auto';

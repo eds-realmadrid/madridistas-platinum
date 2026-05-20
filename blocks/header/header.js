@@ -1,4 +1,3 @@
-import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
@@ -113,10 +112,9 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment
-  const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
+  const locales = ['en-us', 'es-es'];
+  const locale = locales.find((l) => window.location.pathname.includes(l)) || 'es-es';
+  const fragment = await loadFragment(`/${locale}/nav`);
 
   // decorate nav DOM
   block.textContent = '';
@@ -124,10 +122,11 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
   const sections = [...nav.children].filter((child) => child.tagName !== 'HR');
-  classes.forEach((c, i) => {
-    if (sections[i]) sections[i].classList.add(`nav-${c}`);
+  sections.forEach((section, i) => {
+    if (i === 0) section.classList.add('nav-brand');
+    else if (i === sections.length - 1) section.classList.add('nav-tools');
+    else section.classList.add('nav-sections');
   });
 
   const navBrand = nav.querySelector('.nav-brand');
@@ -187,13 +186,28 @@ export default async function decorate(block) {
 
   const dropdown = document.createElement('div');
   dropdown.className = 'nav-lang-dropdown';
-  languages.filter((l) => l.code !== currentLang.code).forEach((lang) => {
+
+  // Non-current languages first, then current (selected) at the bottom
+  const orderedLangs = [
+    ...languages.filter((l) => l.code !== currentLang.code),
+    currentLang,
+  ];
+  orderedLangs.forEach((lang) => {
     const langPath = currentPath.includes(currentLang.code)
       ? currentPath.replace(currentLang.code, lang.code)
       : currentPath.replace(/\/?$/, `/${lang.code}`);
     const link = document.createElement('a');
     link.href = langPath;
     link.textContent = lang.label;
+    if (lang.code === currentLang.code) {
+      link.classList.add('is-current');
+      link.setAttribute('aria-current', 'true');
+      const check = document.createElement('span');
+      check.className = 'nav-lang-check';
+      check.setAttribute('aria-hidden', 'true');
+      check.textContent = '✓';
+      link.append(check);
+    }
     dropdown.append(link);
   });
 
@@ -240,6 +254,8 @@ export default async function decorate(block) {
     if (pricingSection) {
       const rect = pricingSection.getBoundingClientRect();
       bottomBanner.classList.toggle('visible', rect.top < window.innerHeight);
+    } else {
+      bottomBanner.classList.add('visible');
     }
   };
 

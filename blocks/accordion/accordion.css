@@ -9,6 +9,11 @@
   text-align: center;
 }
 
+/* Extend the gradient paint area so descenders (g, p, y…) aren't clipped */
+.accordion-container > .default-content-wrapper h2 {
+  padding-bottom: 0.2em;
+}
+
 .accordion-container > .accordion-wrapper {
   text-align: left;
 }

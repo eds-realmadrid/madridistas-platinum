@@ -269,7 +269,9 @@ export default function decorate(block) {
 
   function updateCarousel() {
     const items = [...carousel.querySelectorAll('.pricing-benefit')];
-    if (!items.length) return;
+    const maxIndex = Math.max(0, items.length - itemsPerView);
+    if (currentIndex > maxIndex) currentIndex = maxIndex;
+    if (currentIndex < 0) currentIndex = 0;
 
     // Build actual top positions — items may have different heights
     let top = 0;
@@ -278,21 +280,7 @@ export default function decorate(block) {
       top += item.offsetHeight + 12;
       return t;
     });
-
-    // maxIndex: last scroll position where the content fills the wrapper with no
-    // empty space at the bottom, regardless of non-uniform item heights
-    const lastBottom = tops[items.length - 1] + items[items.length - 1].offsetHeight;
-    const visibleH = carouselWrapper.offsetHeight - 24; // subtract top+bottom padding
-    const maxOffset = Math.max(0, lastBottom - visibleH);
-    let maxIndex = 0;
-    for (let i = tops.length - 1; i >= 0; i -= 1) {
-      if (tops[i] <= maxOffset) { maxIndex = i; break; }
-    }
-
-    if (currentIndex > maxIndex) currentIndex = maxIndex;
-    if (currentIndex < 0) currentIndex = 0;
-
-    carousel.style.transform = `translateY(-${tops[currentIndex]}px)`;
+    carousel.style.transform = `translateY(-${tops[currentIndex] ?? 0}px)`;
 
     prevBtn.classList.toggle('hidden', currentIndex === 0);
     nextBtn.classList.toggle('hidden', currentIndex >= maxIndex);
@@ -319,6 +307,16 @@ export default function decorate(block) {
     updateCarousel();
     setTimeout(() => { wheelLocked = false; }, 250);
   }, { passive: false });
+
+  // Size wrapper using the tallest item so non-uniform heights don't leave empty space
+  new ResizeObserver(() => {
+    const items = [...carousel.querySelectorAll('.pricing-benefit')];
+    if (!items.length) return;
+    const maxH = Math.max(...items.map((item) => item.offsetHeight));
+    if (maxH === 0) return;
+    carouselWrapper.style.height = `${itemsPerView * (maxH + 12) - 12}px`;
+    updateCarousel();
+  }).observe(carousel);
 
   requestAnimationFrame(() => updateCarousel());
 }

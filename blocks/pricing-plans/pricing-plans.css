@@ -196,7 +196,7 @@
   overflow: hidden;
   padding: 12px;
   flex: 1;
-  height: 500px;
+  max-height: 1100px;
 }
 
 .pricing-plans .pricing-carousel-wrapper::before,
@@ -408,7 +408,7 @@
   }
 
   .pricing-plans .pricing-carousel-wrapper {
-    height: 372px;
+    max-height: 500px;
   }
 
   .pricing-plans .pricing-card-image img {

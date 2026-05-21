@@ -32,9 +32,12 @@ footer .default-content-wrapper > p:nth-child(2) {
   white-space: nowrap;
 }
 
-/* Links row spans both columns */
+/* Links row spans both columns, centered on mobile */
 footer .default-content-wrapper > p:nth-child(3) {
   grid-column: 1 / -1;
+  text-align: center;
+  font-size: 11px;
+  white-space: nowrap;
 }
 
 
@@ -42,7 +45,7 @@ footer .footer a:any-link {
   color: #fff;
   text-decoration: none;
   transition: color 0.2s ease;
-  padding: 0 16px;
+  padding: 0 6px;
 }
 
 footer .footer a:hover {
@@ -53,6 +56,15 @@ footer .footer a:hover {
   footer .default-content-wrapper > p:nth-child(2) {
     font-size: var(--body-font-size-s);
     white-space: normal;
+  }
+
+  footer .default-content-wrapper > p:nth-child(3) {
+    font-size: var(--body-font-size-s);
+    white-space: normal;
+  }
+
+  footer .footer a:any-link {
+    padding: 0 16px;
   }
 }
 

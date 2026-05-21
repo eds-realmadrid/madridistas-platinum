@@ -25,6 +25,12 @@ footer .footer img {
   height: auto;
 }
 
+/* Copyright — smaller on mobile so it fits on one line next to the logo */
+footer .default-content-wrapper > p:nth-child(2) {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
 /* Links row spans both columns */
 footer .default-content-wrapper > p:nth-child(3) {
   grid-column: 1 / -1;
@@ -40,6 +46,13 @@ footer .footer a:any-link {
 
 footer .footer a:hover {
   color: var(--text-color);
+}
+
+@media (width >= 600px) {
+  footer .default-content-wrapper > p:nth-child(2) {
+    font-size: var(--body-font-size-s);
+    white-space: normal;
+  }
 }
 
 @media (width >= 900px) {

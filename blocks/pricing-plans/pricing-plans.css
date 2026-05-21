@@ -285,7 +285,7 @@
 }
 
 .pricing-plans .pricing-benefit-img.blur img {
-  filter: blur(4px);
+  filter: blur(2px);
 }
 
 .pricing-plans .pricing-benefit-text {

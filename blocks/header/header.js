@@ -244,16 +244,13 @@ export default async function decorate(block) {
   // Toggle solid background on scroll + show/hide bottom banner (throttled)
   let ticking = false;
 
+  const topHero = document.querySelector('main > .section:first-child .hero');
+
   const updateScrollState = () => {
     navWrapper.classList.toggle('scrolled', window.scrollY > 50);
 
-    const pricingSection = document.querySelector('.pricing-plans-container');
-    if (pricingSection) {
-      const rect = pricingSection.getBoundingClientRect();
-      bottomBanner.classList.toggle('visible', rect.top < window.innerHeight);
-    } else {
-      bottomBanner.classList.add('visible');
-    }
+    const heroBottom = topHero ? topHero.getBoundingClientRect().bottom : 0;
+    bottomBanner.classList.toggle('visible', heroBottom <= 0);
   };
 
   const onScroll = () => {

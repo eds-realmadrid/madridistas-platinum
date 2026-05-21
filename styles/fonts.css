@@ -1,33 +1,58 @@
-/* RM Neue - Real Madrid brand font */
+/* fix(typography): rename to per-weight families matching source site naming */
 
+/* RM Neue Regular — weight 400 */
 @font-face {
-  font-family: 'RM Neue';
+  font-family: 'RM Neue Regular';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url('../fonts/rm-neue-regular.woff2') format('woff2');
 }
 
+/* fix(typography): calibrated fallback metrics for RM Neue Regular to reduce CLS */
 @font-face {
-  font-family: 'RM Neue';
+  font-family: 'RM Neue Regular Placeholder';
+  size-adjust: 97%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  src: local('Arial');
+}
+
+/* RM Neue SemiBold — weight 600 */
+@font-face {
+  font-family: 'RM Neue SemiBold';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url('../fonts/rm-neue-semibold.woff2') format('woff2');
 }
 
+/* fix(typography): calibrated fallback metrics for RM Neue SemiBold to reduce CLS */
 @font-face {
-  font-family: 'RM Neue';
+  font-family: 'RM Neue SemiBold Placeholder';
+  size-adjust: 97%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  src: local('Arial');
+}
+
+/* RM Neue Bold — weight 700 */
+@font-face {
+  font-family: 'RM Neue Bold';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url('../fonts/rm-neue-bold.woff2') format('woff2');
 }
 
+/* fix(typography): calibrated fallback metrics for RM Neue Bold to reduce CLS */
 @font-face {
-  font-family: 'RM Neue';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('../fonts/rm-neue-bold.woff2') format('woff2');
+  font-family: 'RM Neue Bold Placeholder';
+  size-adjust: 97%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  src: local('Arial');
 }

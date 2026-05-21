@@ -287,7 +287,9 @@
 .pricing-plans .pricing-benefit-text {
   margin: 0;
   font-size: var(--body-font-size-s);
-  font-weight: 500;
+
+  /* fix(typography): 500→600 — no rm-neue-medium.woff2, synthesised 500 rendered grey */
+  font-weight: 600;
   color: #fff;
   line-height: 1.4;
   flex: 1;

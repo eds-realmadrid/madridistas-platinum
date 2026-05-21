@@ -6,7 +6,14 @@ export default async function decorate(block) {
   const rows = [...block.children];
 
   // Row 0: background image → add class
-  if (rows[0]) rows[0].classList.add('hero-bg');
+  if (rows[0]) {
+    rows[0].classList.add('hero-bg');
+
+    /* fix(perf): LCP image was not prioritised — browser discovered it too late.
+       fetchpriority=high tells the browser to fetch this above other resources */
+    const lcpImg = rows[0].querySelector('img');
+    if (lcpImg) lcpImg.fetchPriority = 'high';
+  }
 
   // Row 1: content (h1, desc, buttons) → add class
   if (rows[1]) rows[1].classList.add('hero-content');

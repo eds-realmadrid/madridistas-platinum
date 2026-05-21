@@ -4,11 +4,12 @@ header .nav-wrapper {
   width: 100%;
   z-index: 10;
   position: fixed;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 header .nav-wrapper.scrolled {
-  background-color: var(--background-color);
+  background-color: rgb(10 10 10 / 80%);
+  backdrop-filter: blur(16px);
 }
 
 header nav {

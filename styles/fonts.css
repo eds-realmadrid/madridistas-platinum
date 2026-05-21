@@ -11,10 +11,10 @@
   src: url('../fonts/rm-neue-regular.woff2') format('woff2');
 }
 
-/* fix(perf): accurate fallback metrics measured from woff2 OS/2 table (UPM=1000, capHeight=700 vs Arial 716/2048) */
+/* fix(perf): accurate fallback metrics — size-adjust uses x-height ratio (sxHeight 491/1000 vs Arial 1062/2048 = 94.7%) */
 @font-face {
   font-family: 'RM Neue Regular Placeholder';
-  size-adjust: 200%;
+  size-adjust: 95%;
   ascent-override: 95%;
   descent-override: 23%;
   line-gap-override: 0%;
@@ -32,10 +32,10 @@
   src: url('../fonts/rm-neue-semibold.woff2') format('woff2');
 }
 
-/* fix(perf): accurate fallback metrics measured from woff2 OS/2 table (UPM=1000, capHeight=700 vs Arial 716/2048) */
+/* fix(perf): accurate fallback metrics — size-adjust uses x-height ratio (sxHeight 492/1000 vs Arial 1062/2048 = 94.7%) */
 @font-face {
   font-family: 'RM Neue SemiBold Placeholder';
-  size-adjust: 200%;
+  size-adjust: 95%;
   ascent-override: 95%;
   descent-override: 23%;
   line-gap-override: 0%;
@@ -53,10 +53,10 @@
   src: url('../fonts/rm-neue-bold.woff2') format('woff2');
 }
 
-/* fix(perf): accurate fallback metrics measured from woff2 OS/2 table (UPM=1000, capHeight=700 vs Arial 716/2048) */
+/* fix(perf): accurate fallback metrics — size-adjust uses x-height ratio (sxHeight 493/1000 vs Arial 1062/2048 = 94.7%) */
 @font-face {
   font-family: 'RM Neue Bold Placeholder';
-  size-adjust: 200%;
+  size-adjust: 95%;
   ascent-override: 95%;
   descent-override: 23%;
   line-gap-override: 0%;

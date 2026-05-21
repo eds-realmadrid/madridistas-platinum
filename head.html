@@ -15,7 +15,8 @@
 <link rel="preload" href="/fonts/rm-neue-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/rm-neue-bold.woff2" as="font" type="font/woff2" crossorigin>
 <!-- OneTrust Consent Management -->
-<script nonce="aem" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="22a2ad6c-055f-488c-a71e-13ecc9969a0e"></script>
+<!-- fix(perf): async prevents OneTrust from blocking HTML parsing and main thread (reduces TBT) -->
+<script nonce="aem" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="22a2ad6c-055f-488c-a71e-13ecc9969a0e" async></script>
 <script nonce="aem" type="text/javascript">
 function OptanonWrapper() {
   if (typeof window.RMOneTrustLoaded === 'undefined' || window.RMOneTrustLoaded !== true) {

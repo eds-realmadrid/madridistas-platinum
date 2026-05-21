@@ -127,9 +127,10 @@
     flex: unset;
   }
 
-  /* Image cells in 3-column layout */
+  /* Image cells in 3-column layout — fixed height so text starts at same level */
   .columns:has(> div:nth-child(3)) > div > div:has(> p > img:only-child) {
-    flex: 1;
+    flex: none;
+    height: 240px;
   }
 
   .columns:has(> div:nth-child(3)) > div > div:has(> p > img:only-child) > p {
@@ -141,7 +142,6 @@
     display: block;
     width: 100%;
     height: 100%;
-    max-height: 280px;
     object-fit: cover;
     object-position: top;
     border-radius: 20px;

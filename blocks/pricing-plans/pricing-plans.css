@@ -284,6 +284,10 @@
   object-position: top;
 }
 
+.pricing-plans .pricing-benefit-img.blur img {
+  filter: blur(4px);
+}
+
 .pricing-plans .pricing-benefit-text {
   margin: 0;
   font-size: var(--body-font-size-s);

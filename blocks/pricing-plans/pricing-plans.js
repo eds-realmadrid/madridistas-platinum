@@ -192,6 +192,7 @@ export default function decorate(block) {
     if (benefit.img) {
       const imgEl = document.createElement('div');
       imgEl.className = 'pricing-benefit-img';
+      if (benefit.text.toLowerCase().includes('limitada')) imgEl.classList.add('blur');
       imgEl.append(benefit.img.cloneNode(true));
       item.append(imgEl);
     }

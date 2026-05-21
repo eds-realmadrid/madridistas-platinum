@@ -244,13 +244,13 @@ export default async function decorate(block) {
   // Toggle solid background on scroll + show/hide bottom banner (throttled)
   let ticking = false;
 
-  const topHero = document.querySelector('main > .section:first-child .hero');
+  const heroCta = document.querySelector('main > .section:first-child .hero a.button.primary');
 
   const updateScrollState = () => {
     navWrapper.classList.toggle('scrolled', window.scrollY > 50);
 
-    const heroBottom = topHero ? topHero.getBoundingClientRect().bottom : 0;
-    bottomBanner.classList.toggle('visible', heroBottom <= 0);
+    const ctaBottom = heroCta ? heroCta.getBoundingClientRect().bottom : 0;
+    bottomBanner.classList.toggle('visible', ctaBottom <= 0);
   };
 
   const onScroll = () => {

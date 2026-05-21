@@ -25,6 +25,17 @@ footer .footer img {
   height: auto;
 }
 
+/* Copyright line — shrink on mobile so it stays on one line */
+footer .default-content-wrapper > p:nth-child(2) {
+  font-size: 12px;
+}
+
+@media (width >= 600px) {
+  footer .default-content-wrapper > p:nth-child(2) {
+    font-size: var(--body-font-size-s);
+  }
+}
+
 footer .footer a:any-link {
   color: #fff;
   text-decoration: none;

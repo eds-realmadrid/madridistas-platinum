@@ -385,8 +385,10 @@ main .section.highlight {
   }
 }
 
-main .section.center .default-content-wrapper {
-  text-align: center;
+@media (width >= 600px) {
+  main .section.center .default-content-wrapper {
+    text-align: center;
+  }
 }
 
 @media (width >= 900px) {

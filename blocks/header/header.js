@@ -165,11 +165,11 @@ export default async function decorate(block) {
 
   // Language switcher
   const languages = [
-    { code: 'en-us', label: 'EN' },
     { code: 'es-es', label: 'ES' },
+    { code: 'en-us', label: 'EN' },
   ];
   const currentPath = window.location.pathname;
-  const currentLang = languages.find((l) => currentPath.includes(l.code)) || languages[1];
+  const currentLang = languages.find((l) => currentPath.includes(l.code)) || languages[0];
 
   const langSwitcher = document.createElement('div');
   langSwitcher.className = 'nav-lang-switcher';
@@ -187,11 +187,8 @@ export default async function decorate(block) {
   const dropdown = document.createElement('div');
   dropdown.className = 'nav-lang-dropdown';
 
-  // Non-current languages first, then current (selected) at the bottom
-  const orderedLangs = [
-    ...languages.filter((l) => l.code !== currentLang.code),
-    currentLang,
-  ];
+  // Fixed order: ES always on top, EN always on bottom
+  const orderedLangs = languages;
   orderedLangs.forEach((lang) => {
     const langPath = currentPath.includes(currentLang.code)
       ? currentPath.replace(currentLang.code, lang.code)

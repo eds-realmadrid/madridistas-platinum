@@ -334,11 +334,11 @@
 }
 
 .pricing-plans .pricing-carousel-btn.prev::after {
-  transform: rotate(-45deg) translate(1px, 2px);
+  transform: translateY(3px) rotate(-45deg);
 }
 
 .pricing-plans .pricing-carousel-btn.next::after {
-  transform: rotate(135deg) translate(1px, 2px);
+  transform: translateY(-3px) rotate(135deg);
 }
 
 .pricing-plans .pricing-carousel-btn:hover {

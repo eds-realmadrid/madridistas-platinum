@@ -5,8 +5,10 @@
   margin: 0 auto;
 }
 
-.accordion-container > .default-content-wrapper {
-  text-align: center;
+@media (width >= 600px) {
+  .accordion-container > .default-content-wrapper {
+    text-align: center;
+  }
 }
 
 

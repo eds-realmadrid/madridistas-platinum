@@ -52,8 +52,11 @@
   margin: 0;
   color: rgb(255 255 255 / 95%);
   font-size: var(--heading-font-size-xxl);
-  font-weight: 800;
-  line-height: 1.06;
+
+  /* fix(typography): no rm-neue-extrabold.woff2 available — use Bold (700) intentionally */
+  font-weight: 700;
+
+  /* fix(typography): line-height removed — now set globally in styles.css */
   letter-spacing: -0.02em;
 }
 

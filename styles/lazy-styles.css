@@ -1,9 +1,12 @@
 /* add global styles that can be loaded post LCP here */
 
 /* Enhanced typography */
+
+/* fix(typography): use semibold font family instead of weight synthesis */
 strong,
 b {
-  font-weight: 600;
+  font-family: var(--semibold-font-family);
+  font-weight: normal;
 }
 
 /* List improvements */

@@ -23,8 +23,15 @@
   --light-gray: #edeff2;
 
   /* fonts */
-  --body-font-family: 'RM Neue', rm-neue-fallback, sans-serif;
-  --heading-font-family: 'RM Neue', rm-neue-fallback, sans-serif;
+
+  /* fix(typography): match source site per-weight font-family naming */
+  --body-font-family: 'RM Neue Regular', 'RM Neue Regular Placeholder', sans-serif;
+
+  /* fix(typography): match source site per-weight font-family naming */
+  --heading-font-family: 'RM Neue Bold', 'RM Neue Bold Placeholder', sans-serif;
+
+  /* fix(typography): add semibold token — used for UI chrome and strong text */
+  --semibold-font-family: 'RM Neue SemiBold', 'RM Neue SemiBold Placeholder', sans-serif;
 
   /* body sizes */
   --body-font-size-m: 18px;
@@ -43,12 +50,6 @@
   --nav-height: 80px;
 }
 
-/* fallback font */
-@font-face {
-  font-family: rm-neue-fallback;
-  size-adjust: 100%;
-  src: local('Arial');
-}
 
 @media (width >= 900px) {
   :root {
@@ -103,6 +104,9 @@ h6 {
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
   font-weight: 700;
+
+  /* fix(typography): make letter-spacing explicit on all headings, not cascade-dependent */
+  letter-spacing: -0.02em;
   scroll-margin: 40px;
 }
 
@@ -116,7 +120,9 @@ h2 {
 
 h1 {
   font-size: var(--heading-font-size-xxl);
-  line-height: 1;
+
+  /* fix(typography): align global h1 line-height with hero.css override value */
+  line-height: 1.06;
   letter-spacing: -0.02em;
 }
 

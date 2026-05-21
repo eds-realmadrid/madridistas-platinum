@@ -175,7 +175,8 @@ header nav .nav-sections ul {
 }
 
 header nav .nav-sections ul > li {
-  font-weight: 500;
+  /* fix(typography): 500→600 — no rm-neue-medium.woff2, synthesised 500 too light */
+  font-weight: 600;
 }
 
 header nav .nav-sections ul > li > ul {
@@ -290,7 +291,9 @@ header nav .nav-lang-current {
   border: none;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+
+  /* fix(typography): 500→600 — no rm-neue-medium.woff2, synthesised 500 too light */
+  font-weight: 600;
   font-family: var(--body-font-family);
   cursor: pointer;
   padding: 6px 0;
@@ -334,7 +337,9 @@ header nav .nav-lang-dropdown a {
   padding: 10px 16px;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+
+  /* fix(typography): 500→600 — no rm-neue-medium.woff2, synthesised 500 too light */
+  font-weight: 600;
   text-decoration: none;
   transition: background 0.2s ease;
 }
@@ -407,7 +412,9 @@ header .nav-bottom-banner-cta {
   color: #000;
   border-radius: 12px;
   font-size: 16px;
-  font-weight: 500;
+
+  /* fix(typography): 500→600 — no rm-neue-medium.woff2, synthesised 500 too light */
+  font-weight: 600;
   text-decoration: none;
   transition: background 0.2s ease;
   box-sizing: border-box;

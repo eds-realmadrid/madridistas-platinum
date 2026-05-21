@@ -200,14 +200,9 @@ async function loadEager(doc) {
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
-  try {
-    /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
-    if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
-      loadFonts();
-    }
-  } catch (e) {
-    // do nothing
-  }
+  /* fix(perf): load fonts eagerly on all viewports — mobile gate was delaying font swap
+     until lazy phase, causing CLS 0.5+ on mobile as RM Neue replaced Arial fallback */
+  loadFonts();
 }
 
 /**

@@ -147,9 +147,9 @@
     border-radius: 20px;
   }
 
-  /* Blur option: blur the last column's image */
-  .columns.blur > div:last-child > div:last-child img {
-    filter: blur(4px);
-  }
+}
 
+/* Blur option: blur the last column's image — all viewport sizes */
+.columns.blur > div:last-child > div:last-child img {
+  filter: blur(4px);
 }

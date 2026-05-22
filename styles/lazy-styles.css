@@ -1,5 +1,15 @@
 /* add global styles that can be loaded post LCP here */
 
+/* fix(perf): constrain OneTrust cookie banner to a single bar — async loading can cause it to expand full-height */
+#onetrust-consent-sdk {
+  max-height: 30vh;
+  overflow: hidden;
+}
+
+#onetrust-banner-sdk {
+  max-height: 30vh !important;
+}
+
 /* Enhanced typography */
 
 /* fix(typography): use semibold font family instead of weight synthesis */

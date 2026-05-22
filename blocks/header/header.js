@@ -232,8 +232,11 @@ export default async function decorate(block) {
   bottomBanner.className = 'nav-bottom-banner';
   const bannerText = navTools?.querySelector('p:not(:has(a))')?.textContent || '';
   const bannerLink = navTools?.querySelector('a');
+  const bannerPicture = navTools?.querySelector('picture');
   if (bannerText && bannerLink) {
+    const pictureHTML = bannerPicture ? bannerPicture.outerHTML : '';
     bottomBanner.innerHTML = `
+      ${pictureHTML ? `<span class="nav-bottom-banner-img">${pictureHTML}</span>` : ''}
       <span class="nav-bottom-banner-text">${bannerText}</span>
       <a href="${bannerLink.href}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
     `;

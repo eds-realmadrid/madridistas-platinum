@@ -12,7 +12,10 @@ export default async function decorate(block) {
     /* fix(perf): LCP image was not prioritised — browser discovered it too late.
        fetchpriority=high tells the browser to fetch this above other resources */
     const lcpImg = rows[0].querySelector('img');
-    if (lcpImg) lcpImg.fetchPriority = 'high';
+    if (lcpImg) {
+      lcpImg.fetchPriority = 'high';
+      lcpImg.loading = 'eager';
+    }
   }
 
   // Row 1: content (h1, desc, buttons) → add class
@@ -36,9 +39,14 @@ export default async function decorate(block) {
     rows[1].querySelector('div').append(buttonContainer);
   }
 
-  // Rows 2+: product images → add class
-  rows.slice(2).forEach((row) => {
+  // Rows 2+: product images → add class, set dimensions to prevent CLS
+  rows.slice(2).forEach((row, i) => {
     row.classList.add('hero-product');
+    const img = row.querySelector('img');
+    if (img) {
+      img.width = i === 1 ? 380 : 280;
+      img.height = i === 1 ? 240 : 350;
+    }
   });
 
   // CTA hero (bg + content only, no product images)

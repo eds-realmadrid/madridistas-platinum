@@ -2,6 +2,12 @@
   "project": "Madridistas Platinum",
   "plugins": [
     {
+      "id": "quick-edit",
+      "title": "Quick Edit",
+      "environments": ["dev", "preview"],
+      "event": "quick-edit"
+    },
+    {
       "id": "experimentation",
       "title": "Experimentation",
       "titleI18n": {

@@ -31,7 +31,7 @@ function buildPageData() {
   const localeMatch = pathname.match(/^\/([a-z]{2})-([a-z]{2})(\/|$)/);
   const country = localeMatch ? localeMatch[2] : 'es';
 
-  // Fixed levels — always the same for this site
+  // Fixed levels — always same
   const pageLevel1 = 'landing';
   const pageLevel2 = 'platinum';
   const pageLevel3 = 'home';

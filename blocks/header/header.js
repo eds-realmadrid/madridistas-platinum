@@ -230,13 +230,13 @@ export default async function decorate(block) {
   const navTools = nav.querySelector('.nav-tools');
   const bottomBanner = document.createElement('div');
   bottomBanner.className = 'nav-bottom-banner';
-  const bannerText = navTools?.querySelector('p:not(:has(a))')?.textContent || '';
+  const bannerText = navTools?.querySelector('p:not(:has(a)):not(:has(picture))')?.textContent || '';
   const bannerLink = navTools?.querySelector('a');
   const bannerPicture = navTools?.querySelector('picture');
   if (bannerText && bannerLink) {
-    const pictureHTML = bannerPicture ? bannerPicture.outerHTML : '';
+    const imgHTML = bannerPicture ? `<span class="nav-bottom-banner-img">${bannerPicture.outerHTML}</span>` : '';
     bottomBanner.innerHTML = `
-      ${pictureHTML ? `<span class="nav-bottom-banner-img">${pictureHTML}</span>` : ''}
+      ${imgHTML}
       <span class="nav-bottom-banner-text">${bannerText}</span>
       <a href="${bannerLink.href}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
     `;

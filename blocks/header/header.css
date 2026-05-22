@@ -391,6 +391,7 @@ header .nav-bottom-banner.visible {
 }
 
 header .nav-bottom-banner-img {
+  position: relative;
   display: none;
   flex-shrink: 0;
   width: 80px;
@@ -402,9 +403,10 @@ header .nav-bottom-banner-img {
 
 /* stylelint-disable-next-line no-descending-specificity */
 header .nav-bottom-banner-img img {
-  display: block;
-  width: 80px;
-  height: 50px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

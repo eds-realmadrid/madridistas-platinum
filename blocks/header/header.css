@@ -399,12 +399,9 @@ header .nav-bottom-banner-img {
   border-radius: 8px;
 }
 
-header .nav-bottom-banner-img picture {
-  display: contents;
-}
-
 /* stylelint-disable-next-line no-descending-specificity */
 header .nav-bottom-banner-img img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;

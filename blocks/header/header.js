@@ -234,7 +234,13 @@ export default async function decorate(block) {
   const bannerLink = navTools?.querySelector('a');
   const bannerPicture = navTools?.querySelector('picture');
   if (bannerText && bannerLink) {
-    const imgHTML = bannerPicture ? `<span class="nav-bottom-banner-img">${bannerPicture.outerHTML}</span>` : '';
+    const bannerImgEl = bannerPicture?.querySelector('img');
+    const bannerImgSrc = bannerImgEl?.src
+      ? bannerImgEl.src.replace(/width=\d+/, 'width=160')
+      : '';
+    const imgHTML = bannerImgSrc
+      ? `<span class="nav-bottom-banner-img"><img src="${bannerImgSrc}" alt="" width="80" height="50" loading="lazy"></span>`
+      : '';
     bottomBanner.innerHTML = `
       ${imgHTML}
       <span class="nav-bottom-banner-text">${bannerText}</span>

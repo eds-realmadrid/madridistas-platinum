@@ -6,8 +6,8 @@
   font-style: normal;
   font-weight: 400;
 
-  /* fix(perf): optional skips swap entirely if font not ready, eliminating CLS and LCP penalty */
-  font-display: optional;
+  /* fix(perf): swap ensures RM Neue always renders — optional caused permanent Arial fallback on slow connections */
+  font-display: swap;
   src: url('../fonts/rm-neue-regular.woff2') format('woff2');
 }
 
@@ -27,8 +27,8 @@
   font-style: normal;
   font-weight: 600;
 
-  /* fix(perf): optional skips swap entirely if font not ready, eliminating CLS and LCP penalty */
-  font-display: optional;
+  /* fix(perf): swap ensures RM Neue always renders — optional caused permanent Arial fallback on slow connections */
+  font-display: swap;
   src: url('../fonts/rm-neue-semibold.woff2') format('woff2');
 }
 
@@ -48,8 +48,8 @@
   font-style: normal;
   font-weight: 700;
 
-  /* fix(perf): optional skips swap entirely if font not ready, eliminating CLS and LCP penalty */
-  font-display: optional;
+  /* fix(perf): swap ensures RM Neue always renders — optional caused permanent Arial fallback on slow connections */
+  font-display: swap;
   src: url('../fonts/rm-neue-bold.woff2') format('woff2');
 }
 

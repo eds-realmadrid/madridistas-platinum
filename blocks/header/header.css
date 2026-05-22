@@ -390,6 +390,29 @@ header .nav-bottom-banner.visible {
   pointer-events: auto;
 }
 
+header .nav-bottom-banner-img {
+  display: none;
+  flex-shrink: 0;
+  align-self: center;
+  border-radius: 2px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-bottom-banner-img img {
+  display: block;
+  width: 45px;
+  height: 30px;
+  object-fit: cover;
+}
+
+@media (width >= 600px) {
+  header .nav-bottom-banner-img {
+    display: block;
+  }
+}
+
 header .nav-bottom-banner-text {
   display: none;
   color: #fff;

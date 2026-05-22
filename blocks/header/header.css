@@ -394,7 +394,7 @@ header .nav-bottom-banner-img {
   display: none;
   flex-shrink: 0;
   align-self: center;
-  border-radius: 8px;
+  border-radius: 2px;
   overflow: hidden;
   line-height: 0;
 }
@@ -402,14 +402,14 @@ header .nav-bottom-banner-img {
 /* stylelint-disable-next-line no-descending-specificity */
 header .nav-bottom-banner-img img {
   display: block;
-  width: 80px;
-  height: 50px;
+  width: 45px;
+  height: 30px;
   object-fit: cover;
 }
 
 @media (width >= 600px) {
   header .nav-bottom-banner-img {
-    display: flex;
+    display: block;
   }
 }
 

@@ -17,40 +17,40 @@ function getMetadata(name) {
 /**
  * Derives structured page data from the current URL pathname.
  *
- * URL format: /{language}-{country}/{level1}/{level2}/{level3}
- * Examples:
- *   /es-es                        → country=es, level1=home
- *   /en-us/landing/platinum/home  → country=us, level1=landing, level2=platinum, level3=home
+ * Levels 1–3 are fixed for this site: landing / platinum / home.
+ * Any path segments after the locale prefix populate pageLevel4 onward.
  *
- * The locale prefix encodes both language (first part) and country (second part),
- * e.g. "en-us" → language=en, country=us. We only need the country for the datalayer.
+ * Examples:
+ *   /es-es                  → levels 1-3 fixed, no dynamic levels
+ *   /es-es/beneficios       → levels 1-3 fixed, pageLevel4=beneficios
+ *   /es-es/foo/bar          → levels 1-3 fixed, pageLevel4=foo, pageLevel5=bar
  */
 function buildPageData() {
   const { pathname } = window.location;
 
-  // Match the locale prefix at the start of the path: /xx-xx/ or /xx-xx (end of string)
-  // Group 1 = language code (e.g. "es"), Group 2 = country code (e.g. "es" or "us")
   const localeMatch = pathname.match(/^\/([a-z]{2})-([a-z]{2})(\/|$)/);
   const country = localeMatch ? localeMatch[2] : 'es';
 
-  // Strip the locale prefix (e.g. "/es-es" or "/es-es/") to get the remaining path,
-  // then remove any trailing slash before splitting into segments.
-  // e.g. "/es-es/landing/platinum/home" → "landing/platinum/home" → ['landing','platinum','home']
-  // e.g. "/es-es" or "/es-es/" → "" → [] (treated as home)
+  // Fixed levels — always same
+  const pageLevel1 = 'landing';
+  const pageLevel2 = 'platinum';
+  const pageLevel3 = 'home';
+
+  // Dynamic levels — path segments after the locale prefix map to pageLevel4+
   const stripped = pathname
     .replace(/^\/[a-z]{2}-[a-z]{2}(\/|$)/, '')
     .replace(/\/$/, '');
   const segments = stripped ? stripped.split('/').filter(Boolean) : [];
 
+  const dynamicLevels = {};
+  segments.forEach((seg, i) => { dynamicLevels[`pageLevel${i + 4}`] = seg; });
+
   const pageSection = 'madridistas';
-  const pageLevels = {};
-  segments.forEach((seg, i) => { pageLevels[`pageLevel${i + 1}`] = seg; });
-  if (!pageLevels.pageLevel1) pageLevels.pageLevel1 = 'home';
-
-  const authoredPageType = getMetadata('page-type');
-  const pageType = authoredPageType || '';
-
+  const pageLevels = {
+    pageLevel1, pageLevel2, pageLevel3, ...dynamicLevels,
+  };
   const pageName = [pageSection, ...Object.values(pageLevels)].join(':');
+  const pageType = getMetadata('page-type') || '';
 
   return {
     pageSection, pageName, ...pageLevels, pageType, country,

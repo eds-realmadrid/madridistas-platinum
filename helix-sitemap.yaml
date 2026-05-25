@@ -1,0 +1,11 @@
+sitemaps:
+  main:
+    languages:
+      es-es:
+        source: /es-es/query-index.json
+        destination: /sitemap.xml
+        hreflang: es-es
+      en-us:
+        source: /en-us/query-index.json
+        destination: /sitemap-en.xml
+        hreflang: en-us

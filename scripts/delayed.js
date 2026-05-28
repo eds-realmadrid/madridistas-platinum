@@ -57,9 +57,10 @@ function buildPageData() {
   const pageType = getMetadata('page-type') || '';
   const pageUrl = href;
   const pagePath = pathname;
+  const pageChannel = 'web';
 
   return {
-    pageSection, pageName, ...pageLevels, pageType, country, pageUrl, pagePath,
+    pageSection, pageName, ...pageLevels, pageType, country, pageUrl, pagePath, pageChannel,
   };
 }
 
@@ -71,7 +72,7 @@ function buildPageData() {
 function pushPageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const {
-    pageSection, pageName, pageType, country, pageUrl, pagePath, ...pageLevels
+    pageSection, pageName, pageType, country, pageUrl, pagePath, channel, ...pageLevels
   } = buildPageData();
   window.adobeDataLayer.push({
     event: 'pageLoad',
@@ -85,6 +86,7 @@ function pushPageLoadEvent() {
       country,
       pageUrl,
       pagePath,
+      channel,
     },
   });
 }

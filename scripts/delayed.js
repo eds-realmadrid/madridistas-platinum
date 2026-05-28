@@ -21,12 +21,16 @@ function getMetadata(name) {
  * Any path segments after the locale prefix populate pageLevel4 onward.
  *
  * Examples:
- *   /es-es                  → levels 1-3 fixed, no dynamic levels
- *   /es-es/beneficios       → levels 1-3 fixed, pageLevel4=beneficios
- *   /es-es/foo/bar          → levels 1-3 fixed, pageLevel4=foo, pageLevel5=bar
+ *   /es-es                  → levels 1-3 fixed, no dynamic levels, pagePath=/es-es
+ *   /es-es/beneficios       → levels 1-3 fixed, pageLevel4=beneficios, pagePath=/es-es/beneficios
+ *   /es-es/foo/bar          → levels 1-3 fixed, pageLevel4=foo, pageLevel5=bar,
+ *                             pagePath=/es-es/foo/bar
+ *
+ * pageUrl  — full URL, e.g. https://main--madridistas-platinum--eds-realmadrid.aem.page/es-es
+ * pagePath — pathname only, e.g. /es-es or /es-es/sample
  */
 function buildPageData() {
-  const { pathname } = window.location;
+  const { pathname, href } = window.location;
 
   const localeMatch = pathname.match(/^\/([a-z]{2})-([a-z]{2})(\/|$)/);
   const country = localeMatch ? localeMatch[2] : 'es';
@@ -51,9 +55,12 @@ function buildPageData() {
   };
   const pageName = [pageSection, ...Object.values(pageLevels)].join(':');
   const pageType = getMetadata('page-type') || '';
+  const pageUrl = href;
+  const pagePath = pathname;
+  const pageChannel = 'web';
 
   return {
-    pageSection, pageName, ...pageLevels, pageType, country,
+    pageSection, pageName, ...pageLevels, pageType, country, pageUrl, pagePath, pageChannel,
   };
 }
 
@@ -65,7 +72,7 @@ function buildPageData() {
 function pushPageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const {
-    pageSection, pageName, pageType, country, ...pageLevels
+    pageSection, pageName, pageType, country, pageUrl, pagePath, pageChannel, ...pageLevels
   } = buildPageData();
   window.adobeDataLayer.push({
     event: 'pageLoad',
@@ -77,6 +84,9 @@ function pushPageLoadEvent() {
       pageLoadType: 'sequential',
       cms: 'aem',
       country,
+      pageUrl,
+      pagePath,
+      pageChannel,
     },
   });
 }

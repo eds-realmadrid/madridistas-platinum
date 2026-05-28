@@ -72,7 +72,7 @@ function buildPageData() {
 function pushPageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const {
-    pageSection, pageName, pageType, country, pageUrl, pagePath, channel, ...pageLevels
+    pageSection, pageName, pageType, country, pageUrl, pagePath, pageChannel, ...pageLevels
   } = buildPageData();
   window.adobeDataLayer.push({
     event: 'pageLoad',
@@ -86,7 +86,7 @@ function pushPageLoadEvent() {
       country,
       pageUrl,
       pagePath,
-      channel,
+      pageChannel,
     },
   });
 }

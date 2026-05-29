@@ -32,8 +32,8 @@
 
 /* Toggle pill */
 .pricing-plans .pricing-toggle {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background-color: #222326;
   border-radius: 99px;
   padding: 4px;
@@ -56,9 +56,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  min-width: 140px;
+  min-width: 0;
   white-space: nowrap;
-  flex: 1;
 }
 
 .pricing-plans .pricing-tab.active {

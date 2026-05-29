@@ -141,6 +141,7 @@
   font-size: clamp(11px, 3vw, 22px);
   font-weight: 600;
   color: inherit;
+  white-space: nowrap;
 }
 
 .pricing-plans .pricing-price {

@@ -58,6 +58,7 @@
   transition: background-color 0.3s ease, color 0.3s ease;
   min-width: 140px;
   white-space: nowrap;
+  flex: 1;
 }
 
 .pricing-plans .pricing-tab.active {

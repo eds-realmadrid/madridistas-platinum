@@ -3,8 +3,7 @@
  * Content structure (rows):
  *   Row 0: Plan Anual label | Plan Mensual label
  *   Row 1: Savings badge text (e.g. "Ahorras un 4.14%")
- *   Row 2: "Camiseta" card — title | annual price | monthly price | image | description
- *   Row 3: "Camiseta Authentic" card — title | annual price | monthly price | image | description
+ *   Rows 2-3: card — title | annual price | monthly price | annual img | monthly img | desc
  *   Row 4: Footnote annual | Footnote monthly (optional)
  *   Row 5: Column headers — shirts header | benefits header
  *   Rows 6+: Benefit cards — image | text
@@ -27,10 +26,11 @@ export default function decorate(block) {
     const title = cols[0]?.textContent.trim() || '';
     const annualPrice = cols[1]?.textContent.trim() || '';
     const monthlyPrice = cols[2]?.textContent.trim() || '';
-    const img = cols[3]?.querySelector('img');
-    const desc = cols[4]?.textContent.trim() || '';
+    const annualImg = cols[3]?.querySelector('img');
+    const monthlyImg = cols[4]?.querySelector('img');
+    const desc = cols[5]?.textContent.trim() || '';
     return {
-      title, annualPrice, monthlyPrice, img, desc,
+      title, annualPrice, monthlyPrice, annualImg, monthlyImg, desc,
     };
   });
 
@@ -135,17 +135,12 @@ export default function decorate(block) {
     priceMonthly.className = 'pricing-price plan-monthly hidden';
     priceMonthly.textContent = card.monthlyPrice;
 
-    const monthlyImgSrcs = [
-      '/media/media_10eb90bcf942ccddcd6d567cd6fa21216112e5fd7.png',
-      '/media/media_16e5dcca225cfd968fa4ca790d76b0cb322c94783.png',
-    ];
-
     const imgWrapper = document.createElement('div');
     imgWrapper.className = 'pricing-card-image';
-    if (card.img) {
-      const imgEl = card.img.cloneNode(true);
+    if (card.annualImg) {
+      const imgEl = card.annualImg.cloneNode(true);
       imgEl.dataset.annualSrc = imgEl.src;
-      imgEl.dataset.monthlySrc = monthlyImgSrcs[idx];
+      if (card.monthlyImg) imgEl.dataset.monthlySrc = card.monthlyImg.src;
       imgWrapper.append(imgEl);
     }
 

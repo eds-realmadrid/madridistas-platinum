@@ -245,7 +245,7 @@ export default async function decorate(block) {
     bottomBanner.innerHTML = `
       ${imgHTML}
       <span class="nav-bottom-banner-text">${bannerText}</span>
-      <a href="${appendTrackedParams(bannerLink.href)}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
+      <a href="${appendTrackedParams(bannerLink.href, 'wplatinum-sticky')}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
     `;
     navTools.textContent = '';
   }

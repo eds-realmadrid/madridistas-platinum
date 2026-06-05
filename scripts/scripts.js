@@ -257,3 +257,28 @@ loadPage();
   // eslint-disable-next-line import/no-unresolved
   import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
 }());
+
+const TRACKED_PARAMS = [
+  'utm_campaign', 'utm_source', 'utm_medium', 'utm_content', 'utm_term',
+  'ajo_action', 'ajo_journey', 'correlationId',
+];
+
+/**
+ * Appends any tracked campaign/AJO query params from the current page URL
+ * to the given destination href, without duplicating params already present.
+ * @param {string} href Destination URL string
+ * @returns {string} href with tracked params appended, or original href if none present
+ */
+export function appendTrackedParams(href) {
+  const pageParams = new URLSearchParams(window.location.search);
+  const tracked = TRACKED_PARAMS.filter((key) => pageParams.has(key));
+  if (!tracked.length) return href;
+
+  const url = new URL(href, window.location.origin);
+  tracked.forEach((key) => {
+    if (!url.searchParams.has(key)) {
+      url.searchParams.set(key, pageParams.get(key));
+    }
+  });
+  return url.toString();
+}

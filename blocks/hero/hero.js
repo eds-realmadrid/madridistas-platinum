@@ -28,7 +28,8 @@ export default async function decorate(block) {
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'hero-buttons';
 
-  const channelSuffix = rows.length === 2 ? 'wplatinum-footer' : 'wplatinum-hero';
+  let channelSuffix = 'wplatinum-hero';
+  if (block.closest('.hero-bottom')) channelSuffix = 'wplatinum-footer';
   links.forEach((link, index) => {
     const p = link.closest('p');
     if (p && !p.querySelector('picture')) {

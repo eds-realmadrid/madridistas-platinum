@@ -1,3 +1,5 @@
+import { appendTrackedParams } from '../../scripts/scripts.js';
+
 /**
  * Decorates the hero block
  * @param {Element} block The hero block element
@@ -31,6 +33,7 @@ export default async function decorate(block) {
     if (p && !p.querySelector('picture')) {
       p.className = 'button-wrapper';
       link.className = index === 0 ? 'button primary' : 'button secondary';
+      link.href = appendTrackedParams(link.href);
       buttonContainer.append(p);
     }
   });

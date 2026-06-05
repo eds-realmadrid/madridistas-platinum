@@ -258,27 +258,36 @@ loadPage();
   import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
 }());
 
-const TRACKED_PARAMS = [
-  'utm_campaign', 'utm_source', 'utm_medium', 'utm_content', 'utm_term',
-  'ajo_action', 'ajo_journey', 'correlationId',
-];
-
 /**
- * Appends any tracked campaign/AJO query params from the current page URL
- * to the given destination href, without duplicating params already present.
- * @param {string} href Destination URL string
- * @returns {string} href with tracked params appended, or original href if none present
+ * Applies campaign parameter pass-through to a CTA button href.
+ *
+ * Scenario 1 — landing URL contains campaignId:
+ *   Overrides campaignId and campaignChannel on the destination href.
+ *   campaignChannel becomes: {incoming value}-{channelSuffix}
+ *
+ * Scenario 2 — landing URL has no campaignId:
+ *   Authored href defaults are left untouched (they already contain the
+ *   organic fallback campaignId and the correct channelSuffix value).
+ *
+ * In both scenarios, ajo_action and ajo_journey are forwarded if present.
+ *
+ * @param {string} href Destination URL string (authored value)
+ * @param {string} channelSuffix Per-button suffix e.g. 'wplatinum-hero'
+ * @returns {string} Modified href string
  */
-export function appendTrackedParams(href) {
+export function appendTrackedParams(href, channelSuffix) {
   const pageParams = new URLSearchParams(window.location.search);
-  const tracked = TRACKED_PARAMS.filter((key) => pageParams.has(key));
-  if (!tracked.length) return href;
-
   const url = new URL(href, window.location.origin);
-  tracked.forEach((key) => {
-    if (!url.searchParams.has(key)) {
-      url.searchParams.set(key, pageParams.get(key));
-    }
+
+  if (pageParams.has('campaignId')) {
+    url.searchParams.set('campaignId', pageParams.get('campaignId'));
+    const incomingChannel = pageParams.get('campaignChannel') || '';
+    url.searchParams.set('campaignChannel', `${incomingChannel}-${channelSuffix}`);
+  }
+
+  ['ajo_action', 'ajo_journey'].forEach((key) => {
+    if (pageParams.has(key)) url.searchParams.set(key, pageParams.get(key));
   });
+
   return url.toString();
 }

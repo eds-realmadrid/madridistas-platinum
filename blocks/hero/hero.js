@@ -1,3 +1,5 @@
+import { appendTrackedParams } from '../../scripts/scripts.js';
+
 /**
  * Decorates the hero block
  * @param {Element} block The hero block element
@@ -26,11 +28,14 @@ export default async function decorate(block) {
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'hero-buttons';
 
+  let channelSuffix = 'wplatinum-hero';
+  if (block.closest('.hero-bottom')) channelSuffix = 'wplatinum-footer';
   links.forEach((link, index) => {
     const p = link.closest('p');
     if (p && !p.querySelector('picture')) {
       p.className = 'button-wrapper';
       link.className = index === 0 ? 'button primary' : 'button secondary';
+      link.href = appendTrackedParams(link.href, channelSuffix);
       buttonContainer.append(p);
     }
   });

@@ -257,3 +257,38 @@ loadPage();
   // eslint-disable-next-line import/no-unresolved
   import('https://da.live/scripts/dapreview.js').then(({ default: daPreview }) => daPreview(loadPage));
 }());
+
+/**
+ * Applies campaign parameter pass-through to a CTA button href.
+ *
+ * Scenario 1 — landing URL contains campaignId:
+ *   Overrides campaignId and campaignChannel on the destination href.
+ *   campaignChannel becomes: {incoming value}-{channelSuffix}
+ *
+ * Scenario 2 — landing URL has no campaignId:
+ *   Authored href defaults are left untouched (they already contain the
+ *   organic fallback campaignId and the correct channelSuffix value).
+ *
+ * In both scenarios, ajo_action and ajo_journey are forwarded if present.
+ *
+ * @param {string} href Destination URL string (authored value)
+ * @param {string} channelSuffix Per-button suffix e.g. 'wplatinum-hero'
+ * @returns {string} Modified href string
+ */
+export function appendTrackedParams(href, channelSuffix) {
+  const pageParams = new URLSearchParams(window.location.search);
+  const url = new URL(href, window.location.origin);
+
+  if (pageParams.has('campaignId')) {
+    url.searchParams.set('campaignId', pageParams.get('campaignId'));
+    if (pageParams.has('campaignChannel')) {
+      url.searchParams.set('campaignChannel', `${pageParams.get('campaignChannel')}-${channelSuffix}`);
+    }
+  }
+
+  ['ajo_action', 'ajo_journey', 'correlationId'].forEach((key) => {
+    if (pageParams.has(key)) url.searchParams.set(key, pageParams.get(key));
+  });
+
+  return url.toString();
+}

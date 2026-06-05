@@ -1,4 +1,5 @@
 import { loadFragment } from '../fragment/fragment.js';
+import { appendTrackedParams } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -244,7 +245,7 @@ export default async function decorate(block) {
     bottomBanner.innerHTML = `
       ${imgHTML}
       <span class="nav-bottom-banner-text">${bannerText}</span>
-      <a href="${bannerLink.href}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
+      <a href="${appendTrackedParams(bannerLink.href, 'wplatinum-sticky')}" class="nav-bottom-banner-cta">${bannerLink.textContent}</a>
     `;
     navTools.textContent = '';
   }

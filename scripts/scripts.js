@@ -286,7 +286,7 @@ export function appendTrackedParams(href, channelSuffix) {
     }
   }
 
-  ['ajo_action', 'ajo_journey'].forEach((key) => {
+  ['ajo_action', 'ajo_journey', 'correlationId'].forEach((key) => {
     if (pageParams.has(key)) url.searchParams.set(key, pageParams.get(key));
   });
 

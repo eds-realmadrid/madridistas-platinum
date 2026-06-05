@@ -28,12 +28,13 @@ export default async function decorate(block) {
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'hero-buttons';
 
+  const channelSuffix = rows.length === 2 ? 'wplatinum-footer' : 'wplatinum-hero';
   links.forEach((link, index) => {
     const p = link.closest('p');
     if (p && !p.querySelector('picture')) {
       p.className = 'button-wrapper';
       link.className = index === 0 ? 'button primary' : 'button secondary';
-      link.href = appendTrackedParams(link.href);
+      link.href = appendTrackedParams(link.href, channelSuffix);
       buttonContainer.append(p);
     }
   });

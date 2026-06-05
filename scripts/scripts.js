@@ -281,8 +281,9 @@ export function appendTrackedParams(href, channelSuffix) {
 
   if (pageParams.has('campaignId')) {
     url.searchParams.set('campaignId', pageParams.get('campaignId'));
-    const incomingChannel = pageParams.get('campaignChannel') || '';
-    url.searchParams.set('campaignChannel', `${incomingChannel}-${channelSuffix}`);
+    if (pageParams.has('campaignChannel')) {
+      url.searchParams.set('campaignChannel', `${pageParams.get('campaignChannel')}-${channelSuffix}`);
+    }
   }
 
   ['ajo_action', 'ajo_journey'].forEach((key) => {

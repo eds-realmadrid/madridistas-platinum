@@ -17,14 +17,13 @@
 <!-- OneTrust Consent Management -->
 <!-- fix(perf): async prevents OneTrust from blocking HTML parsing and main thread (reduces TBT) -->
 <script nonce="aem" src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-domain-script="69ad9e0c-e5c8-4c48-a86c-58c47a28c517" async></script>
-<script type="text/javascript">
-  function OptanonWrapper() {
-    if (typeof RMOneTrustLoaded == "undefined" || RMOneTrustLoaded !== true) {
-      window.RMOneTrustLoaded = true;
-      var event = new Event("RMOneTrustLoaded");
-      window.dispatchEvent(event);
-    }
+<script nonce="aem" type="text/javascript">
+function OptanonWrapper() {
+  if (typeof window.RMOneTrustLoaded === 'undefined' || window.RMOneTrustLoaded !== true) {
+    window.RMOneTrustLoaded = true;
+    window.dispatchEvent(new Event('RMOneTrustLoaded'));
   }
+}
 </script>
 <script nonce="aem" src="/scripts/aem.js" type="module"></script>
 <script nonce="aem" src="/scripts/scripts.js" type="module"></script>

@@ -10,8 +10,7 @@ data:
     - name: "redirect-platinum-madridistas-to-platinum-realmadrid"
       when:
         reqProperty: domain
-        equals: "eds.realmadrid.com"
-        #equals: "platinum.madridistas.com"
+        equals: "platinum.madridistas.com"
       action:
         type: "redirect"
         status: 301

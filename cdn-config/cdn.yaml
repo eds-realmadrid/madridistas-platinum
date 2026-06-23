@@ -1,0 +1,21 @@
+kind: "CDN"
+version: "1"
+
+metadata:
+  envTypes: [ "prod" ]
+
+data:
+  redirects:
+    rules:
+    - name: "redirect-platinum-madridistas-to-platinum-realmadrid"
+      when:
+        reqProperty: domain
+        equals: "platinum.madridistas.com"
+      action:
+        type: "redirect"
+        status: 301
+        location:
+          join:
+            format: "https://platinum.realmadrid.com%s"
+            args:
+            - reqProperty: url

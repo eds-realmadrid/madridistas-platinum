@@ -221,7 +221,7 @@
 
 /* Card image — overlaps jersey + 3D tilt effect */
 .hero > .hero-product:nth-child(4) {
-  margin-top: -220px !important;
+  margin-top: -80px !important;
   transition: transform 0.2s ease-out;
   position: relative;
   z-index: 20 !important;
@@ -238,7 +238,7 @@
 }
 
 .hero > .hero-product:nth-child(4) img {
-  max-width: 380px;
+  max-width: 300px;
 }
 
 @keyframes hero-float {
@@ -282,7 +282,7 @@
   }
 
   .hero > .hero-product:nth-child(4) img {
-    max-width: 460px;
+    max-width: 300px;
   }
 }
 
@@ -319,11 +319,11 @@
   }
 
   .hero > .hero-product:nth-child(4) {
-    margin-top: -190px !important;
+    margin-top: -120px !important;
   }
 
   .hero > .hero-product:nth-child(4) img {
-    max-width: 540px;
+    max-width: 300px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

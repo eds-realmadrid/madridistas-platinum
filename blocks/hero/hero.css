@@ -512,7 +512,7 @@
   .hero[data-jerseys="3"] > .hero-card img {
     width: auto;
     height: auto;
-    max-width: 280px;
+    max-width: 250px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

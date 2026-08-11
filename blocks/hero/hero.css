@@ -454,15 +454,19 @@
     max-width: 340px;
   }
 
-  /* Desktop keeps the card in FRONT of every jersey, centered and overlapping
-     the jerseys' middle like the design. Overrides the mobile z-index. */
+  /* Desktop depth order matches mobile: white jersey in FRONT of the card,
+     the card in front of the pink/green secondaries. */
+  .hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
+    z-index: 5;
+  }
+
   .hero[data-jerseys="3"] > .hero-card {
     margin-top: -190px !important;
-    z-index: 40 !important;
+    z-index: 20 !important;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
-    max-width: 360px;
+    max-width: 320px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

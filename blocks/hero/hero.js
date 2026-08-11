@@ -23,6 +23,23 @@ export default async function decorate(block) {
   // Row 1: content (h1, desc, buttons) → add class
   if (rows[1]) rows[1].classList.add('hero-content');
 
+  // Force the hero title onto two lines (last two words on the second line),
+  // so mobile matches the design: line 1 white, line 2 in the silver gradient
+  // (the gradient runs top→bottom over the whole h1, so line 2 renders silver).
+  // The break only applies on mobile; the desktop breakpoint hides it.
+  const heroTitle = rows[1]?.querySelector('h1');
+  if (heroTitle && !heroTitle.querySelector('.hero-title-break')) {
+    const words = heroTitle.textContent.trim().split(/\s+/);
+    if (words.length > 2) {
+      const head = words.slice(0, -2).join(' ');
+      const tail = words.slice(-2).join(' ');
+      heroTitle.textContent = `${head} `;
+      const br = document.createElement('br');
+      br.className = 'hero-title-break';
+      heroTitle.append(br, document.createTextNode(tail));
+    }
+  }
+
   // Style hero links as buttons and wrap buttons in a container
   const links = block.querySelectorAll('.hero-content a[href]');
   const buttonContainer = document.createElement('div');

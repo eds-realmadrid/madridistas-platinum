@@ -51,13 +51,24 @@
 .hero h1 {
   margin: 0;
   color: rgb(255 255 255 / 95%);
-  font-size: var(--heading-font-size-xxl);
+
+  /* Slightly smaller than the global xxl on mobile so "Platinum is the" fits on
+     one line and the forced break yields exactly two lines. Desktop restores
+     the full size below. */
+  font-size: 52px;
 
   /* fix(typography): no rm-neue-extrabold.woff2 available — use Bold (700) intentionally */
   font-weight: 700;
 
   /* fix(typography): line-height removed — now set globally in styles.css */
   letter-spacing: -0.02em;
+}
+
+/* Forced title line break: active on mobile so the last two words drop to a
+   second line (which renders in the silver gradient). Hidden on desktop, where
+   the title wraps on its own. */
+.hero h1 .hero-title-break {
+  display: inline;
 }
 
 .hero h2 {
@@ -415,6 +426,16 @@
 @media (width >= 900px) {
   .hero {
     padding: calc(var(--nav-height) + 50px) 40px 0;
+  }
+
+  /* Desktop: full title size and let it wrap on its own — drop the forced
+     mobile line break. */
+  .hero h1 {
+    font-size: var(--heading-font-size-xxl);
+  }
+
+  .hero h1 .hero-title-break {
+    display: none;
   }
 
   /* The three-jersey cluster is pushed down; add room at the bottom so the

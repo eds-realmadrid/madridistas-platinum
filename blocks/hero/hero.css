@@ -440,9 +440,9 @@
     --pink-y: 0px;
     --pink-scale: 0.94;
     --pink-tilt: 1deg;
-    --green-x: 48px;
-    --green-y: -44px;
-    --green-scale: 0.74;
+    --green-x: 40px;
+    --green-y: -86px;
+    --green-scale: 0.8;
     --green-tilt: 1deg;
   }
 
@@ -451,9 +451,10 @@
   }
 
   /* Desktop keeps the card in FRONT of every jersey (unlike mobile, where the
-     white jersey leads). Overrides the mobile sandwich z-index. */
+     white jersey leads). Overrides the mobile sandwich z-index. Lowered a bit
+     so it covers less of the white jersey, matching the design. */
   .hero[data-jerseys="3"] > .hero-card {
-    margin-top: -210px !important;
+    margin-top: -170px !important;
     z-index: 40 !important;
   }
 

@@ -328,9 +328,10 @@
     rotate(var(--pink-tilt)) scale(var(--pink-scale));
 }
 
-/* Deep secondary (green): smaller, down to the side, BELOW the card. */
+/* Deep secondary (green): smaller, down to the side. On mobile it sits IN
+   FRONT of the card (z 15 > card 10); desktop puts it behind the card again. */
 .hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
-  z-index: 4;
+  z-index: 15;
   transform:
     translateX(var(--green-x)) translateY(var(--green-y))
     rotate(var(--green-tilt)) scale(var(--green-scale));
@@ -496,8 +497,8 @@
     max-width: 340px;
   }
 
-  /* Desktop depth order matches mobile: white jersey in FRONT of the card,
-     the card in front of the pink/green secondaries. */
+  /* Desktop depth order: white jersey in front of the card, and the card in
+     front of both secondaries (unlike mobile, where green sits in front). */
   .hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
     z-index: 5;
   }

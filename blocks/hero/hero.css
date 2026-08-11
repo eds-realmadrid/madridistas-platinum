@@ -263,16 +263,16 @@
      white down-left, green down-right, with the card overlapping in front.
      The desktop breakpoint overrides these into a compact overlapping cluster.
      Offsets in px so the arrangement holds as the frame narrows. */
-  --white-x: -86px;
-  --white-y: 30px;
-  --white-scale: 1;
-  --pink-x: 4px;
-  --pink-y: -62px;
-  --pink-scale: 0.8;
+  --white-x: -96px;
+  --white-y: 34px;
+  --white-scale: 1.04;
+  --pink-x: 6px;
+  --pink-y: -66px;
+  --pink-scale: 0.82;
   --pink-tilt: 0deg;
-  --green-x: 100px;
-  --green-y: 40px;
-  --green-scale: 0.78;
+  --green-x: 108px;
+  --green-y: 46px;
+  --green-scale: 0.72;
   --green-tilt: 0deg;
 
   display: grid;
@@ -350,12 +350,12 @@
    kept small and raised into the middle gap so it stays clearly visible and
    doesn't cover too much of the jerseys on mobile. */
 .hero[data-jerseys="3"] > .hero-card {
-  margin-top: -175px !important;
+  margin-top: -168px !important;
   z-index: 10 !important;
 }
 
 .hero[data-jerseys="3"] > .hero-card img {
-  max-width: 165px;
+  max-width: 172px;
 }
 
 @keyframes hero-float {

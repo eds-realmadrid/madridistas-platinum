@@ -429,32 +429,31 @@
     max-width: 540px;
   }
 
-  /* Desktop composition: bigger protagonist, prominent pink beside it, green
-     peeking between them — a compact overlapping cluster like the design.
-     Resets the mobile spread offsets (white-y/pink-y) back to the cluster. */
+  /* Desktop composition: the same triangle spread as mobile but scaled up —
+     pink raised up-center, white down-left, green down-right, card centered in
+     front. Horizontal offsets in vw so the spread scales with the viewport. */
   .hero > .hero-jerseys {
-    --white-x: -70px;
-    --white-y: 0px;
+    --white-x: -15vw;
+    --white-y: 34px;
     --white-scale: 1.16;
-    --pink-x: 150px;
-    --pink-y: 0px;
-    --pink-scale: 0.94;
-    --pink-tilt: 1deg;
-    --green-x: 40px;
-    --green-y: -86px;
-    --green-scale: 0.8;
-    --green-tilt: 1deg;
+    --pink-x: 1vw;
+    --pink-y: -150px;
+    --pink-scale: 0.98;
+    --pink-tilt: 0deg;
+    --green-x: 15vw;
+    --green-y: 44px;
+    --green-scale: 1.06;
+    --green-tilt: 0deg;
   }
 
   .hero > .hero-jerseys > .hero-jersey img {
     max-width: 420px;
   }
 
-  /* Desktop keeps the card in FRONT of every jersey (unlike mobile, where the
-     white jersey leads). Overrides the mobile sandwich z-index. Lowered a bit
-     so it covers less of the white jersey, matching the design. */
+  /* Desktop keeps the card in FRONT of every jersey, centered and overlapping
+     the jerseys' middle like the design. Overrides the mobile z-index. */
   .hero[data-jerseys="3"] > .hero-card {
-    margin-top: -170px !important;
+    margin-top: -230px !important;
     z-index: 40 !important;
   }
 

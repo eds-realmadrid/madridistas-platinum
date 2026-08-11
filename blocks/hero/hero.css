@@ -347,10 +347,12 @@
 }
 
 /* Card sits BETWEEN the white jersey (above) and the secondaries (below),
-   kept small and raised into the middle gap so it stays clearly visible and
-   doesn't cover too much of the jerseys on mobile. */
+   kept small and raised into the middle gap. De-centered slightly to the left
+   (overlapping the white jersey) to match the design, leaving the green its
+   own space on the right. */
 .hero[data-jerseys="3"] > .hero-card {
   margin-top: -168px !important;
+  transform: translateX(-28px);
   z-index: 10 !important;
 }
 
@@ -500,6 +502,7 @@
 
   .hero[data-jerseys="3"] > .hero-card {
     margin-top: -230px !important;
+    transform: none;
     z-index: 20 !important;
   }
 

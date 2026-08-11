@@ -416,6 +416,12 @@
     padding: calc(var(--nav-height) + 50px) 40px 0;
   }
 
+  /* The three-jersey cluster is pushed down; add room at the bottom so the
+     hero grows to contain it and overflow:hidden doesn't clip the jerseys. */
+  .hero[data-jerseys="3"] {
+    padding-bottom: 90px;
+  }
+
   .hero p {
     font-size: 18px;
     line-height: 1.25;

@@ -276,22 +276,23 @@
 }
 
 /* Stack every jersey in the same grid cell so they overlap into one cluster.
-   Each jersey floats individually (the stage itself doesn't) so the group
-   animation is preserved while jerseys stay in the page's stacking context. */
+   The jersey element holds the positioning transform; its inner div carries
+   the float animation, so the two transforms never overwrite each other and
+   each jersey stays in the page's stacking context. */
 .hero > .hero-jerseys > .hero-jersey {
   grid-area: 1 / 1;
   margin: 0;
+}
+
+.hero > .hero-jerseys > .hero-jersey > div {
+  justify-content: center;
   animation: hero-float 4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero > .hero-jerseys > .hero-jersey {
+  .hero > .hero-jerseys > .hero-jersey > div {
     animation: none;
   }
-}
-
-.hero > .hero-jerseys > .hero-jersey div {
-  justify-content: center;
 }
 
 /* White jersey — protagonist: largest, and ABOVE the card (it overlaps the

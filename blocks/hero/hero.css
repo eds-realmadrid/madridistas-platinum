@@ -435,34 +435,34 @@
      Extra top margin pushes the whole cluster below the CTAs so the raised
      pink jersey never overlaps the buttons. */
   .hero > .hero-jerseys {
-    --white-x: -15vw;
-    --white-y: 34px;
-    --white-scale: 1.16;
+    --white-x: -12vw;
+    --white-y: 28px;
+    --white-scale: 1;
     --pink-x: 1vw;
-    --pink-y: -150px;
-    --pink-scale: 0.98;
+    --pink-y: -120px;
+    --pink-scale: 0.84;
     --pink-tilt: 0deg;
-    --green-x: 15vw;
-    --green-y: 44px;
-    --green-scale: 1.06;
+    --green-x: 12vw;
+    --green-y: 36px;
+    --green-scale: 0.9;
     --green-tilt: 0deg;
 
-    margin-top: 230px;
+    margin-top: 210px;
   }
 
   .hero > .hero-jerseys > .hero-jersey img {
-    max-width: 420px;
+    max-width: 340px;
   }
 
   /* Desktop keeps the card in FRONT of every jersey, centered and overlapping
      the jerseys' middle like the design. Overrides the mobile z-index. */
   .hero[data-jerseys="3"] > .hero-card {
-    margin-top: -230px !important;
+    margin-top: -190px !important;
     z-index: 40 !important;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
-    max-width: 440px;
+    max-width: 360px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

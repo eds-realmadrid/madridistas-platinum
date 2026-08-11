@@ -431,7 +431,9 @@
 
   /* Desktop composition: the same triangle spread as mobile but scaled up —
      pink raised up-center, white down-left, green down-right, card centered in
-     front. Horizontal offsets in vw so the spread scales with the viewport. */
+     front. Horizontal offsets in vw so the spread scales with the viewport.
+     Extra top margin pushes the whole cluster below the CTAs so the raised
+     pink jersey never overlaps the buttons. */
   .hero > .hero-jerseys {
     --white-x: -15vw;
     --white-y: 34px;
@@ -444,6 +446,8 @@
     --green-y: 44px;
     --green-scale: 1.06;
     --green-tilt: 0deg;
+
+    margin-top: 230px;
   }
 
   .hero > .hero-jerseys > .hero-jersey img {

@@ -263,16 +263,16 @@
      white down-left, green down-right, with the card overlapping in front.
      The desktop breakpoint overrides these into a compact overlapping cluster.
      Offsets in px so the arrangement holds as the frame narrows. */
-  --white-x: -66px;
+  --white-x: -86px;
   --white-y: 30px;
   --white-scale: 1;
   --pink-x: 4px;
   --pink-y: -62px;
   --pink-scale: 0.8;
   --pink-tilt: 0deg;
-  --green-x: 78px;
-  --green-y: 30px;
-  --green-scale: 0.94;
+  --green-x: 100px;
+  --green-y: 40px;
+  --green-scale: 0.78;
   --green-tilt: 0deg;
 
   display: grid;

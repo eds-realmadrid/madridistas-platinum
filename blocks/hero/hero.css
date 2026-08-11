@@ -330,9 +330,10 @@
 }
 
 /* Card sits BETWEEN the white jersey (above) and the secondaries (below),
-   and is kept small so it doesn't cover too much of the jerseys on mobile. */
+   kept small and raised to the middle gap so it doesn't cover too much of the
+   jerseys on mobile. */
 .hero[data-jerseys="3"] > .hero-card {
-  margin-top: -100px !important;
+  margin-top: -170px !important;
   z-index: 10 !important;
 }
 

@@ -263,15 +263,15 @@
      white down-left, green down-right, with the card overlapping in front.
      The desktop breakpoint overrides these into a compact overlapping cluster.
      Offsets in px so the arrangement holds as the frame narrows. */
-  --white-x: -76px;
-  --white-y: 34px;
-  --white-scale: 1.02;
+  --white-x: -66px;
+  --white-y: 30px;
+  --white-scale: 1;
   --pink-x: 6px;
-  --pink-y: -74px;
+  --pink-y: -64px;
   --pink-scale: 0.78;
   --pink-tilt: 0deg;
-  --green-x: 96px;
-  --green-y: 48px;
+  --green-x: 82px;
+  --green-y: 42px;
   --green-scale: 0.76;
   --green-tilt: 0deg;
 
@@ -337,19 +337,25 @@
 }
 
 .hero > .hero-jerseys > .hero-jersey img {
-  max-width: 210px;
+  max-width: 175px;
+}
+
+/* Room at the bottom (mobile) so the lowered jerseys aren't clipped by the
+   hero's overflow:hidden. Desktop overrides this below. */
+.hero[data-jerseys="3"] {
+  padding-bottom: 70px;
 }
 
 /* Card sits BETWEEN the white jersey (above) and the secondaries (below),
-   kept small and raised to the middle gap so it doesn't cover too much of the
-   jerseys on mobile. */
+   kept small and raised into the middle gap so it stays clearly visible and
+   doesn't cover too much of the jerseys on mobile. */
 .hero[data-jerseys="3"] > .hero-card {
-  margin-top: -170px !important;
+  margin-top: -185px !important;
   z-index: 10 !important;
 }
 
 .hero[data-jerseys="3"] > .hero-card img {
-  max-width: 190px;
+  max-width: 165px;
 }
 
 @keyframes hero-float {

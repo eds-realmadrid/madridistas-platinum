@@ -247,21 +247,22 @@
    exact offsets/tilt/scale from the design can be tuned in one place.
    Mobile-first defaults; scaled up at the tablet/desktop breakpoints below. */
 .hero > .hero-jerseys {
-  /* Per-jersey composition knobs (mobile). Each garment is positioned
-     independently so the cluster overlaps into one compact group like the
-     design: the white protagonist in front, a prominent secondary (pink)
-     beside it, and a deeper secondary (green) tucked behind, peeking out
-     between the two. Offsets are in px so overlap stays consistent while the
-     cluster is centered. */
-  --white-x: -22px;
-  --white-scale: 1.05;
-  --pink-x: 58px;
-  --pink-scale: 0.86;
-  --pink-tilt: 1deg;
-  --green-x: 16px;
-  --green-y: -30px;
-  --green-scale: 0.68;
-  --green-tilt: 1deg;
+  /* Per-jersey composition knobs (mobile). On the small frame the three
+     garments spread into a triangle like the design: pink raised up-center,
+     white down-left, green down-right, with the card overlapping in front.
+     The desktop breakpoint overrides these into a compact overlapping cluster.
+     Offsets in px so the arrangement holds as the frame narrows. */
+  --white-x: -84px;
+  --white-y: 44px;
+  --white-scale: 0.92;
+  --pink-x: 4px;
+  --pink-y: -70px;
+  --pink-scale: 0.8;
+  --pink-tilt: 0deg;
+  --green-x: 98px;
+  --green-y: 50px;
+  --green-scale: 0.78;
+  --green-tilt: 0deg;
 
   display: grid;
   place-items: center;
@@ -288,14 +289,18 @@
 /* White jersey — protagonist: largest, in front, offset to the side. */
 .hero > .hero-jerseys > .hero-jersey-front {
   z-index: 3;
-  transform: translateX(var(--white-x)) scale(var(--white-scale));
+  transform:
+    translateX(var(--white-x)) translateY(var(--white-y))
+    scale(var(--white-scale));
 }
 
 /* Prominent secondary (last jersey, e.g. pink): sits beside the white,
    overlapping it, slightly tilted. */
 .hero > .hero-jerseys > .hero-jersey:last-child {
   z-index: 2;
-  transform: translateX(var(--pink-x)) rotate(var(--pink-tilt)) scale(var(--pink-scale));
+  transform:
+    translateX(var(--pink-x)) translateY(var(--pink-y))
+    rotate(var(--pink-tilt)) scale(var(--pink-scale));
 }
 
 /* Deep secondary (green): smaller, tucked behind, peeking between the two. */
@@ -307,16 +312,16 @@
 }
 
 .hero > .hero-jerseys > .hero-jersey img {
-  max-width: 240px;
+  max-width: 200px;
 }
 
 /* Card shrinks a little to make room for the three garments. */
 .hero[data-jerseys="3"] > .hero-card {
-  margin-top: -170px !important;
+  margin-top: -120px !important;
 }
 
 .hero[data-jerseys="3"] > .hero-card img {
-  max-width: 250px;
+  max-width: 240px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -370,11 +375,11 @@
   }
 
   .hero > .hero-jerseys > .hero-jersey img {
-    max-width: 340px;
+    max-width: 260px;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
-    max-width: 400px;
+    max-width: 360px;
   }
 }
 
@@ -419,15 +424,20 @@
   }
 
   /* Desktop composition: bigger protagonist, prominent pink beside it, green
-     peeking between them — a compact overlapping cluster like the design. */
+     peeking between them — a compact overlapping cluster like the design.
+     Resets the mobile spread offsets (white-y/pink-y) back to the cluster. */
   .hero > .hero-jerseys {
     --white-x: -70px;
+    --white-y: 0px;
     --white-scale: 1.16;
     --pink-x: 150px;
+    --pink-y: 0px;
     --pink-scale: 0.94;
+    --pink-tilt: 1deg;
     --green-x: 48px;
     --green-y: -44px;
     --green-scale: 0.74;
+    --green-tilt: 1deg;
   }
 
   .hero > .hero-jerseys > .hero-jersey img {

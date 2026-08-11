@@ -252,82 +252,87 @@
      white down-left, green down-right, with the card overlapping in front.
      The desktop breakpoint overrides these into a compact overlapping cluster.
      Offsets in px so the arrangement holds as the frame narrows. */
-  --white-x: -84px;
-  --white-y: 44px;
-  --white-scale: 0.92;
-  --pink-x: 4px;
-  --pink-y: -70px;
-  --pink-scale: 0.8;
+  --white-x: -76px;
+  --white-y: 34px;
+  --white-scale: 1.02;
+  --pink-x: 6px;
+  --pink-y: -74px;
+  --pink-scale: 0.78;
   --pink-tilt: 0deg;
-  --green-x: 98px;
-  --green-y: 50px;
-  --green-scale: 0.78;
+  --green-x: 96px;
+  --green-y: 48px;
+  --green-scale: 0.76;
   --green-tilt: 0deg;
 
   display: grid;
   place-items: center;
   position: relative;
-  z-index: 10;
   margin-top: 80px;
   max-width: 100%;
 
-  /* The whole cluster floats together — same motion as the single jersey. */
-  animation: hero-float 4s ease-in-out infinite;
+  /* No z-index here on purpose: the stage must NOT form its own stacking
+     context, so each jersey's z-index can interleave with the card
+     (white above the card; pink/green below it). */
 }
 
-/* Stack every jersey in the same grid cell so they overlap into one cluster. */
+/* Stack every jersey in the same grid cell so they overlap into one cluster.
+   Each jersey floats individually (the stage itself doesn't) so the group
+   animation is preserved while jerseys stay in the page's stacking context. */
 .hero > .hero-jerseys > .hero-jersey {
   grid-area: 1 / 1;
   margin: 0;
-  animation: none; /* the stage floats, not the individual jerseys */
+  animation: hero-float 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero > .hero-jerseys > .hero-jersey {
+    animation: none;
+  }
 }
 
 .hero > .hero-jerseys > .hero-jersey div {
   justify-content: center;
 }
 
-/* White jersey — protagonist: largest, in front, offset to the side. */
+/* White jersey — protagonist: largest, and ABOVE the card (it overlaps the
+   card by just a sliver of its sleeve, like the design). */
 .hero > .hero-jerseys > .hero-jersey-front {
-  z-index: 3;
+  z-index: 30;
   transform:
     translateX(var(--white-x)) translateY(var(--white-y))
     scale(var(--white-scale));
 }
 
-/* Prominent secondary (last jersey, e.g. pink): sits beside the white,
-   overlapping it, slightly tilted. */
+/* Prominent secondary (last jersey, e.g. pink): raised up-center, BELOW the
+   card. */
 .hero > .hero-jerseys > .hero-jersey:last-child {
-  z-index: 2;
+  z-index: 5;
   transform:
     translateX(var(--pink-x)) translateY(var(--pink-y))
     rotate(var(--pink-tilt)) scale(var(--pink-scale));
 }
 
-/* Deep secondary (green): smaller, tucked behind, peeking between the two. */
+/* Deep secondary (green): smaller, down to the side, BELOW the card. */
 .hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
-  z-index: 1;
+  z-index: 4;
   transform:
     translateX(var(--green-x)) translateY(var(--green-y))
     rotate(var(--green-tilt)) scale(var(--green-scale));
 }
 
 .hero > .hero-jerseys > .hero-jersey img {
-  max-width: 200px;
+  max-width: 210px;
 }
 
-/* Card shrinks a little to make room for the three garments. */
+/* Card sits BETWEEN the white jersey (above) and the secondaries (below),
+   and is a little smaller to let the white jersey lead. */
 .hero[data-jerseys="3"] > .hero-card {
   margin-top: -120px !important;
+  z-index: 10 !important;
 }
 
 .hero[data-jerseys="3"] > .hero-card img {
-  max-width: 240px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero > .hero-jerseys {
-    animation: none;
-  }
+  max-width: 210px;
 }
 
 @keyframes hero-float {
@@ -444,8 +449,11 @@
     max-width: 420px;
   }
 
+  /* Desktop keeps the card in FRONT of every jersey (unlike mobile, where the
+     white jersey leads). Overrides the mobile sandwich z-index. */
   .hero[data-jerseys="3"] > .hero-card {
     margin-top: -210px !important;
+    z-index: 40 !important;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {

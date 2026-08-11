@@ -270,9 +270,13 @@
   margin-top: 80px;
   max-width: 100%;
 
-  /* No z-index here on purpose: the stage must NOT form its own stacking
-     context, so each jersey's z-index can interleave with the card
-     (white above the card; pink/green below it). */
+  /* z-index MUST be auto so the stage does NOT form its own stacking context.
+     Explicitly set here to override the generic `.hero > div { z-index: 1 }`
+     rule — otherwise the stage traps the jerseys' z-index and the card (a
+     sibling) always paints over them. With auto, each jersey's z-index
+     interleaves with the card: white (30) above the card (20), pink/green (5)
+     below it. */
+  z-index: auto;
 }
 
 /* Stack every jersey in the same grid cell so they overlap into one cluster.

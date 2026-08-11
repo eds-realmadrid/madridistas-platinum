@@ -266,13 +266,13 @@
   --white-x: -66px;
   --white-y: 30px;
   --white-scale: 1;
-  --pink-x: 6px;
-  --pink-y: -64px;
-  --pink-scale: 0.78;
+  --pink-x: 4px;
+  --pink-y: -62px;
+  --pink-scale: 0.8;
   --pink-tilt: 0deg;
-  --green-x: 82px;
-  --green-y: 42px;
-  --green-scale: 0.76;
+  --green-x: 78px;
+  --green-y: 30px;
+  --green-scale: 0.94;
   --green-tilt: 0deg;
 
   display: grid;
@@ -343,14 +343,14 @@
 /* Room at the bottom (mobile) so the lowered jerseys aren't clipped by the
    hero's overflow:hidden. Desktop overrides this below. */
 .hero[data-jerseys="3"] {
-  padding-bottom: 70px;
+  padding-bottom: 80px;
 }
 
 /* Card sits BETWEEN the white jersey (above) and the secondaries (below),
    kept small and raised into the middle gap so it stays clearly visible and
    doesn't cover too much of the jerseys on mobile. */
 .hero[data-jerseys="3"] > .hero-card {
-  margin-top: -185px !important;
+  margin-top: -175px !important;
   z-index: 10 !important;
 }
 

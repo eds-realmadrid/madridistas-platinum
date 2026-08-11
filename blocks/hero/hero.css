@@ -201,7 +201,7 @@
 }
 
 /* Jersey image — slightly larger + floating animation */
-.hero > .hero-product:nth-child(3) {
+.hero > .hero-jersey {
   animation: hero-float 4s ease-in-out infinite;
   margin-top: 80px !important;
   position: relative;
@@ -210,17 +210,17 @@
 
 /* Pause animation for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .hero > .hero-product:nth-child(3) {
+  .hero > .hero-jersey {
     animation: none;
   }
 }
 
-.hero > .hero-product:nth-child(3) img {
+.hero > .hero-jersey img {
   max-width: 300px;
 }
 
 /* Card image — overlaps jersey + 3D tilt effect */
-.hero > .hero-product:nth-child(4) {
+.hero > .hero-card {
   margin-top: -220px !important;
   transition: transform 0.2s ease-out;
   position: relative;
@@ -228,17 +228,89 @@
   perspective: 500px;
 }
 
-.hero > .hero-product:nth-child(4) > div {
+.hero > .hero-card > div {
   transition: transform 0.2s ease-out;
   transform-style: preserve-3d;
 }
 
-.hero > .hero-product:nth-child(4):hover > div {
+.hero > .hero-card:hover > div {
   will-change: transform;
 }
 
-.hero > .hero-product:nth-child(4) img {
+.hero > .hero-card img {
   max-width: 380px;
+}
+
+/* ---- Layered multi-jersey composition (white in front, secondaries behind) ----
+   Active only when the content provides more than one jersey (the JS wraps them
+   in a .hero-jerseys stage). Everything is driven by custom properties so the
+   exact offsets/tilt/scale from the design can be tuned in one place.
+   Mobile-first defaults; scaled up at the tablet/desktop breakpoints below. */
+.hero > .hero-jerseys {
+  /* Tunable composition knobs (mobile) — kept tight so the whole cluster
+     stays inside the small frame. */
+  --front-scale: 1.08;   /* white jersey is the protagonist → larger */
+  --front-x: -16%;       /* white pushed to one side */
+  --back-scale: 0.72;    /* secondary jerseys sit smaller, further back */
+  --back-x: 15%;         /* green + pink grouped on the opposite side */
+  --back-step: 9%;       /* horizontal fan between the two back jerseys */
+  --back-tilt: 1deg;     /* 1° tilt on each secondary jersey */
+
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 10;
+  margin-top: 80px;
+  max-width: 100%;
+
+  /* The whole cluster floats together — same motion as the single jersey. */
+  animation: hero-float 4s ease-in-out infinite;
+}
+
+/* Stack every jersey in the same grid cell so they overlap into one cluster. */
+.hero > .hero-jerseys > .hero-jersey {
+  grid-area: 1 / 1;
+  margin: 0;
+  animation: none; /* the stage floats, not the individual jerseys */
+}
+
+.hero > .hero-jerseys > .hero-jersey div {
+  justify-content: center;
+}
+
+/* White jersey — protagonist: larger, in front, offset to the side. */
+.hero > .hero-jerseys > .hero-jersey-front {
+  z-index: 3;
+  transform: translateX(var(--front-x)) scale(var(--front-scale));
+}
+
+/* Green + pink — secondary: behind, grouped on the other side, each tilted 1°,
+   fanned apart by index for depth. */
+.hero > .hero-jerseys > .hero-jersey-back {
+  z-index: 1;
+  transform:
+    translateX(calc(var(--back-x) + var(--jersey-index, 1) * var(--back-step)))
+    rotate(var(--back-tilt))
+    scale(var(--back-scale));
+}
+
+.hero > .hero-jerseys > .hero-jersey img {
+  max-width: 220px;
+}
+
+/* Card shrinks a little to make room for the three garments. */
+.hero[data-jerseys="3"] > .hero-card {
+  margin-top: -180px !important;
+}
+
+.hero[data-jerseys="3"] > .hero-card img {
+  max-width: 260px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero > .hero-jerseys {
+    animation: none;
+  }
 }
 
 @keyframes hero-float {
@@ -277,12 +349,20 @@
     padding: 16px 32px;
   }
 
-  .hero > .hero-product:nth-child(3) img {
+  .hero > .hero-jersey img {
     max-width: 360px;
   }
 
-  .hero > .hero-product:nth-child(4) img {
+  .hero > .hero-card img {
     max-width: 460px;
+  }
+
+  .hero > .hero-jerseys > .hero-jersey img {
+    max-width: 340px;
+  }
+
+  .hero[data-jerseys="3"] > .hero-card img {
+    max-width: 400px;
   }
 }
 
@@ -314,16 +394,32 @@
     line-height: 1.25;
   }
 
-  .hero > .hero-product:nth-child(3) img {
+  .hero > .hero-jersey img {
     max-width: 420px;
   }
 
-  .hero > .hero-product:nth-child(4) {
+  .hero > .hero-card {
     margin-top: -190px !important;
   }
 
-  .hero > .hero-product:nth-child(4) img {
+  .hero > .hero-card img {
     max-width: 540px;
+  }
+
+  /* Desktop composition: a touch more spread and a bigger protagonist. */
+  .hero > .hero-jerseys {
+    --front-scale: 1.2;
+    --front-x: -26%;
+    --back-x: 24%;
+    --back-step: 14%;
+  }
+
+  .hero > .hero-jerseys > .hero-jersey img {
+    max-width: 400px;
+  }
+
+  .hero[data-jerseys="3"] > .hero-card img {
+    max-width: 460px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

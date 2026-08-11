@@ -465,12 +465,12 @@
   }
 
   .hero[data-jerseys="3"] > .hero-card {
-    margin-top: -190px !important;
+    margin-top: -230px !important;
     z-index: 20 !important;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
-    max-width: 320px;
+    max-width: 280px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

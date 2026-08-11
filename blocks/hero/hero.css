@@ -357,7 +357,9 @@
 }
 
 .hero[data-jerseys="3"] > .hero-card img {
-  max-width: 172px;
+  width: auto;
+  max-width: none;
+  height: 100px;
 }
 
 @keyframes hero-float {
@@ -507,6 +509,8 @@
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
+    width: auto;
+    height: auto;
     max-width: 280px;
   }
 

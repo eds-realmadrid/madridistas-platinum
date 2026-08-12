@@ -411,8 +411,8 @@
      the edges (vw offsets scale with the wider viewport) and shrink the
      jerseys a little so the cluster doesn't bunch up in the middle. */
   .hero > .hero-jerseys {
-    --white-x: -20vw;
-    --green-x: 20vw;
+    --white-x: -26vw;
+    --green-x: 26vw;
     --white-scale: 0.95;
     --pink-scale: 0.78;
     --green-scale: 0.68;

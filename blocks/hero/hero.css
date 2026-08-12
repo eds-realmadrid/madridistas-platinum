@@ -407,12 +407,23 @@
     max-width: 460px;
   }
 
+  /* Mobile landscape + tablet portrait (600–899px): spread white/green toward
+     the edges (vw offsets scale with the wider viewport) and shrink the
+     jerseys a little so the cluster doesn't bunch up in the middle. */
+  .hero > .hero-jerseys {
+    --white-x: -20vw;
+    --green-x: 20vw;
+    --white-scale: 0.95;
+    --pink-scale: 0.78;
+    --green-scale: 0.68;
+  }
+
   .hero > .hero-jerseys > .hero-jersey img {
-    max-width: 260px;
+    max-width: 230px;
   }
 
   .hero[data-jerseys="3"] > .hero-card img {
-    max-width: 360px;
+    height: 120px;
   }
 }
 
@@ -575,6 +586,20 @@
   }
 
   /* will-change applied dynamically via JS when scrolling starts */
+}
+
+/* Tablet landscape (900–1199px): a subtler version of the mobile-landscape
+   tweak — spread white/green a little more toward the edges and shrink the
+   jerseys slightly. Larger desktops (≥1200px) keep the compact cluster. */
+@media (width >= 900px) and (width <= 1199px) {
+  .hero > .hero-jerseys {
+    --white-x: -16vw;
+    --green-x: 16vw;
+  }
+
+  .hero > .hero-jerseys > .hero-jersey img {
+    max-width: 280px;
+  }
 }
 
 /* CTA hero ("Únete ya") — lighter gradient so background image stays visible */

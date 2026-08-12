@@ -51,13 +51,24 @@
 .hero h1 {
   margin: 0;
   color: rgb(255 255 255 / 95%);
-  font-size: var(--heading-font-size-xxl);
+
+  /* Slightly smaller than the global xxl on mobile so "Platinum is the" fits on
+     one line and the forced break yields exactly two lines. Desktop restores
+     the full size below. */
+  font-size: 52px;
 
   /* fix(typography): no rm-neue-extrabold.woff2 available — use Bold (700) intentionally */
   font-weight: 700;
 
   /* fix(typography): line-height removed — now set globally in styles.css */
   letter-spacing: -0.02em;
+}
+
+/* Forced title line break: active on mobile so the last two words drop to a
+   second line (which renders in the silver gradient). Hidden on desktop, where
+   the title wraps on its own. */
+.hero h1 .hero-title-break {
+  display: inline;
 }
 
 .hero h2 {
@@ -201,7 +212,7 @@
 }
 
 /* Jersey image — slightly larger + floating animation */
-.hero > .hero-product:nth-child(3) {
+.hero > .hero-jersey {
   animation: hero-float 4s ease-in-out infinite;
   margin-top: 80px !important;
   position: relative;
@@ -210,35 +221,146 @@
 
 /* Pause animation for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .hero > .hero-product:nth-child(3) {
+  .hero > .hero-jersey {
     animation: none;
   }
 }
 
-.hero > .hero-product:nth-child(3) img {
+.hero > .hero-jersey img {
   max-width: 300px;
 }
 
 /* Card image — overlaps jersey + 3D tilt effect */
-.hero > .hero-product:nth-child(4) {
-  margin-top: -80px !important;
+.hero > .hero-card {
+  margin-top: -220px !important;
   transition: transform 0.2s ease-out;
   position: relative;
   z-index: 20 !important;
   perspective: 500px;
 }
 
-.hero > .hero-product:nth-child(4) > div {
+.hero > .hero-card > div {
   transition: transform 0.2s ease-out;
   transform-style: preserve-3d;
 }
 
-.hero > .hero-product:nth-child(4):hover > div {
+.hero > .hero-card:hover > div {
   will-change: transform;
 }
 
-.hero > .hero-product:nth-child(4) img {
-  max-width: 300px;
+.hero > .hero-card img {
+  max-width: 380px;
+}
+
+/* ---- Layered multi-jersey composition (white in front, secondaries behind) ----
+   Active only when the content provides more than one jersey (the JS wraps them
+   in a .hero-jerseys stage). Everything is driven by custom properties so the
+   exact offsets/tilt/scale from the design can be tuned in one place.
+   Mobile-first defaults; scaled up at the tablet/desktop breakpoints below. */
+.hero > .hero-jerseys {
+  /* Per-jersey composition knobs (mobile). On the small frame the three
+     garments spread into a triangle like the design: pink raised up-center,
+     white down-left, green down-right, with the card overlapping in front.
+     The desktop breakpoint overrides these into a compact overlapping cluster.
+     Offsets in px so the arrangement holds as the frame narrows. */
+  --white-x: -96px;
+  --white-y: 34px;
+  --white-scale: 1.04;
+  --pink-x: 6px;
+  --pink-y: -66px;
+  --pink-scale: 0.82;
+  --pink-tilt: 0deg;
+  --green-x: 108px;
+  --green-y: 46px;
+  --green-scale: 0.72;
+  --green-tilt: 0deg;
+
+  display: grid;
+  place-items: center;
+  position: relative;
+  margin-top: 80px;
+  max-width: 100%;
+
+  /* z-index MUST be auto so the stage does NOT form its own stacking context.
+     Explicitly set here to override the generic `.hero > div { z-index: 1 }`
+     rule — otherwise the stage traps the jerseys' z-index and the card (a
+     sibling) always paints over them. With auto, each jersey's z-index
+     interleaves with the card: white (30) above the card (20), pink/green (5)
+     below it. */
+  z-index: auto;
+}
+
+/* Stack every jersey in the same grid cell so they overlap into one cluster.
+   The jersey element holds the positioning transform; its inner div carries
+   the float animation, so the two transforms never overwrite each other and
+   each jersey stays in the page's stacking context. */
+.hero > .hero-jerseys > .hero-jersey {
+  grid-area: 1 / 1;
+  margin: 0;
+}
+
+.hero > .hero-jerseys > .hero-jersey > div {
+  justify-content: center;
+  animation: hero-float 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero > .hero-jerseys > .hero-jersey > div {
+    animation: none;
+  }
+}
+
+/* White jersey — protagonist: largest, and ABOVE the card (it overlaps the
+   card by just a sliver of its sleeve, like the design). */
+.hero > .hero-jerseys > .hero-jersey-front {
+  z-index: 30;
+  transform:
+    translateX(var(--white-x)) translateY(var(--white-y))
+    scale(var(--white-scale));
+}
+
+/* Prominent secondary (last jersey, e.g. pink): raised up-center, BELOW the
+   card. */
+.hero > .hero-jerseys > .hero-jersey:last-child {
+  z-index: 5;
+  transform:
+    translateX(var(--pink-x)) translateY(var(--pink-y))
+    rotate(var(--pink-tilt)) scale(var(--pink-scale));
+}
+
+/* Deep secondary (green): smaller, down to the side. On mobile it sits IN
+   FRONT of the card (z 15 > card 10); desktop puts it behind the card again. */
+.hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
+  z-index: 15;
+  transform:
+    translateX(var(--green-x)) translateY(var(--green-y))
+    rotate(var(--green-tilt)) scale(var(--green-scale));
+}
+
+.hero > .hero-jerseys > .hero-jersey img {
+  max-width: 175px;
+}
+
+/* Room at the bottom (mobile) so the lowered jerseys aren't clipped by the
+   hero's overflow:hidden. Desktop overrides this below. */
+.hero[data-jerseys="3"] {
+  padding-bottom: 80px;
+}
+
+/* Card sits BETWEEN the white jersey (above) and the secondaries (below),
+   kept small and raised into the middle gap. De-centered slightly to the right
+   (overlapping the green jersey) to match the design, leaving the white its
+   own space on the left. */
+.hero[data-jerseys="3"] > .hero-card {
+  margin-top: -168px !important;
+  transform: translateX(28px);
+  z-index: 10 !important;
+}
+
+.hero[data-jerseys="3"] > .hero-card img {
+  width: auto;
+  max-width: none;
+  height: 100px;
 }
 
 @keyframes hero-float {
@@ -277,12 +399,20 @@
     padding: 16px 32px;
   }
 
-  .hero > .hero-product:nth-child(3) img {
+  .hero > .hero-jersey img {
     max-width: 360px;
   }
 
-  .hero > .hero-product:nth-child(4) img {
-    max-width: 300px;
+  .hero > .hero-card img {
+    max-width: 460px;
+  }
+
+  .hero > .hero-jerseys > .hero-jersey img {
+    max-width: 260px;
+  }
+
+  .hero[data-jerseys="3"] > .hero-card img {
+    max-width: 360px;
   }
 }
 
@@ -309,21 +439,80 @@
     padding: calc(var(--nav-height) + 50px) 40px 0;
   }
 
+  /* Desktop: full title size and let it wrap on its own — drop the forced
+     mobile line break. */
+  .hero h1 {
+    font-size: var(--heading-font-size-xxl);
+  }
+
+  .hero h1 .hero-title-break {
+    display: none;
+  }
+
+  /* The three-jersey cluster is pushed down; add room at the bottom so the
+     hero grows to contain it and overflow:hidden doesn't clip the jerseys. */
+  .hero[data-jerseys="3"] {
+    padding-bottom: 90px;
+  }
+
   .hero p {
     font-size: 18px;
     line-height: 1.25;
   }
 
-  .hero > .hero-product:nth-child(3) img {
+  .hero > .hero-jersey img {
     max-width: 420px;
   }
 
-  .hero > .hero-product:nth-child(4) {
-    margin-top: -120px !important;
+  .hero > .hero-card {
+    margin-top: -190px !important;
   }
 
-  .hero > .hero-product:nth-child(4) img {
+  .hero > .hero-card img {
+    max-width: 540px;
+  }
+
+  /* Desktop composition: the same triangle spread as mobile but scaled up —
+     pink raised up-center, white down-left, green down-right, card centered in
+     front. Horizontal offsets in vw so the spread scales with the viewport.
+     Extra top margin pushes the whole cluster below the CTAs so the raised
+     pink jersey never overlaps the buttons. */
+  .hero > .hero-jerseys {
+    --white-x: -12vw;
+    --white-y: 28px;
+    --white-scale: 1;
+    --pink-x: 1vw;
+    --pink-y: -120px;
+    --pink-scale: 0.84;
+    --pink-tilt: 0deg;
+    --green-x: 12vw;
+    --green-y: 36px;
+    --green-scale: 0.78;
+    --green-tilt: 0deg;
+
+    margin-top: 210px;
+  }
+
+  .hero > .hero-jerseys > .hero-jersey img {
     max-width: 300px;
+  }
+
+  /* Desktop depth order: white jersey in front of the card, and the card in
+     front of both secondaries (unlike mobile, where green sits in front). */
+  .hero > .hero-jerseys > .hero-jersey-back:not(:last-child) {
+    z-index: 5;
+  }
+
+  .hero[data-jerseys="3"] > .hero-card {
+    margin-top: -230px !important;
+    transform: none;
+    z-index: 20 !important;
+  }
+
+  .hero[data-jerseys="3"] > .hero-card img {
+    width: auto;
+    height: auto;
+    max-width: 250px;
   }
 
   /* Left-aligned hero variant (e.g. "No es para todos") — overlaid layout */

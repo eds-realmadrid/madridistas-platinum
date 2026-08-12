@@ -23,6 +23,23 @@ export default async function decorate(block) {
   // Row 1: content (h1, desc, buttons) → add class
   if (rows[1]) rows[1].classList.add('hero-content');
 
+  // Force the hero title onto two lines (last two words on the second line),
+  // so mobile matches the design: line 1 white, line 2 in the silver gradient
+  // (the gradient runs top→bottom over the whole h1, so line 2 renders silver).
+  // The break only applies on mobile; the desktop breakpoint hides it.
+  const heroTitle = rows[1]?.querySelector('h1');
+  if (heroTitle && !heroTitle.querySelector('.hero-title-break')) {
+    const words = heroTitle.textContent.trim().split(/\s+/);
+    if (words.length > 2) {
+      const head = words.slice(0, -2).join(' ');
+      const tail = words.slice(-2).join(' ');
+      heroTitle.textContent = `${head} `;
+      const br = document.createElement('br');
+      br.className = 'hero-title-break';
+      heroTitle.append(br, document.createTextNode(tail));
+    }
+  }
+
   // Style hero links as buttons and wrap buttons in a container
   const links = block.querySelectorAll('.hero-content a[href]');
   const buttonContainer = document.createElement('div');
@@ -44,23 +61,56 @@ export default async function decorate(block) {
     rows[1].querySelector('div').append(buttonContainer);
   }
 
-  // Rows 2+: product images → add class, set dimensions to prevent CLS
-  rows.slice(2).forEach((row, i) => {
+  // Rows 2+: product images (jerseys + card).
+  // Contract: every product row after the content row is a jersey, EXCEPT the
+  // last one, which is the membership card. Identifying pieces by semantic
+  // class (not :nth-child) lets the composition scale to any number of
+  // jerseys without the CSS breaking when rows are added/removed.
+  const productRows = rows.slice(2);
+  const cardRow = productRows[productRows.length - 1];
+  const jerseyRows = productRows.slice(0, -1);
+
+  productRows.forEach((row) => {
     row.classList.add('hero-product');
+    const isCard = row === cardRow;
+    row.classList.add(isCard ? 'hero-card' : 'hero-jersey');
     const img = row.querySelector('img');
     if (img) {
-      img.width = i === 1 ? 380 : 280;
-      img.height = i === 1 ? 240 : 350;
+      // Set intrinsic dimensions to reserve space and avoid layout shift.
+      img.width = isCard ? 380 : 280;
+      img.height = isCard ? 240 : 350;
     }
   });
+
+  // Contract for the layered multi-jersey composition:
+  //   jersey 0        → the protagonist (white), largest, in front, offset aside
+  //   jersey 1, 2, …  → secondary jerseys (green, pink), grouped behind, tilted
+  jerseyRows.forEach((row, i) => {
+    row.classList.add(i === 0 ? 'hero-jersey-front' : 'hero-jersey-back');
+    row.style.setProperty('--jersey-index', String(i));
+  });
+
+  // When more than one jersey is present, group them into a single stage so
+  // they can overlap into one cluster and float together as a group. The
+  // single-jersey layout is left untouched (jerseys stay direct children).
+  if (jerseyRows.length > 1) {
+    const stage = document.createElement('div');
+    stage.className = 'hero-jerseys';
+    jerseyRows[0].before(stage);
+    jerseyRows.forEach((row) => stage.append(row));
+  }
+
+  // Expose the jersey count so the CSS can pick the right composition
+  // (single jersey today, three layered jerseys once the content adds them).
+  block.dataset.jerseys = String(jerseyRows.length);
 
   // CTA hero (bg + content only, no product images)
   if (rows.length === 2) {
     block.classList.add('cta');
   }
 
-  // 3D tilt effect for card (4th child)
-  const card = rows[3];
+  // 3D tilt effect for the membership card
+  const card = cardRow;
   if (card) {
     const cardInner = card.querySelector('div');
     if (cardInner) {

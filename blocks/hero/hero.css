@@ -429,23 +429,20 @@
 
 /* Left-aligned hero variant — all viewports */
 /* stylelint-disable no-descending-specificity */
-.hero.left {
-  align-items: flex-start;
-  text-align: left;
-}
-
-.hero.left > div {
-  margin: 0;
-}
-
 /* Mobile layout for the left hero: text at the top over black, image anchored
    to the bottom (players framed), with a dark gradient over the top so the
    text stays readable. The desktop breakpoint below overrides this into the
    side-by-side overlaid layout. */
 .hero.left {
+  align-items: flex-start;
+  text-align: left;
   min-height: 620px;
   justify-content: flex-start;
   overflow: hidden;
+}
+
+.hero.left > div {
+  margin: 0;
 }
 
 .hero.left > .hero-content {

@@ -125,8 +125,9 @@ export default async function decorate(block) {
   // (single jersey today, three layered jerseys once the content adds them).
   block.dataset.jerseys = String(jerseyRows.length);
 
-  // CTA hero (bg + content only, no product images)
-  if (rows.length === 2) {
+  // CTA hero (bg + content only, no product images). The left-aligned variant
+  // also has just two rows but is NOT a CTA hero, so exclude it.
+  if (rows.length === 2 && !block.classList.contains('left')) {
     block.classList.add('cta');
   }
 

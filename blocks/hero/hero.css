@@ -430,14 +430,14 @@
 /* Left-aligned hero variant — all viewports */
 /* stylelint-disable no-descending-specificity */
 
-/* Mobile layout for the left hero: text at the top over solid black, and the
-   image confined to the lower band so the players never sit behind the text
-   (matches the Figma mobile design). The desktop breakpoint below overrides
-   this into the side-by-side overlaid layout. */
+/* Mobile layout for the left hero: full-bleed background image (a dedicated
+   mobile crop authored in DA) with the text at the top over a dark gradient so
+   it stays readable. The desktop breakpoint below overrides this into the
+   side-by-side overlaid layout. */
 .hero.left {
   align-items: flex-start;
   text-align: left;
-  min-height: 640px;
+  min-height: 720px;
   justify-content: flex-start;
   overflow: hidden;
   background: #0a0a0a;
@@ -453,31 +453,34 @@
   padding: 44px 24px 0;
 }
 
-/* image only fills the bottom ~46% of the hero */
 .hero.left > .hero-bg {
   position: absolute;
-  inset: auto 0 0;
-  height: 46%;
+  inset: 0;
   z-index: 0;
 }
 
 .hero.left > .hero-bg img {
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center bottom;
   width: 100%;
   height: 100%;
 }
 
-/* soft fade so the top of the image blends into the black text area */
+/* dark gradient over the top so the text reads on any image */
 .hero.left::after {
   display: block;
   content: '';
   position: absolute;
-  inset: auto 0 0;
-  height: 46%;
+  inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, #0a0a0a 0%, transparent 22%);
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10) 0%,
+    rgb(10 10 10) 38%,
+    rgb(10 10 10 / 55%) 55%,
+    transparent 78%
+  );
 }
 
 /* stylelint-enable no-descending-specificity */
@@ -571,6 +574,7 @@
     min-height: 500px;
     padding: 0;
     overflow: clip;
+    background: none;
   }
 
   .hero.left > .hero-content {

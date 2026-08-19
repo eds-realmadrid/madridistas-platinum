@@ -11,6 +11,27 @@ export default async function decorate(block) {
   if (rows[0]) {
     rows[0].classList.add('hero-bg');
 
+    // Optional art direction: authors can provide TWO images in the background
+    // row (each in its own inner div). When present, the FIRST is the mobile
+    // image and the SECOND is the desktop one. We merge them into a single
+    // <picture> with a max-width source so the mobile crop only loads on small
+    // screens. With a single image, behaviour is unchanged.
+    const pictures = rows[0].querySelectorAll('picture');
+    if (pictures.length >= 2) {
+      const [mobilePic, desktopPic] = pictures;
+      const mobileImg = mobilePic.querySelector('img');
+      if (mobileImg) {
+        const source = document.createElement('source');
+        source.media = '(max-width: 899px)';
+        source.srcset = mobileImg.getAttribute('src');
+        desktopPic.prepend(source);
+      }
+      // keep only the (now merged) desktop picture; drop the extra wrapper
+      const mobileCell = mobilePic.closest('div');
+      if (mobileCell && mobileCell !== desktopPic.closest('div')) mobileCell.remove();
+      else mobilePic.remove();
+    }
+
     /* fix(perf): LCP image was not prioritised — browser discovered it too late.
        fetchpriority=high tells the browser to fetch this above other resources */
     const lcpImg = rows[0].querySelector('img');

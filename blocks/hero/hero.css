@@ -429,17 +429,56 @@
 
 /* Left-aligned hero variant — all viewports */
 /* stylelint-disable no-descending-specificity */
+
+/* Mobile layout for the left hero: text at the top over black, image anchored
+   to the bottom (players framed), with a dark gradient over the top so the
+   text stays readable. The desktop breakpoint below overrides this into the
+   side-by-side overlaid layout. */
 .hero.left {
   align-items: flex-start;
   text-align: left;
+  min-height: 780px;
+  justify-content: flex-start;
+  overflow: hidden;
 }
 
 .hero.left > div {
   margin: 0;
 }
 
+.hero.left > .hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px 24px 0;
+}
+
+.hero.left > .hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero.left > .hero-bg img {
+  object-fit: cover;
+  object-position: center bottom;
+  width: 100%;
+  height: 100%;
+}
+
 .hero.left::after {
-  display: none;
+  display: block;
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10) 0%,
+    rgb(10 10 10) 46%,
+    rgb(10 10 10 / 55%) 62%,
+    transparent 85%
+  );
 }
 
 /* stylelint-enable no-descending-specificity */
@@ -556,6 +595,11 @@
     z-index: 0;
     max-width: unset;
     margin-left: 0;
+  }
+
+  /* reset the mobile bottom-anchored framing back to centered on desktop */
+  .hero.left > .hero-bg img {
+    object-position: center;
   }
 
   .hero.left::after {

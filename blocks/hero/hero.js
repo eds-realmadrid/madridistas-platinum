@@ -26,10 +26,20 @@ export default async function decorate(block) {
         source.srcset = mobileImg.getAttribute('src');
         desktopPic.prepend(source);
       }
-      // keep only the (now merged) desktop picture; drop the extra wrapper
+      // keep only the (now merged) desktop picture; drop the extra wrapper.
+      // Both images may live in separate cells (own inner div) OR in the same
+      // cell wrapped in their own <p>. Remove the mobile image AND its now-empty
+      // wrapper so it doesn't occupy layout space and push the picture off-screen.
       const mobileCell = mobilePic.closest('div');
-      if (mobileCell && mobileCell !== desktopPic.closest('div')) mobileCell.remove();
-      else mobilePic.remove();
+      if (mobileCell && mobileCell !== desktopPic.closest('div')) {
+        mobileCell.remove();
+      } else {
+        const mobileWrapper = mobilePic.closest('p');
+        mobilePic.remove();
+        if (mobileWrapper && !mobileWrapper.textContent.trim() && !mobileWrapper.querySelector('picture, img')) {
+          mobileWrapper.remove();
+        }
+      }
     }
 
     /* fix(perf): LCP image was not prioritised — browser discovered it too late.

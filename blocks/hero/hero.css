@@ -453,7 +453,12 @@
 .hero.left > .hero-content {
   position: relative;
   z-index: 2;
-  padding: 44px 24px 0;
+
+  /* Horizontal insets come from the .hero's own 24px padding. The content box
+     inherits a fixed width from the base .hero > div rule with content-box
+     sizing, so adding side padding here overflowed 24px past the right edge
+     (text flush right, oversized left gap). Keep padding vertical only. */
+  padding: 44px 0 0;
 }
 
 .hero.left > .hero-bg {

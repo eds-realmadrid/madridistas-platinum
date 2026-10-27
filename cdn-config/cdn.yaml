@@ -1,21 +1,76 @@
+# Global CDN config for all Edge Delivery sites in this Cloud Manager program.
+# Deployed by one Edge Delivery config pipeline as config/cdn.yaml.
 kind: "CDN"
 version: "1"
 
 metadata:
-  envTypes: [ "prod" ]
+  envTypes: ["prod"]
 
 data:
+  # ---------------------------------------------------------------
+  # Redirects
+  # ---------------------------------------------------------------
   redirects:
     rules:
-    - name: "redirect-platinum-madridistas-to-platinum-realmadrid"
-      when:
-        reqProperty: domain
-        equals: "platinum.madridistas.com"
-      action:
-        type: "redirect"
-        status: 301
-        location:
-          join:
-            format: "https://platinum.realmadrid.com%s"
-            args:
-            - reqProperty: url
+      # Site: madridistas-platinum
+      - name: redirect-platinum-madridistas-to-platinum-realmadrid
+        when:
+          reqProperty: domain
+          equals: platinum.madridistas.com
+        action:
+          type: redirect
+          status: 301
+          location:
+            join:
+              format: "https://platinum.realmadrid.com%s"
+              args:
+                - reqProperty: url
+
+      # Site: play-landing-captacion root redirect
+      - name: redirect-join-root
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: join.realmadrid.com
+            - reqProperty: originalPath
+              equals: /
+        action:
+          type: redirect
+          status: 302
+          location: /rmplay/
+
+  # ---------------------------------------------------------------
+  # Path-based routing on join.realmadrid.com
+  # ---------------------------------------------------------------
+  originSelectors:
+    rules:
+      # Site: play-landing-captacion
+      - name: route-join-rmplay
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: join.realmadrid.com
+            - reqProperty: originalPath
+              matches: "^/rmplay(/.*)?$"
+        action:
+          type: selectOrigin
+          originName: rmplay
+
+      # Site: mad-rmworld-signup
+      - name: route-join-rmworld
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: join.realmadrid.com
+            - reqProperty: originalPath
+              matches: "^/rmworld(/.*)?$"
+        action:
+          type: selectOrigin
+          originName: rmworld
+
+
+    origins:
+      - name: rmplay
+        domain: main--play-landing-captacion--eds-realmadrid.aem.live
+      - name: rmworld
+        domain: main--mad-rmworld-signup--eds-realmadrid.aem.live

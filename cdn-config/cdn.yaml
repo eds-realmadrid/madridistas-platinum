@@ -1,5 +1,5 @@
 # Global CDN config for all Edge Delivery sites in this Cloud Manager program.
-# Deployed by one Edge Delivery config pipeline as config/cdn.yaml.
+# Deployed by the Edge Delivery config pipeline from cdn-config/cdn.yaml.
 kind: "CDN"
 version: "1"
 
@@ -8,7 +8,7 @@ metadata:
 
 data:
   # ---------------------------------------------------------------
-  # Redirects
+  # Redirects (evaluated before origin selectors)
   # ---------------------------------------------------------------
   redirects:
     rules:
@@ -26,7 +26,7 @@ data:
               args:
                 - reqProperty: url
 
-      # Site: play-landing-captacion root redirect
+      # Site: play-landing-captacion - root of join goes to the RM Play landing
       - name: redirect-join-root
         when:
           allOf:
@@ -39,8 +39,28 @@ data:
           status: 302
           location: /rmplay/
 
+      # Site: play-landing-captacion - add the missing trailing slash, keep the query string
+      # /rmplay -> /rmplay/   |   /rmplay/en?x=1 -> /rmplay/en/?x=1
+      - name: redirect-join-trailing-slash
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: join.realmadrid.com
+            - reqProperty: originalPath
+              matches: "^/rmplay(/en)?$"
+        action:
+          type: redirect
+          status: 301
+          location:
+            reqProperty: url
+            transform:
+              - op: replace
+                match: '^/rmplay(/en)?(\?.*)?$'
+                replacement: '/rmplay\1/\2'
+
   # ---------------------------------------------------------------
   # Path-based routing on join.realmadrid.com
+  # Anything not matched goes to the site join is mapped to (community).
   # ---------------------------------------------------------------
   originSelectors:
     rules:
@@ -56,6 +76,19 @@ data:
           type: selectOrigin
           originName: rmplay
 
+      # Site: play-landing-captacion - join's robots.txt and sitemap.xml
+      # (otherwise the community site's "Disallow: /" would be served on join)
+      - name: route-join-seo-files
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: join.realmadrid.com
+            - reqProperty: originalPath
+              matches: "^/(robots\\.txt|sitemap\\.xml)$"
+        action:
+          type: selectOrigin
+          originName: rmplay
+
       # Site: mad-rmworld-signup
       - name: route-join-rmworld
         when:
@@ -67,7 +100,6 @@ data:
         action:
           type: selectOrigin
           originName: rmworld
-
 
     origins:
       - name: rmplay

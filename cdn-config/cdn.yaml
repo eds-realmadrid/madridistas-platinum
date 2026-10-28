@@ -26,19 +26,6 @@ data:
               args:
                 - reqProperty: url
 
-      # Site: play-landing-captacion - root of join goes to the RM Play landing
-      - name: redirect-join-root
-        when:
-          allOf:
-            - reqProperty: domain
-              equals: join.realmadrid.com
-            - reqProperty: originalPath
-              equals: /
-        action:
-          type: redirect
-          status: 302
-          location: /rmplay/
-
       # Site: play-landing-captacion - add the missing trailing slash, keep the query string
       # /rmplay -> /rmplay/   |   /rmplay/en?x=1 -> /rmplay/en/?x=1
       - name: redirect-join-trailing-slash

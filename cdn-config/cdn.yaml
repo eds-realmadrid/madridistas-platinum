@@ -44,7 +44,7 @@ data:
               - op: replace
                 match: '^/rmplay(/en)?(\?.*)?$'
                 replacement: '/rmplay\1/\2'
-                
+
       # Site: community - comunidad.realmadrid.com moved to join.realmadrid.com
       # Keeps the subpath and the query string; /es-es-nav and other paths are not touched
       # /es-es -> https://join.realmadrid.com/es-es   |   /en-us?x=1 -> https://join.realmadrid.com/en-us?x=1
@@ -63,7 +63,26 @@ data:
               format: "https://join.realmadrid.com%s"
               args:
                 - reqProperty: url
-                
+
+      # Site: community - comunidad.realmadrid.com root goes straight to join's default language
+      # / -> https://join.realmadrid.com/es-es   |   /?x=1 -> https://join.realmadrid.com/es-es?x=1
+      - name: redirect-comunidad-root-to-join
+        when:
+          allOf:
+            - reqProperty: domain
+              equals: comunidad.realmadrid.com
+            - reqProperty: originalPath
+              equals: "/"
+        action:
+          type: redirect
+          status: 301
+          location:
+            reqProperty: url
+            transform:
+              - op: replace
+                match: '^/(\?.*)?$'
+                replacement: 'https://join.realmadrid.com/es-es\1'
+
   # ---------------------------------------------------------------
   # Path-based routing on join.realmadrid.com
   # Anything not matched goes to the site join is mapped to (community).
